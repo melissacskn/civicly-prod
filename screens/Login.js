@@ -169,7 +169,7 @@ const Login= ({navigation})=>{
                                     Login
                                 </ButtonText>
                             </StyledButton>
-                            <TextLink>
+                            <TextLink onPress={()=> navigation.navigate("ForgotPassword")}>
                                     <TextLinkContent >
                                     
 

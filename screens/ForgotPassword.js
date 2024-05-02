@@ -27,54 +27,16 @@ import{
     StyledTextInput,StyledInputLabel,StyledTextInput2
 } from '../components/styles2';
 import Login from "./Login";
-import { ForgotPassword } from "aws-amplify-react-native";
 
 
 //Colors
 const{darkLight,primary,green,secondary,tertiary}= Colors;
 
-const ConfirmEmail = ({route,navigation})=>{
+const ForgotPassword = ({navigation})=>{
 
+    const [email,SetEmail]=useState('');
 
-  const [code, setCode] = useState('');
-  
- const {email}=route.params
-   
-
-  async function handleSignUpConfirmation({ username, confirmationCode }) {
-    try {
-      const response= await confirmSignUp({
-        username,
-        confirmationCode
-        
-      });
-      console.log(response)
-      
-    } catch (error) {
-      console.log('error confirming sign up', error);
-    }
-  }
-  const handlesignupconfirmation = () => {
-    handleSignUpConfirmation({ username:email,confirmationCode:code});
-  };
-
-  ////////
-  async function handleResendCode({ username}) {
-    try {
-      const response= await Auth.resendSignUp(username);
-      console.log(response)
-      Alert.alert("code is resent to your mail")
-      
-    } catch (error) {
-      console.log('error confirming sign up', error);
-      Alert.alert("oops",error.message)
-    }
-  }
-  const handleresendcode = () => {
-    handleResendCode({ username:email});
-  };
-
-
+ 
 
     return(
         <>
@@ -86,43 +48,29 @@ const ConfirmEmail = ({route,navigation})=>{
             <InnerContainer>
                 <PageLogoo resizeMode="cover" source={require('./../assets/images/civicly-remove.png')}/>
     <SafeAreaView>
-    <MyTextInput
-                           
-                           
-                      
-                        
-                          value={email}
+    
+  
+       
+                             <MyTextInput
+                            
+                            
+                             placeholder="email"
+                             placeholderTextColor={darkLight}
+                             onChangeText={SetEmail}
+                             
+                             value={email}
+                            
+                             />
+                         <StyledButtonn onPress= {()=>{
                           
-                           />
-      
-                            <MyTextInput 
+                             
+                         navigation.navigate("NewPasswordScreen")}}>
+                                 <ButtonText>
+                                     Send
+                                 </ButtonText>
+                             </StyledButtonn>
+ 
                            
-                           
-                            placeholder="Enter your confirmation code"
-                            placeholderTextColor={darkLight}
-                            onChangeText={setCode}
-                            
-                            value={code}
-                           
-                            />
-                        <StyledButtonn onPress= {()=>{
-                          handlesignupconfirmation()
-                            
-                        navigation.navigate("Login")}}>
-                                <ButtonText>
-                                    Confirm
-                                </ButtonText>
-                            </StyledButtonn>
-
-                            <StyledButtonnn  onPress= {()=>{
-                              
-                            
-                            }} 
-                           >
-                                    <ButtonText>
-                                        Resend code
-                                    </ButtonText>
-                                </StyledButtonnn>
     </SafeAreaView>
 
 
@@ -202,9 +150,9 @@ const MyTextInput=({ ...props}) =>{
   return(
       <View>
           
-            <StyledTextInput {...props}/>
+            <StyledTextInputt {...props}/>
       </View>
   )
 
 }
-export default ConfirmEmail;
+export default ForgotPassword;

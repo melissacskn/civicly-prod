@@ -8,6 +8,7 @@ import styled from 'styled-components';
 
 import { confirmSignUp } from 'aws-amplify/auth';
 import {resendSignUp} from 'aws-amplify/auth'
+import { ForgotPassword } from "aws-amplify/auth";
 
 
 
@@ -27,54 +28,33 @@ import{
     StyledTextInput,StyledInputLabel,StyledTextInput2
 } from '../components/styles2';
 import Login from "./Login";
-import { ForgotPassword } from "aws-amplify-react-native";
 
 
 //Colors
 const{darkLight,primary,green,secondary,tertiary}= Colors;
 
-const ConfirmEmail = ({route,navigation})=>{
+const NewPasswordScreen = ({navigation})=>{
+
+    const [code,setCode]=useState('');
+    const [password,setPassword]=useState('');
+    const [email,setEmail]=useState('')
 
 
-  const [code, setCode] = useState('');
-  
- const {email}=route.params
-   
-
-  async function handleSignUpConfirmation({ username, confirmationCode }) {
-    try {
-      const response= await confirmSignUp({
-        username,
-        confirmationCode
-        
-      });
-      console.log(response)
+    async function ForgotPasswordd({ username,code, password }) {
+        try {
+          const user =  await ForgotPassword(username,code,password)
       
-    } catch (error) {
-      console.log('error confirming sign up', error);
-    }
-  }
-  const handlesignupconfirmation = () => {
-    handleSignUpConfirmation({ username:email,confirmationCode:code});
-  };
-
-  ////////
-  async function handleResendCode({ username}) {
-    try {
-      const response= await Auth.resendSignUp(username);
-      console.log(response)
-      Alert.alert("code is resent to your mail")
-      
-    } catch (error) {
-      console.log('error confirming sign up', error);
-      Alert.alert("oops",error.message)
-    }
-  }
-  const handleresendcode = () => {
-    handleResendCode({ username:email});
-  };
-
-
+        } catch (error) {
+          Alert.alert('Oops', error.message)
+          //console.error('Error signing in:', error);
+          // Handle errors like incorrect username/password, user not confirmed, etc.
+        }
+      }
+    
+    const forgo= () => {
+        ForgotPasswordd({ username: email,code, password });
+      };
+    
 
     return(
         <>
@@ -87,42 +67,55 @@ const ConfirmEmail = ({route,navigation})=>{
                 <PageLogoo resizeMode="cover" source={require('./../assets/images/civicly-remove.png')}/>
     <SafeAreaView>
     <MyTextInput
+                            
+                            
+                            placeholder="email"
+                            placeholderTextColor={darkLight}
+                            onChangeText={setEmail}
+                            
+                            value={email}
                            
-                           
-                      
-                        
-                          value={email}
-                          
-                           />
-      
-                            <MyTextInput 
-                           
-                           
-                            placeholder="Enter your confirmation code"
+                            />
+    <MyTextInput
+                            
+                            
+                            placeholder="code"
                             placeholderTextColor={darkLight}
                             onChangeText={setCode}
                             
                             value={code}
                            
                             />
-                        <StyledButtonn onPress= {()=>{
-                          handlesignupconfirmation()
+       
+                             <MyTextInput
                             
-                        navigation.navigate("Login")}}>
-                                <ButtonText>
-                                    Confirm
-                                </ButtonText>
-                            </StyledButtonn>
-
-                            <StyledButtonnn  onPress= {()=>{
-                              
                             
-                            }} 
-                           >
-                                    <ButtonText>
-                                        Resend code
-                                    </ButtonText>
-                                </StyledButtonnn>
+                             placeholder="Enter your Password"
+                             placeholderTextColor={darkLight}
+                             onChangeText={setPassword}
+                             
+                             value={password}
+                            
+                             />
+                         <StyledButtonn onPress= {()=>{
+                          
+                          forgo
+                          }}>
+                                 <ButtonText>
+                                     Submit
+                                 </ButtonText>
+                             </StyledButtonn>
+ 
+                             <StyledButtonnn  onPress= {()=>{
+                                navigation.navigate("Login")
+                               
+                             
+                             }} 
+                            >
+                                     <ButtonText>
+                                         Back to Sign in
+                                     </ButtonText>
+                                 </StyledButtonnn>
     </SafeAreaView>
 
 
@@ -197,14 +190,13 @@ height: 50px;
 
 
 `;
-  
 const MyTextInput=({ ...props}) =>{
-  return(
-      <View>
-          
-            <StyledTextInput {...props}/>
-      </View>
-  )
-
-}
-export default ConfirmEmail;
+    return(
+        <View>
+            
+              <StyledTextInput {...props}/>
+        </View>
+    )
+  
+  }
+export default NewPasswordScreen;

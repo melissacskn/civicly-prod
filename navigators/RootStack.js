@@ -5,6 +5,8 @@ import Login from './../screens/Login';
 import Signup from './../screens/Signup';
 import Welcome from './../screens/Welcome';
 import ConfirmEmail from '../screens/ConfirmEmail';
+import ForgotPassword from '../screens/ForgotPassword';
+import NewPasswordScreen from '../screens/NewPasswordScreen';
 
 import  {Colors} from './../components/styles';
 const{primary,tertiary}=Colors
@@ -44,6 +46,8 @@ return(
             <Stack.Screen name='Signup' component={Signup}/>
             <Stack.Screen options={{headerTintColor: primary}} name='Welcome' component={Welcome}/>
             <Stack.Screen name='ConfirmEmail' component={ConfirmEmail}/>
+            <Stack.Screen name='ForgotPassword' component={ForgotPassword}/>
+            <Stack.Screen name='NewPasswordScreen' component={NewPasswordScreen}/>
             
         </Stack.Navigator>
     </NavigationContainer>
