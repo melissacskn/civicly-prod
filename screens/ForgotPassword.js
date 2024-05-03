@@ -52,8 +52,7 @@ const ForgotPassword = ({navigation})=>{
   
        
                              <MyTextInput
-                            
-                            
+                
                              placeholder="email"
                              placeholderTextColor={darkLight}
                              onChangeText={SetEmail}

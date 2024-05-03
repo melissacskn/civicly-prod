@@ -27,7 +27,8 @@ import{
     StyledTextInput,StyledInputLabel,StyledTextInput2
 } from '../components/styles2';
 import Login from "./Login";
-import { ForgotPassword } from "aws-amplify-react-native";
+
+import { resendSignUpCode } from 'aws-amplify/auth';
 
 
 //Colors
@@ -58,23 +59,19 @@ const ConfirmEmail = ({route,navigation})=>{
     handleSignUpConfirmation({ username:email,confirmationCode:code});
   };
 
-  ////////
-  async function handleResendCode({ username}) {
-    try {
-      const response= await Auth.resendSignUp(username);
-      console.log(response)
-      Alert.alert("code is resent to your mail")
-      
-    } catch (error) {
-      console.log('error confirming sign up', error);
-      Alert.alert("oops",error.message)
-    }
+  const handleResendCode = async ({ username }) => {
+    try{
+    await resendSignUpCode({ username });
+    Alert.alert("Success",'Code is resent to your email')
   }
+  catch(e){
+    Alert.alert('Oops',e.message)
+  }
+  }
+
   const handleresendcode = () => {
     handleResendCode({ username:email});
   };
-
-
 
     return(
         <>
@@ -115,6 +112,8 @@ const ConfirmEmail = ({route,navigation})=>{
                             </StyledButtonn>
 
                             <StyledButtonnn  onPress= {()=>{
+                              handleresendcode()
+                              
                               
                             
                             }} 
