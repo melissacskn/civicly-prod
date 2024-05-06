@@ -9,6 +9,8 @@ import styled from 'styled-components';
 import { confirmSignUp } from 'aws-amplify/auth';
 import {resendSignUp} from 'aws-amplify/auth'
 
+import { resetPassword } from 'aws-amplify/auth';
+
 
 
 import{
@@ -32,11 +34,27 @@ import Login from "./Login";
 //Colors
 const{darkLight,primary,green,secondary,tertiary}= Colors;
 
-const ForgotPassword = ({navigation})=>{
+const ForgotPassword = ({navigation,route})=>{
+  const [email, setEmail] = useState('');
 
-    const [email,SetEmail]=useState('');
 
- 
+  async function handleForgotPassword({username}) {
+    try {
+        await resetPassword({
+        username,})
+      
+    
+        Alert.alert("Success",'Code is resent to your email')}
+      
+     catch (error) {
+     
+      Alert.alert('Oops', error.message)
+    
+    }
+  }
+  const handleforgotpassword = () => {
+    handleForgotPassword({ username:email});
+  };
 
     return(
         <>
@@ -48,28 +66,31 @@ const ForgotPassword = ({navigation})=>{
             <InnerContainer>
                 <PageLogoo resizeMode="cover" source={require('./../assets/images/civicly-remove.png')}/>
     <SafeAreaView>
-    
+    <MyTextInput
+                            
+                            
+                            placeholder="email"
+                            placeholderTextColor={darkLight}
+                            onChangeText={setEmail}
+                            
+                            value={email}
+                           
+                            />
   
        
-                             <MyTextInput
-                
-                             placeholder="email"
-                             placeholderTextColor={darkLight}
-                             onChangeText={SetEmail}
-                             
-                             value={email}
-                            
-                             />
                          <StyledButtonn onPress= {()=>{
+                          handleforgotpassword()
+                          navigation.navigate("NewPasswordScreen",{email})
                           
-                             
-                         navigation.navigate("NewPasswordScreen")}}>
+                         
+                          }}>
                                  <ButtonText>
                                      Send
                                  </ButtonText>
                              </StyledButtonn>
  
-                           
+                            
+                                     
     </SafeAreaView>
 
 
@@ -92,20 +113,8 @@ const styles =StyleSheet.create({
     }
 
   });
-  export const StyledTextInputt= styled.TextInput`
-  background-color: ${secondary};
-  padding: 20px;
-  padding-left: 150px;
-  padding-right: 100px;
-  border-radius: 5px;
-  font-size: 16px;
-  height: 30px;
-  margin-vertical: 30px;
-  margin-bottom: 15px;
-  color: ${tertiary};
+
   
-  
-  `;
   export const PageLogoo= styled.Image`
 
 width: 200px;
@@ -144,14 +153,13 @@ height: 50px;
 
 
 `;
-  
 const MyTextInput=({ ...props}) =>{
-  return(
-      <View>
-          
-            <StyledTextInputt {...props}/>
-      </View>
-  )
-
-}
+    return(
+        <View>
+            
+              <StyledTextInput {...props}/>
+        </View>
+    )
+  
+  }
 export default ForgotPassword;

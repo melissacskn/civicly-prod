@@ -8,6 +8,7 @@ import Login from './screens/Login';
 import Signup from './screens/Signup';
 import Welcome from './screens/Welcome';
 import ConfirmEmail from './screens/ConfirmEmail';
+import ForgotPassword from './screens/ForgotPassword';
 
 
 // React navigation stack

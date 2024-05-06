@@ -10,6 +10,7 @@ import { confirmSignUp } from 'aws-amplify/auth';
 import {resendSignUp} from 'aws-amplify/auth'
 import { ForgotPassword } from "aws-amplify/auth";
 
+import { confirmResetPassword } from 'aws-amplify/auth';
 
 
 import{
@@ -28,33 +29,38 @@ import{
     StyledTextInput,StyledInputLabel,StyledTextInput2
 } from '../components/styles2';
 import Login from "./Login";
+import { Formik } from "formik";
 
 
 //Colors
 const{darkLight,primary,green,secondary,tertiary}= Colors;
 
-const NewPasswordScreen = ({navigation})=>{
+const NewPasswordScreen = ({route,navigation})=>{
 
     const [code,setCode]=useState('');
-    const [password,setPassword]=useState('');
-    const [email,setEmail]=useState('')
+    const [newPassword,setNewPassword]=useState('');
+    const {email}=route.params
 
-
-    async function ForgotPasswordd({ username,code, password }) {
-        try {
-          const user =  await ForgotPassword(username,code,password)
+    async function handleNewPassword({username}) {
+      try {
+          await confirmResetPassword({
+          username,code,password})
+        
       
-        } catch (error) {
-          Alert.alert('Oops', error.message)
-          //console.error('Error signing in:', error);
-          // Handle errors like incorrect username/password, user not confirmed, etc.
-        }
+          Alert.alert("Success",'Your new password is set')}
+        
+       catch (error) {
+       
+        Alert.alert('Oops', error.message)
+      
       }
+    }
+    const handlenewpassword = () => {
+      handleNewPassword({ username:email,code:code,password:newPassword});
+    };
+  
     
-    const forgo= () => {
-        ForgotPasswordd({ username: email,code, password });
-      };
-    
+      
 
     return(
         <>
@@ -65,17 +71,18 @@ const NewPasswordScreen = ({navigation})=>{
             
             <InnerContainer>
                 <PageLogoo resizeMode="cover" source={require('./../assets/images/civicly-remove.png')}/>
-    <SafeAreaView>
+                <Formik>
+  
+      <SafeAreaView>
+     
     <MyTextInput
                             
-                            
-                            placeholder="email"
-                            placeholderTextColor={darkLight}
-                            onChangeText={setEmail}
+ 
                             
                             value={email}
                            
                             />
+                            
     <MyTextInput
                             
                             
@@ -88,18 +95,27 @@ const NewPasswordScreen = ({navigation})=>{
                             />
        
                              <MyTextInput
+                              
+                             
+                               
+                              
+                            
+                               
+                            
+                             ///
                             
                             
                              placeholder="Enter your Password"
                              placeholderTextColor={darkLight}
-                             onChangeText={setPassword}
+                             onChangeText={setNewPassword}
                              
-                             value={password}
+                             value={newPassword}
                             
                              />
                          <StyledButtonn onPress= {()=>{
                           
-                          forgo
+                          handlenewpassword
+                          navigation.navigate("Welcome",{email})
                           }}>
                                  <ButtonText>
                                      Submit
@@ -116,9 +132,12 @@ const NewPasswordScreen = ({navigation})=>{
                                          Back to Sign in
                                      </ButtonText>
                                  </StyledButtonnn>
-    </SafeAreaView>
 
-
+                               </SafeAreaView>
+                               
+       
+                            
+             </Formik>               
           </InnerContainer>
             </ImageBackground>
             
@@ -158,8 +177,6 @@ width: 200px;
 height: 55px;
 margin-top:55px;
 left:9px;
-
-
 
 
 `;

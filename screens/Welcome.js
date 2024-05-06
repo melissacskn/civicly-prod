@@ -47,8 +47,9 @@ async function currentAuthenticatedUser() {
 
 
 const Welcome = ({route,navigation})=>{
-    const [text, setText] = useState('');
+    
     const { email} = route.params;
+
     return(
         <>
         <ImageBackground source={require('./../assets/Pulse-mobile.png')} resizeMode='cover' style={styles.container} imageStyle= {styles.image}>
