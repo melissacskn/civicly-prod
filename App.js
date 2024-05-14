@@ -3,12 +3,16 @@ import React from 'react';
 import { ImageBackground,StyleSheet,View } from "react-native";
 
 
+
+
+
 // screens
 import Login from './screens/Login';
 import Signup from './screens/Signup';
 import Welcome from './screens/Welcome';
 import ConfirmEmail from './screens/ConfirmEmail';
 import ForgotPassword from './screens/ForgotPassword';
+import { LogInContext } from './navigators/RootStack';
 
 
 // React navigation stack
@@ -23,8 +27,13 @@ import {
 const App=()=> {
  // signOut()
   return (
+    
 
-    <RootStack></RootStack>
+<RootStack />
+      
+
+        
+
     
   )
     

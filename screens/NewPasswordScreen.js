@@ -95,15 +95,6 @@ const NewPasswordScreen = ({route,navigation})=>{
                             />
        
                              <MyTextInput
-                              
-                             
-                               
-                              
-                            
-                               
-                            
-                             ///
-                            
                             
                              placeholder="Enter your Password"
                              placeholderTextColor={darkLight}

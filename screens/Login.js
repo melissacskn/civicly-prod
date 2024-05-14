@@ -1,4 +1,5 @@
-import React, {useState} from "react";
+
+import React, {useState,useContext} from "react";
 import { StatusBar,Alert } from "react-native";
 
 // formik
@@ -12,8 +13,13 @@ import { ImageBackground,Text,StyleSheet } from "react-native";
 
 import { getCurrentUser } from 'aws-amplify/auth';
 import { signIn, signOut,} from 'aws-amplify/auth';
+import { fetchAuthSession } from 'aws-amplify/auth';
+
+import { useNavigation } from '@react-navigation/native';
 
 import { useRoute } from '@react-navigation/native';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import{
     StyledContainer,
@@ -44,17 +50,22 @@ import {
     useAuthenticator
   } from '@aws-amplify/ui-react-native';
 import Welcome from "./Welcome";
+import { LogInContext } from "../navigators/RootStack";
 
 //Colors
 const{brand,darkLight,primary,green}= Colors;
 
 
 
-const Login= ({navigation})=>{
+const Login= ()=>{
+
+  const setIsUser =useContext(LogInContext)
+  
+  signOut()
     const [hidePassword,setHidePassword]= useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
+    const navigation=useNavigation()
 /*
     async function mysignIn({ username, password }) {
     
@@ -87,12 +98,15 @@ const Login= ({navigation})=>{
     }
 
   */
+ 
   
     async function sign({ username, password }) {
       try {
+        
         const user =  await signIn({ username, password });
         console.log('Successfully signed in:', user);
-        // You can now route the user to the appropriate screen or perform additional checks
+      
+        
       } catch (error) {
         Alert.alert('Oops', error.message)
         //console.error('Error signing in:', error);
@@ -101,7 +115,15 @@ const Login= ({navigation})=>{
     }
   
   const handleLogin = () => {
+      setIsUser(true)
+      
       sign({ username: email, password });
+      console.log("navigating to welcome")
+     
+   setTimeout(()=>navigation.navigate("Welcome",{email}),10)
+      
+      
+
     };
   
     return(
@@ -157,10 +179,15 @@ const Login= ({navigation})=>{
                              <StyledButton onPress={()=>{
                             
                             handleLogin()
-                            navigation.navigate("Welcome",{email})
+                            // Assuming you are navigating from a component that is not part of InnerStack
+                          
+
+                            
+
+                            
                           
                             
-                            
+
                              }}
                              
                           >   

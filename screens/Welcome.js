@@ -1,10 +1,13 @@
-import React,{useState} from "react";
+import React,{useState,useContext} from "react";
 import { Alert, StatusBar, TextInput, TouchableWithoutFeedbackBase, View } from "react-native";
 import { ImageBackground ,StyleSheet,Text} from "react-native";
 
 import { signIn, signOut,} from 'aws-amplify/auth';
-import { getCurrentUser } from 'aws-amplify/auth';
+import { getCurrentUser,fetchAuthSession } from 'aws-amplify/auth';
+import { useNavigation } from '@react-navigation/native';
+import { Auth } from 'aws-amplify';
 
+import { LogInContext } from "../navigators/RootStack";
 
 import{
     StyledContainer,
@@ -21,6 +24,7 @@ import{
     Colors,
     TextLinkContent
 } from '../components/styles3';
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 //Colors
 const{darkLight,primary,green}= Colors;
@@ -30,11 +34,10 @@ async function currentAuthenticatedUser() {
     try {
       const { username, userId, signInDetails,} = await getCurrentUser();
       
-      console.log(`The username: ${username}`);
-      console.log(`The userId: ${userId}`);
-      console.log(`The signInDetails: ${signInDetails}`);
-
-      
+      console.log("username", username);
+      console.log("user id", userId);
+      console.log("sign-in details", signInDetails);
+    
     } catch (err) {
       console.log(err);
     }
@@ -43,15 +46,34 @@ async function currentAuthenticatedUser() {
   const getuser=()=>{
     currentAuthenticatedUser()
   }
+  
 
 
+const Welcome = ({route})=>{
+  const setIsUser =useContext(LogInContext)
+  signOut()
+ const navigation=useNavigation()
 
-const Welcome = ({route,navigation})=>{
+  const handleLogout= async () => {
+    try {
+      await signOut();
+      //navigation.navigate("Login"); // Ensure this only runs if login is successful
+     
     
-    const { email} = route.params;
+
+    } catch (error) {
+      Alert.alert('Oops', error.message)
+    }
+  };
+    
+ 
+  // getuser()
+   const email = route.params 
 
     return(
+
         <>
+         
         <ImageBackground source={require('./../assets/Pulse-mobile.png')} resizeMode='cover' style={styles.container} imageStyle= {styles.image}>
             <StatusBar backgroundColor='transparent'
             translucent={true}
@@ -70,8 +92,12 @@ const Welcome = ({route,navigation})=>{
                
                         
                            <StyledButton onPress= {()=>{
-                            signOut()
-                        navigation.navigate("Login")}}>
+                            handleLogout()
+                            setIsUser(false)
+                            setTimeout(()=>navigation.navigate('Login'))
+                          }}
+                            >
+                        
                                 <ButtonText>
                                     Logout
                                 </ButtonText>
@@ -101,6 +127,6 @@ const styles =StyleSheet.create({
 
 
 
-  
+
 
 export default Welcome;
