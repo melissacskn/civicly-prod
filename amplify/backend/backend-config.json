@@ -1,30 +1,45 @@
 {
   "auth": {
-    "myaws36fe448c": {
+    "myaws83c82baf": {
       "customAuth": false,
       "dependsOn": [],
-      "frontendAuthConfig": {
-        "mfaConfiguration": "OFF",
-        "mfaTypes": [
-          "SMS"
-        ],
-        "passwordProtectionSettings": {
-          "passwordPolicyCharacters": [],
-          "passwordPolicyMinLength": 8
-        },
-        "signupAttributes": [
-          "EMAIL"
-        ],
-        "socialProviders": [],
-        "usernameAttributes": [
-          "EMAIL"
-        ],
-        "verificationMechanisms": [
-          "EMAIL"
-        ]
-      },
       "providerPlugin": "awscloudformation",
-      "service": "Cognito"
+      "service": "Cognito",
+      "serviceType": "imported"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_auth_myaws83c82baf_nativeClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "myaws83c82baf"
+        }
+      ]
+    },
+    "AMPLIFY_auth_myaws83c82baf_userPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "myaws83c82baf"
+        }
+      ]
+    },
+    "AMPLIFY_auth_myaws83c82baf_userPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "myaws83c82baf"
+        }
+      ]
+    },
+    "AMPLIFY_auth_myaws83c82baf_webClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "myaws83c82baf"
+        }
+      ]
     }
   }
 }

@@ -13,7 +13,12 @@
     },
     "categories": {
       "auth": {
-        "myaws36fe448c": {}
+        "myaws83c82baf": {
+          "userPoolId": "eu-west-2_ywi5LCijq",
+          "userPoolName": "platform-dev",
+          "webClientId": "1vsiuathnqd1v4v3jp1vsoivhl",
+          "nativeClientId": "1vsiuathnqd1v4v3jp1vsoivhl"
+        }
       }
     }
   }
