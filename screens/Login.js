@@ -105,23 +105,28 @@ const Login= ()=>{
         
         const user =  await signIn({ username, password });
         console.log('Successfully signed in:', user);
+        setIsUser(true)
+        console.log("navigating to welcome")
+        setTimeout(()=>navigation.navigate("Welcome",email),10)
       
         
       } catch (error) {
         Alert.alert('Oops', error.message)
-        //console.error('Error signing in:', error);
+        //console.log('Error signing in:', error);
+        setIsUser(false)
         // Handle errors like incorrect username/password, user not confirmed, etc.
-      }
+      //   if (error === 'NotAuthorizedException') {
+      //     console.error('Incorrect username or password.');
+      //     setIsUser(false)
+      // }
+
     }
-  
+    }
   const handleLogin = () => {
-      setIsUser(true)
+      
       
       sign({ username: email, password });
-      console.log("navigating to welcome")
-     
-   setTimeout(()=>navigation.navigate("Welcome",{email}),10)
-      
+
       
 
     };
