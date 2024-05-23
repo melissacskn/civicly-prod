@@ -50,6 +50,7 @@ import {
     useAuthenticator
   } from '@aws-amplify/ui-react-native';
 import Welcome from "./Welcome";
+import AssetsPage from "./AssetsPage";
 import { LogInContext } from "../navigators/RootStack";
 
 //Colors
@@ -107,7 +108,9 @@ const Login= ()=>{
         console.log('Successfully signed in:', user);
         setIsUser(true)
         console.log("navigating to welcome")
-        setTimeout(()=>navigation.navigate("Welcome",email),10)
+       // setTimeout(()=>navigation.navigate("Welcome",email),10)
+       setTimeout(()=>navigation.navigate("AssetsPage",email),10)
+      
       
         
       } catch (error) {

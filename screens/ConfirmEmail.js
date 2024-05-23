@@ -40,16 +40,36 @@ const ConfirmEmail = ({route,navigation})=>{
   const [code, setCode] = useState('');
   
  const {email}=route.params
+ const myHeaders = new Headers();
+ myHeaders.append("Content-Type", "application/json");
    
 
   async function handleSignUpConfirmation({ username, confirmationCode }) {
     try {
-      const response= await confirmSignUp({
-        username,
-        confirmationCode
+      // const response= await confirmSignUp({
+      //   username,
+      //   confirmationCode
         
-      });
-      console.log(response)
+      // });
+      // console.log(response)
+      const raw = JSON.stringify({
+        "email": email,
+        "confirmation_code": confirmationCode
+    });
+    console.log("melissa raw" , raw)
+
+    const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow"
+    };
+
+
+    const responsee = await fetch('https://api.dev.nonprod.civic.ly/core/user/confirm/', requestOptions);
+    const responseData = await responsee.json();
+    console.log(responseData);
+    navigation.navigate("Login")
       
     } catch (error) {
       console.log('error confirming sign up', error);

@@ -8,6 +8,7 @@ import ConfirmEmail from '../screens/ConfirmEmail';
 import ForgotPassword from '../screens/ForgotPassword';
 import NewPasswordScreen from '../screens/NewPasswordScreen';
 import InnerStack from './InnerStack';
+import AssetsPage from '../screens/AssetsPage';
 import { Auth } from 'aws-amplify';
 
 import  {Colors} from './../components/styles';
@@ -147,7 +148,11 @@ const RootStack=()=>{
                         />
                     
                 </> }
-                {isUser && <Stack.Screen name="Welcome" component={Welcome} />}
+                {isUser &&
+                <> 
+                <Stack.Screen name="Welcome" component={Welcome} />
+                {/* <Stack.Screen name="AssetsPage" component={AssetsPage}/> */}
+                </>}
             
 
                
