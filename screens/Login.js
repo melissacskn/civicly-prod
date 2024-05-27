@@ -13,6 +13,8 @@ import { ImageBackground,Text,StyleSheet } from "react-native";
 
 import { getCurrentUser } from 'aws-amplify/auth';
 import { signIn, signOut,} from 'aws-amplify/auth';
+import {Auth} from "aws-amplify"
+
 import { fetchAuthSession } from 'aws-amplify/auth';
 
 import { useNavigation } from '@react-navigation/native';
@@ -50,7 +52,7 @@ import {
     useAuthenticator
   } from '@aws-amplify/ui-react-native';
 import Welcome from "./Welcome";
-import AssetsPage from "./AssetsPage";
+
 import { LogInContext } from "../navigators/RootStack";
 
 //Colors
@@ -67,49 +69,52 @@ const Login= ()=>{
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigation=useNavigation()
-/*
-    async function mysignIn({ username, password }) {
-    
-      try {
-        const { isSignedIn, nextStep } = await signIn({ username, password });
-      } catch (error) {
-        console.log('error signing in', error);
-      }
-    }
-    const handleLog=()=>{
-      mysignIn({ username: email, password })
 
-    }
-  */
-  /*
-    async function currentAuthenticatedUser() {
-      try {
-        const { username, userId, signInDetails,} = await getCurrentUser();
-        const userr= await getCurrentUser();
-        console.log(`The username: ${username}`);
-        console.log(`The userId: ${userId}`);
-        console.log(`The signInDetails: ${signInDetails}`);
-      } catch (err) {
-        console.log(err);
-      }
-    }
+    // const fetchAuthData = async () => {
+    //   try {
+    //     // Fetch current authenticated user
+    //     const currentUser = await getCurrentUser();
+    //     console.log("Current User:", currentUser);
+  
+    //     // Fetch current session
+      
 
-    const getuser=()=>{
-      currentAuthenticatedUser()
-    }
-
-  */
+    //     const session = await fetchAuthSession({forceRefresh: true });
+    //     const idToken= session.tokens.idToken.toString()
+    //     const accessToken =session.tokens.accessToken.toString()
+    //     console.log("id token", idToken)
+    //     console.log("access token", accessToken)
+    //   } catch (error) {
+    //     console.error('Error fetching auth session', error);
+    //   }
+      
+    // };
  
   
     async function sign({ username, password }) {
       try {
         
         const user =  await signIn({ username, password });
+         console.log(user.signInUser)
+       
         console.log('Successfully signed in:', user);
         setIsUser(true)
         console.log("navigating to welcome")
-       // setTimeout(()=>navigation.navigate("Welcome",email),10)
-       setTimeout(()=>navigation.navigate("AssetsPage",email),10)
+       // fetchAuthData()
+
+       const currentUser = await getCurrentUser();
+       console.log("Current User:", currentUser);
+ 
+       
+       // Fetch current session
+
+       const session = await fetchAuthSession({forceRefresh: true });
+       const idToken= session.tokens.idToken.toString()
+       const accessToken =session.tokens.accessToken.toString()
+       console.log("id token", idToken)
+       console.log("access token", accessToken)
+       setTimeout(()=>navigation.navigate("Welcome",{email,accessToken}),10)
+       
       
       
         
@@ -187,14 +192,7 @@ const Login= ()=>{
                              <StyledButton onPress={()=>{
                             
                             handleLogin()
-                            // Assuming you are navigating from a component that is not part of InnerStack
-                          
-
-                            
-
-                            
-                          
-                            
+                            // Assuming you are navigating from a component that is not part of InnerSta
 
                              }}
                              

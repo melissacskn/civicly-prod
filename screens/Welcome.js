@@ -30,29 +30,18 @@ import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 const{darkLight,primary,green}= Colors;
 
  
-async function currentAuthenticatedUser() {
-    try {
-      const { username, userId, signInDetails,} = await getCurrentUser();
-      
-      console.log("username", username);
-      console.log("user id", userId);
-      console.log("sign-in details", signInDetails);
-    
-    } catch (err) {
-      console.log(err);
-    }
-  }
 
-  const getuser=()=>{
-    currentAuthenticatedUser()
-  }
   
+
 
 
 const Welcome = ({route})=>{
   const setIsUser =useContext(LogInContext)
   signOut()
- const navigation=useNavigation()
+  const navigation=useNavigation()
+
+
+  
 
   const handleLogout= async () => {
     try {
@@ -65,13 +54,16 @@ const Welcome = ({route})=>{
       Alert.alert('Oops', error.message)
     }
   };
-    
+
+
+
+  //  const email = route.params 
+  //  const accessToken= route.params
+   const { email, accessToken } = route.params;
+     console.log("accces token: ",accessToken)
  
-  // getuser()
-   const email = route.params 
-
     return(
-
+     
         <>
          
         <ImageBackground source={require('./../assets/Pulse-mobile.png')} resizeMode='cover' style={styles.container} imageStyle= {styles.image}>
