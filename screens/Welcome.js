@@ -41,6 +41,9 @@ const Welcome = ({route})=>{
   const navigation=useNavigation()
 
 
+
+////////////////////////
+
   
 
   const handleLogout= async () => {
@@ -57,11 +60,15 @@ const Welcome = ({route})=>{
 
 
 
-  //  const email = route.params 
-  //  const accessToken= route.params
-   const { email, accessToken } = route.params;
-     console.log("accces token: ",accessToken)
+
+  const {email,accessToken,tenantname}=route.params
+  console.log("accces token: ",accessToken)
+  console.log("tenant name",tenantname)
+  
+
+  
  
+   
     return(
      
         <>
@@ -79,7 +86,9 @@ const Welcome = ({route})=>{
                     <StyledFormArea>
                 <PageTitle welcome={true}>Welcome</PageTitle>
                 <SubTitle welcome={true}>{JSON.stringify(email)}</SubTitle>
+                <SubTitle welcome={true}>Your tenant name is: {JSON.stringify(tenantname)}</SubTitle>
                 <SubTitle welcome={true}></SubTitle>
+             
                
                
                         

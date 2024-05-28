@@ -69,6 +69,7 @@ const Login= ()=>{
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigation=useNavigation()
+    const [data, setData] = useState(null);
 
     // const fetchAuthData = async () => {
     //   try {
@@ -95,28 +96,55 @@ const Login= ()=>{
       try {
         
         const user =  await signIn({ username, password });
-         console.log(user.signInUser)
+        //console.log(user.signInUser)
        
         console.log('Successfully signed in:', user);
         setIsUser(true)
         console.log("navigating to welcome")
-       // fetchAuthData()
+       
 
        const currentUser = await getCurrentUser();
        console.log("Current User:", currentUser);
  
-       
+
        // Fetch current session
 
        const session = await fetchAuthSession({forceRefresh: true });
-       const idToken= session.tokens.idToken.toString()
+       //const idToken= session.tokens.idToken.toString()
        const accessToken =session.tokens.accessToken.toString()
-       console.log("id token", idToken)
-       console.log("access token", accessToken)
-       setTimeout(()=>navigation.navigate("Welcome",{email,accessToken}),10)
+    //    console.log("id token", idToken)
+    //   console.log("access token", accessToken)
+      // setTimeout(()=>navigation.navigate("Welcome",({email,accessToken,tenantname}),10))
+      
+       //console.log(`Access Token: ${accessToken}`);
+
+
+       const myHeaders = new Headers();
+       myHeaders.append("Authorization", `Bearer ${accessToken}`);
+    const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow"
+};
        
+//   fetch("https://api.dev.nonprod.civic.ly/core/user/tenant", requestOptions)
+//   .then((response) => response.text())
+//   .then((result) => console.log(result))
+//   .catch((error) => console.error(error));
+const response = await fetch("https://api.dev.nonprod.civic.ly/core/user/tenant", {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${accessToken}`
+    }
+  });
+  const json = await response.json();
+  console.log("Response JSON:", json);
+  const tenantid = json.results[0].id
+  const tenantname=json.results[0].name
+//   console.log(tenantid)
+//   console.log(tenantname)
       
-      
+setTimeout(()=>navigation.navigate("Welcome",({email,accessToken,tenantname}),10))
         
       } catch (error) {
         Alert.alert('Oops', error.message)
@@ -129,7 +157,9 @@ const Login= ()=>{
       // }
 
     }
+    
     }
+   
   const handleLogin = () => {
       
       
