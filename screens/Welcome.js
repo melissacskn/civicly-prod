@@ -1,133 +1,154 @@
-import React,{useState,useContext} from "react";
-import { Alert, StatusBar, TextInput, TouchableWithoutFeedbackBase, View } from "react-native";
-import { ImageBackground ,StyleSheet,Text} from "react-native";
-
-import { signIn, signOut,} from 'aws-amplify/auth';
-import { getCurrentUser,fetchAuthSession } from 'aws-amplify/auth';
+import React, { useContext, useEffect,useState } from "react";
+import { Alert, StatusBar, ImageBackground, StyleSheet } from "react-native";
 import { useNavigation } from '@react-navigation/native';
-import { Auth } from 'aws-amplify';
-
+import { signOut, getCurrentUser, fetchAuthSession } from 'aws-amplify/auth';
 import { LogInContext } from "../navigators/RootStack";
-
-import{
-    StyledContainer,
-    InnerContainer,
-    PageLogo,
-    PageTitle,
-    SubTitle,
-    StyledFormArea,
-  
-    StyledButton,
-    ButtonText,
-    BackgroundImage,
-    WelcomeContainer,
-    Colors,
-    TextLinkContent
+import {
+  StyledContainer,
+  InnerContainer,
+  PageLogo,
+  PageTitle,
+  SubTitle,
+  StyledFormArea,
+  StyledButton,
+  ButtonText,
+  WelcomeContainer,
+  Colors
 } from '../components/styles3';
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
-//Colors
-const{darkLight,primary,green}= Colors;
+// Colors
+const { darkLight, primary, green } = Colors;
 
- 
-
+const Welcome = ({ route }) => {
+  const setIsUser = useContext(LogInContext);
+  const navigation = useNavigation();
+  const email = route.params?.email;
   
 
-
-
-const Welcome = ({route})=>{
-  const setIsUser =useContext(LogInContext)
-  signOut()
-  const navigation=useNavigation()
-
-
-
-////////////////////////
-
-  
-
-  const handleLogout= async () => {
+  const handleLogout = async () => {
     try {
       await signOut();
-      //navigation.navigate("Login"); // Ensure this only runs if login is successful
-     
-    
-
+      setIsUser(false);
+      setTimeout(() => navigation.navigate('Login'), 500);
     } catch (error) {
-      Alert.alert('Oops', error.message)
+      Alert.alert('Oops', error.message);
     }
   };
 
+  const fetchAuthDataAndTenats = async () => {
+    try {
 
+      // Fetch current authenticated user
+      const currentUser = await getCurrentUser();
+     // console.log("Current User:", currentUser);
 
+      // Fetch current session
+      const session = await fetchAuthSession({ forceRefresh: true });
+      if (!session) {
+        throw new Error('Session is undefined');
+      }
 
-  const {email,accessToken,tenantname}=route.params
-  console.log("accces token: ",accessToken)
-  console.log("tenant name",tenantname)
-  
+      //console.log("Session:", session);
 
-  
- 
-   
-    return(
-     
-        <>
-         
-        <ImageBackground source={require('./../assets/Pulse-mobile.png')} resizeMode='cover' style={styles.container} imageStyle= {styles.image}>
-            <StatusBar backgroundColor='transparent'
-            translucent={true}
-            />
-            
-            <InnerContainer>
-                
-                <PageLogo resizeMode="cover" source={require('./../assets/images/civicly-remove.png')}/>
-                
-                <WelcomeContainer>
-                    <StyledFormArea>
-                <PageTitle welcome={true}>Welcome</PageTitle>
-                <SubTitle welcome={true}>{JSON.stringify(email)}</SubTitle>
-                <SubTitle welcome={true}>Your tenant name is: {JSON.stringify(tenantname)}</SubTitle>
-                <SubTitle welcome={true}></SubTitle>
-             
-               
-               
-                        
-                           <StyledButton onPress= {()=>{
-                            handleLogout()
-                            setIsUser(false)
-                            setTimeout(()=>navigation.navigate('Login'))
-                          }}
-                            >
-                        
-                                <ButtonText>
-                                    Logout
-                                </ButtonText>
-                            </StyledButton>
-                            </StyledFormArea>
-                        
-                </WelcomeContainer>
-            </InnerContainer>
-            </ImageBackground>
-            
-        </>
-    );
+      if (!session.tokens) {
+        throw new Error('Session tokens are undefined');
+      }
+
+      //console.log("Session Tokens:", session.tokens);
+
+      const idToken = session.tokens.idToken.toString();
+      const accessToken = session.tokens.accessToken.toString();
+      console.log(`Access Token: ${accessToken}`);
+
+      if (!idToken) {
+        throw new Error('ID token is undefined');
+      }
+
+      if (!accessToken) {
+        throw new Error('Access token is undefined');
+      }
+
+  //   const response = await fetch("https://api.dev.nonprod.civic.ly/core/user/tenant", {
+  //   method: "GET",
+  //   headers: {
+  //     "Authorization": `Bearer ${accessToken}`
+  //   }
+  // });
+
+  // const json = await response.json();
+  // console.log("Response JSON:", json);
+  // const tenantid = json.results[0].id
+  // const tenantname=json.results[0].name
+
+  // console.log(tenantid)
+  // console.log(tenantname)
+  const myHeaders = new Headers();
+myHeaders.append("Authorization", `Bearer ${accessToken}`);
+const requestOptions = {
+  method: "GET",
+  headers: myHeaders,
+  redirect: "follow"
 };
-const styles =StyleSheet.create({
-    container: {
-      flex:1,
-      backgroundColor: 'black',
-      alignItems: 'center',
-      justifyContent: 'center'
-      
-    },
-    image: {
-      opacity: .7
+const response = await fetch("https://api.dev.nonprod.civic.ly/core/user/tenant",requestOptions)
+const json = await response.json();
+  console.log("Response JSON:", json);
+  const tenantid = json.results[0].id
+  const tenantname=json.results[0].name
+
+  console.log(tenantid)
+  console.log(tenantname)
+
+    } catch (error) {
+      Alert.alert('Oops', error.message)
+      console.error('Error fetching auth session', error);
     }
+   
+     
+  };
 
-  });
+ fetchAuthDataAndTenats()
 
 
+  return (
+    <>
+      <ImageBackground
+        source={require('./../assets/Pulse-mobile.png')}
+        resizeMode='cover'
+        style={styles.container}
+        imageStyle={styles.image}
+      >
+        <StatusBar backgroundColor='transparent' translucent={true} />
+        <InnerContainer>
+          <PageLogo
+            resizeMode="cover"
+            source={require('./../assets/images/civicly-remove.png')}
+          />
+          <WelcomeContainer>
+            <StyledFormArea>
+              <PageTitle welcome={true}>Welcome</PageTitle>
+              <SubTitle welcome={true}>{JSON.stringify(email)}</SubTitle>
+              <SubTitle welcome={true}></SubTitle>
+              <StyledButton onPress={handleLogout}>
+                <ButtonText>Logout</ButtonText>
+              </StyledButton>
+            </StyledFormArea>
+          </WelcomeContainer>
+        </InnerContainer>
+      </ImageBackground>
+    </>
+  );
+};
 
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'black',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  image: {
+    opacity: 0.7
+  }
+});
 
 export default Welcome;
