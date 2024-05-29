@@ -92,11 +92,17 @@ const requestOptions = {
 const response = await fetch("https://api.dev.nonprod.civic.ly/core/user/tenant",requestOptions)
 const json = await response.json();
   console.log("Response JSON:", json);
-  const tenantid = json.results[0].id
-  const tenantname=json.results[0].name
+  const tenantid1 = json.results[0].id
+  const tenantname1=json.results[0].name
+  const tenantid2 = json.results[1].id
+  const tenantname2=json.results[1].name
 
-  console.log(tenantid)
-  console.log(tenantname)
+
+  console.log(tenantid1)
+  console.log(tenantname1)
+  console.log(tenantid2)
+  console.log(tenantname2)
+
 
     } catch (error) {
       Alert.alert('Oops', error.message)
@@ -105,6 +111,45 @@ const json = await response.json();
    
      
   };
+  const createTenant =async ()=>{
+    try{
+      const session = await fetchAuthSession({ forceRefresh: true });
+      const accessToken = session.tokens.accessToken.toString();
+
+      const myHeaders = new Headers();
+
+      myHeaders.append("Authorization", `Bearer ${accessToken}`);
+      myHeaders.append("Content-Type", "application/json");
+
+const raw = JSON.stringify({
+  "subdomain": "hogwarts tenant",
+  "name": "Hogwarts tenant ",
+  "address": "Accra",
+  "longitude": "11.3232",
+  "latitude": "53.343"
+  
+});
+
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+const responsee =fetch("https://api.dev.nonprod.civic.ly/core/user/tenant/", requestOptions)
+
+
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+
+    }
+    catch(error){
+      Alert.alert('Oops', error.message)
+
+    }
+  }
 
  fetchAuthDataAndTenats()
 
@@ -130,6 +175,9 @@ const json = await response.json();
               <SubTitle welcome={true}></SubTitle>
               <StyledButton onPress={handleLogout}>
                 <ButtonText>Logout</ButtonText>
+              </StyledButton>
+              <StyledButton onPress={createTenant}>
+                <ButtonText>Create tenant</ButtonText>
               </StyledButton>
             </StyledFormArea>
           </WelcomeContainer>
