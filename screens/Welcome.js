@@ -23,7 +23,7 @@ const Welcome = ({ route }) => {
   const setIsUser = useContext(LogInContext);
   const navigation = useNavigation();
   const email = route.params?.email;
-  let sharedResponse
+
 
   
 
@@ -118,6 +118,7 @@ const count = json.count
   // console.log(tenantname1)
   // console.log(tenantid2)
   // console.log(tenantname2)
+  
   console.log(count)
   for(let i=0; i<count;i++){
     console.log("Tenant Id: ",json.results[i].id)
@@ -126,9 +127,66 @@ const count = json.count
 
 
   }
+    const tenantid1 = json.results[0].id
+  const tenantname1=json.results[0].name
+  const tenantid2 = json.results[1].id
+  const tenantname2=json.results[1].name
+  const tenantid3 = json.results[2].id
+
+ 
+
+//   const myHeaderss = new Headers();
+//   myHeaderss.append("Authorization", `Bearer ${x}`);
 
 
-    }
+// const formdata = new FormData();
+// formdata.append("name", "Trademark");
+// formdata.append("description", "\"\"");
+// formdata.append("asset_type_id", "002097e2-4f65-481a-adfd-7ab1d98a5573");
+// formdata.append("status", "ACTIVE");
+// formdata.append("location", "{\"latitude\": 52.67566641051758, \"longitude\": 1.2828212154745984, \"comment\":\"Local Test\"}");
+// formdata.append("condition", "FAIR");
+
+// const requestOptionss = {
+//   method: "POST",
+//   headers: myHeaderss,
+//   body: formdata,
+//   redirect: "follow"
+// };
+
+
+//   const responsee = await fetch(`https://api.dev.nonprod.civic.ly/assets/${tenantid3}/asset/`,requestOptionss)
+//   const jsonn = await responsee.json();
+//    console.log("Response JSON:", jsonn);
+  
+
+
+    
+    const myHeadersss = new Headers();
+    myHeadersss.append("Authorization", `Bearer ${x}`);
+   
+const requestOptionsss = {
+  method: "GET",
+  headers: myHeadersss,
+  redirect: "follow"
+};
+const responseee = await fetch(`https://api.dev.nonprod.civic.ly/assets/${tenantid3}/asset/`,requestOptionsss)
+const jsonnn = await responseee.json();
+ console.log("Response JSON:", jsonnn);
+ const count2 = jsonnn.count
+
+ for(let i=0; i<count2;i++){
+
+  console.log("Asset Name: ",jsonnn.results[i].name)
+
+
+
+}
+
+
+
+  }
+
    
      
   
@@ -177,7 +235,7 @@ const responsee =fetch("https://api.dev.nonprod.civic.ly/core/user/tenant/", req
  fetchAuthData()
 //  getTenants()
 
-
+ 
 
 
   return (
