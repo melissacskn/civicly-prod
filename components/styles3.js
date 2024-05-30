@@ -38,9 +38,9 @@ align-items: center;
 `;
 
 export const WelcomeContainer=styled(InnerContainer)`
-padding: 25px;
+padding: 20px;
 padding-top: 10px;
-justify-content: center;
+
 `;
 
 

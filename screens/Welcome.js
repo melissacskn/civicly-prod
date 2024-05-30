@@ -23,6 +23,8 @@ const Welcome = ({ route }) => {
   const setIsUser = useContext(LogInContext);
   const navigation = useNavigation();
   const email = route.params?.email;
+  let sharedResponse
+
   
 
   const handleLogout = async () => {
@@ -35,14 +37,14 @@ const Welcome = ({ route }) => {
     }
   };
 
-  const fetchAuthDataAndTenats = async () => {
+  const fetchAuthData = async () => {
     try {
 
       // Fetch current authenticated user
       const currentUser = await getCurrentUser();
      // console.log("Current User:", currentUser);
 
-      // Fetch current session
+      ////////////// Fetch current session////////////////////
       const session = await fetchAuthSession({ forceRefresh: true });
       if (!session) {
         throw new Error('Session is undefined');
@@ -58,6 +60,7 @@ const Welcome = ({ route }) => {
 
       const idToken = session.tokens.idToken.toString();
       const accessToken = session.tokens.accessToken.toString();
+     
       console.log(`Access Token: ${accessToken}`);
 
       if (!idToken) {
@@ -67,6 +70,7 @@ const Welcome = ({ route }) => {
       if (!accessToken) {
         throw new Error('Access token is undefined');
       }
+       
 
   //   const response = await fetch("https://api.dev.nonprod.civic.ly/core/user/tenant", {
   //   method: "GET",
@@ -82,8 +86,19 @@ const Welcome = ({ route }) => {
 
   // console.log(tenantid)
   // console.log(tenantname)
+  await getTenants(accessToken)
+
+    }
+  catch (error) {
+    Alert.alert('Oops', error.message)
+    console.error('Error fetching auth session', error);
+  }}
+
+
+  ///////////////Getting all the tenants//////////////////
+  const getTenants =async (x)=>{
   const myHeaders = new Headers();
-myHeaders.append("Authorization", `Bearer ${accessToken}`);
+myHeaders.append("Authorization", `Bearer ${x}`);
 const requestOptions = {
   method: "GET",
   headers: myHeaders,
@@ -91,26 +106,34 @@ const requestOptions = {
 };
 const response = await fetch("https://api.dev.nonprod.civic.ly/core/user/tenant",requestOptions)
 const json = await response.json();
+const count = json.count
   console.log("Response JSON:", json);
-  const tenantid1 = json.results[0].id
-  const tenantname1=json.results[0].name
-  const tenantid2 = json.results[1].id
-  const tenantname2=json.results[1].name
+  // const tenantid1 = json.results[0].id
+  // const tenantname1=json.results[0].name
+  // const tenantid2 = json.results[1].id
+  // const tenantname2=json.results[1].name
 
 
-  console.log(tenantid1)
-  console.log(tenantname1)
-  console.log(tenantid2)
-  console.log(tenantname2)
+  // console.log(tenantid1)
+  // console.log(tenantname1)
+  // console.log(tenantid2)
+  // console.log(tenantname2)
+  console.log(count)
+  for(let i=0; i<count;i++){
+    console.log("Tenant Id: ",json.results[i].id)
+    console.log("Tenant Name: ",json.results[i].name)
+  
 
 
-    } catch (error) {
-      Alert.alert('Oops', error.message)
-      console.error('Error fetching auth session', error);
+  }
+
+
     }
    
      
-  };
+  
+
+  /////////// Creating a tenant/////////////
   const createTenant =async ()=>{
     try{
       const session = await fetchAuthSession({ forceRefresh: true });
@@ -122,7 +145,7 @@ const json = await response.json();
       myHeaders.append("Content-Type", "application/json");
 
 const raw = JSON.stringify({
-  "subdomain": "hogwarts tenant",
+  "subdomain": "hogwarts",
   "name": "Hogwarts tenant ",
   "address": "Accra",
   "longitude": "11.3232",
@@ -151,7 +174,10 @@ const responsee =fetch("https://api.dev.nonprod.civic.ly/core/user/tenant/", req
     }
   }
 
- fetchAuthDataAndTenats()
+ fetchAuthData()
+//  getTenants()
+
+
 
 
   return (
@@ -172,12 +198,16 @@ const responsee =fetch("https://api.dev.nonprod.civic.ly/core/user/tenant/", req
             <StyledFormArea>
               <PageTitle welcome={true}>Welcome</PageTitle>
               <SubTitle welcome={true}>{JSON.stringify(email)}</SubTitle>
-              <SubTitle welcome={true}></SubTitle>
-              <StyledButton onPress={handleLogout}>
-                <ButtonText>Logout</ButtonText>
-              </StyledButton>
+              <SubTitle welcome={true}>Tenants List</SubTitle>
+              
+
+             
               <StyledButton onPress={createTenant}>
                 <ButtonText>Create tenant</ButtonText>
+              </StyledButton>
+              
+              <StyledButton onPress={handleLogout}>
+                <ButtonText>Logout</ButtonText>
               </StyledButton>
             </StyledFormArea>
           </WelcomeContainer>
@@ -185,7 +215,7 @@ const responsee =fetch("https://api.dev.nonprod.civic.ly/core/user/tenant/", req
       </ImageBackground>
     </>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
