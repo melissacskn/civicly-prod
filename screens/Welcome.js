@@ -3,6 +3,7 @@ import { Alert, StatusBar, ImageBackground, StyleSheet,Text,FlatList,TouchableOp
 import { useNavigation } from '@react-navigation/native';
 import { signOut, getCurrentUser, fetchAuthSession } from 'aws-amplify/auth';
 import { LogInContext } from "../navigators/RootStack";
+import AssetsPage from "./AssetsPage";
 import {
   StyledContainer,
   InnerContainer,
@@ -18,10 +19,11 @@ import {
 
 
 // Colors
-const { darkLight, primary, green } = Colors;
+const { darkLight, primary, green,black } = Colors;
+
 const Item = ({item, onPress, backgroundColor, textColor}) => (
   <TouchableOpacity onPress={onPress} style={[styles2.item, {backgroundColor}]}>
-    <Text style={[styles2.title, {color: textColor}]}>{item.title}</Text>
+    <Text style={[styles2.title,styles2.itemText, {color: textColor}]}>{item.title}</Text>
   </TouchableOpacity>
 );
 
@@ -52,19 +54,23 @@ const Welcome = ({ route }) => {
   const [selectedId, setSelectedId] = useState();
 
   const renderItem = ({item}) => {
-    const backgroundColor = item.id === selectedId ? '#6e3b6e' : '#f9c2ff';
+    const backgroundColor = item.id === selectedId ? green : primary;
     const color = item.id === selectedId ? 'white' : 'black';
 
+    
+  const handlePress = (item) => {
+    navigation.navigate('AssetsPage', { itemId: item.id, itemName: item.title });
+  };
     return (
       <Item
         item={item}
-        onPress={() => setSelectedId(item.id)}
+        onPress={() => setSelectedId(item.id,
+          handlePress(item))}
         backgroundColor={backgroundColor}
         textColor={color}
       />
     );
   };
-
 
   const handleLogout = async () => {
     try {
@@ -362,7 +368,7 @@ const populate=async ()=>{
             <StyledFormArea>
               <PageTitle welcome={true}>Welcome</PageTitle>
               <SubTitle welcome={true}>{JSON.stringify(email)}</SubTitle>
-              <SubTitle welcome={true} >Select Organisation</SubTitle>
+              <SubTitle welcome={true}  >Select Organisation</SubTitle>
               
               
               <FlatList
@@ -412,26 +418,22 @@ const styles2 = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginVertical: 10,
-  },
+
   item: {
     padding: 15,
     marginVertical: 8,
-    backgroundColor: '#f9c2ff',
-    borderRadius: 5,
+    backgroundColor: primary,
+   
+    // borderColor: black, // Set the border color to black
+    borderWidth: 1, // Set the border width to define the thickness
+
+ 
   },
   itemText: {
-    fontSize: 18,
+    fontSize: 19,
   },
-  firstElement: {
-    marginTop: 20,
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'blue',
-  },
+
+
 });
 
 export default Welcome;
