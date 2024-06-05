@@ -1,12 +1,13 @@
 
 import React, { useEffect, useState } from 'react';
-import { Alert, StatusBar, ImageBackground,StyleSheet,View, Text,FlatList,TouchableOpacity,Button} from "react-native";
+import { Alert, StatusBar, ImageBackground,StyleSheet,View, Text,FlatList,TouchableOpacity,Button,ScrollView} from "react-native";
 import { signOut, getCurrentUser, fetchAuthSession } from 'aws-amplify/auth';
 import styled from 'styled-components';
 
 import AntDesign from "react-native-vector-icons/AntDesign";
-import Post from '../components/post';
 
+
+import ItemCard from '../components/itemCard';
 import {
   StyledContainer,
   InnerContainer,
@@ -30,21 +31,69 @@ import {
 const { darkLight, primary, green,black } = Colors;
 
 const AssetsPage = ({ route }) => {
-  const [nameArray,setNameArray]=useState([])
-  const [nana,setNana]=useState('')
-  const [status,setStaus]=useState([])
-  const [str,setstr]=useState("")
-
-  const[typeAssest,setTypeAsset]=useState([])
-
-
-  
+ 
 
 const { itemId, itemName } = route.params;
  const [count,setCount]=useState(0)
+ 
+ const [data,setdata]=useState([])
 
-      //GETTING ASSETS OF AN INDIVUAL TENANT
-      const getAssets=async ()=>{
+// //       //GETTING ASSETS OF AN INDIVUAL TENANT
+// //       const getAssets=async ()=>{
+// //       const session = await fetchAuthSession({ forceRefresh: true });
+// //       const accessToken = session.tokens.accessToken.toString();
+// //       const myHeaders = new Headers();
+// //       myHeaders.append("Authorization", `Bearer ${accessToken}`);
+
+// //     const requestOptionsss = {
+// //       method: "GET",
+// //       headers: myHeaders,
+// //       redirect: "follow"
+// //     };
+// //     const responseee = await fetch(`https://api.dev.nonprod.civic.ly/assets/${itemId}/asset/`,requestOptionsss)
+// //     const jsonnn = await responseee.json();
+// //     console.log("Response JSON:", jsonnn);
+// //     setCount(jsonnn.count)
+// //     const newData = jsonnn.results.map((item) => ({
+// //       name: item.name,
+// //       asset_uploads: item.asset_uploads,
+// //       status: item.status,
+// //     }));
+// //     setdata(newData);
+    
+    
+// //       }
+      
+
+// // useEffect(() => {
+// //     getAssets()
+// //   }, []); 
+//   useEffect(() => {
+//     if (data.length > 0) {
+//       const firstElement = data[0];
+//       const firstName = firstElement.name;
+//       const firstStatus = firstElement.status;
+//       const firstAssetUploads = firstElement.asset_uploads;
+
+//       console.log("Name:", firstName);
+//       console.log("Status:", firstStatus);
+//       console.log("Asset Uploads:", firstAssetUploads);
+
+
+//             // Access the first file URL
+//             if (firstAssetUploads.length > 0) {
+//               const firstFileUrl = firstAssetUploads[0].file;
+//               console.log("First File URL:", firstFileUrl);
+//             }
+      
+//     }
+
+    
+
+//   }, [data]);
+
+  // GETTING ASSETS OF AN INDIVUAL TENANT
+      const fetchData=async ()=>{
       const session = await fetchAuthSession({ forceRefresh: true });
       const accessToken = session.tokens.accessToken.toString();
       const myHeaders = new Headers();
@@ -57,57 +106,30 @@ const { itemId, itemName } = route.params;
     };
     const responseee = await fetch(`https://api.dev.nonprod.civic.ly/assets/${itemId}/asset/`,requestOptionsss)
     const jsonnn = await responseee.json();
-    console.log("Response JSON:", jsonnn);
+    // console.log("Response JSON:", jsonnn);
     setCount(jsonnn.count)
-    let ar=[]
-    let sta=[]
-    let assetTypes=[]
-    let uplo=[]
-     for(let i=0; i<count;i++){
+    const newData = jsonnn.results.map((item) => ({
+      name: item.name,
+      asset_uploads: item.asset_uploads,
+      status: item.status,
+      condition:item.condition,
+      asset_type_name: item.asset_type?.name || 'Unknown'
+    })
+  );
+  // console.log(newData[1].asset_type_name)
 
-      ar.push(jsonnn.results[i].name)
-      sta.push(jsonnn.results[i].status)
-      assetTypes.push (jsonnn.results[i].asset_type.name)
-      uplo.push(jsonnn.results[i].asset_uploads.map(item => item.file));
-    
+    return newData
 
-    }
+  }
+  useEffect(() => {
+    const loadData = async () => {
+      const newData = await fetchData();
+      setdata(newData);
+      
+    };
 
-const urls = jsonnn.results[0].asset_uploads.map(item => item.file);
-console.log(urls[0]);  // Access the second URL using its index
-setstr(urls);
-console.log(str)
-
-
-    
-    setNameArray(ar)
-    setStaus(sta)
-    setTypeAsset(assetTypes)
-
-    console.log(nameArray[0])
-    console.log(typeAssest[0])
-    console.log(typeof(nameArray[0]))
-    
-    // setNana(nameArray[0])
-
-  
-
-   
-    
-     
-}
-const exampleData = {
-  image: "https://images.pexels.com/photos/736230/pexels-photo-736230.jpeg?cs=srgb&dl=pexels-jonaskakaroto-736230.jpg&fm=jpg",
-  assetType: typeAssest[0],
-  name: nameArray[0],
-  status: status[0],
-  postImage:"https://images.pexels.com/photos/736230/pexels-photo-736230.jpeg?cs=srgb&dl=pexels-jonaskakaroto-736230.jpg&fm=jpg",
-};
-
-useEffect(() => {
-    getAssets()
-  }, []); 
-
+    loadData();
+  }, []);
 
 
   return (
@@ -134,25 +156,42 @@ useEffect(() => {
       <StyledFormArea>
        
       <Container>
+      
+     
         <RightCornerContainer>
           <LeftIcon>
             <AntDesign name='user' size={23} color='green' />
           </LeftIcon>
           <TenantTitle>{itemName}</TenantTitle>
         </RightCornerContainer>
+        <ScrollView contentContainerStyle={styles2.container}>
         <AssetTitle>Assets</AssetTitle>
-        <Post
-          image={exampleData.image}
-          name={exampleData.name}
-          assetType={exampleData.assetType}
-          status={exampleData.status}
-          postImage={exampleData.postImage}
+        
+      
+
+        
+          
+      {data.map((item, index) => (
+        <ItemCard
+          key={index}
+          name={item.name}
+          status={item.status}
+          condition={item.condition}
+          imageUrl={item.asset_uploads.length > 0 ? item.asset_uploads[0].file : 'https://via.placeholder.com/100'}
+          assetTypeName={item.asset_type_name}
         />
+      ))}
+       
+    
+       </ScrollView>
       </Container>
+      
   
     </StyledFormArea>
+    
     </WelcomeContainer>
     </InnerContainer>
+  
   
       </ImageBackground>
     </>
@@ -163,7 +202,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'black',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    
   },
   image: {
     opacity: 0.7
@@ -184,7 +224,21 @@ const styles = StyleSheet.create({
 //     marginBottom: 10,
 //   },
 // });
+const styles2 = StyleSheet.create({
+  container: {
+    padding: 20,
+    backgroundColor: '#f5f5f5',
+    // alignItems: 'center', // Center the items horizontally
+    // justifyContent: 'center',
+    
+  },
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
 
+  },
+});
 
 
 

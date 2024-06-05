@@ -256,7 +256,7 @@ const styles =StyleSheet.create({
 export const Container = styled.View`
   flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start; /* Align to the left */
+  /* align-items: flex-start; /* Align to the left */
   margin-bottom: 20px;
 `;
 
