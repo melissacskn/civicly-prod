@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {View,Text, Image,TextInput, TouchableOpacity,StyleSheet} from 'react-native';
+import {View,Text, Image,TextInput, TouchableOpacity,StyleSheet, SafeAreaView} from 'react-native';
 
 
 import { StatusBar, Dimensions } from 'react-native';
@@ -16,10 +16,11 @@ export const Colors ={
     green: "#10B981",
     red: "#EF4444",
     black: "#000000",
+    white: "#FFFFFF",
 
 }; 
 
-const{ primary,secondary,tertiary,darkLight,brand,green,red,black}=Colors;
+const{ primary,secondary,tertiary,darkLight,brand,green,red,black,white}=Colors;
 
 export const StyledContainer=styled.View`
 flex: 1;
@@ -32,13 +33,16 @@ background-color:'transparent';
 export const InnerContainer= styled.View`
 flex: 1 ;
 width: 100%;
-align-items: center;
+align-items: 
+center;background-color:${white};
+
 
 
 `;
 
 export const WelcomeContainer=styled(InnerContainer)`
-padding: 20px;
+
+
 padding-top: 10px;
 
 `;
@@ -46,9 +50,10 @@ padding-top: 10px;
 
 export const PageLogo= styled.Image`
 
-width: 230px;
-height: 45px;
-margin-top:68px;
+width: 150px;
+height: 40px;
+margin-top:65px;
+
 
 
 
@@ -97,7 +102,7 @@ font-weight: normal;
 
 export const StyledFormArea =styled.View`
 width:100%;
-height:90%;
+height:100%;
 
 border-radius: 5px;
 margin-vertical: 5px;
@@ -257,7 +262,7 @@ export const Container = styled.View`
   flex-direction: column;
   justify-content: flex-start;
   /* align-items: flex-start; /* Align to the left */
-  margin-bottom: 20px;
+  margin-bottom: 100px;
 `;
 
 export const RightCornerContainer = styled.View`
@@ -273,6 +278,8 @@ export const AssetTitle = styled.Text`
   font-weight: bold;
   color: ${tertiary};
   text-align: left;
+  padding-bottom: 20px; 
+  padding-top: 30px; 
 `;
 
 export const TenantTitle = styled.Text`

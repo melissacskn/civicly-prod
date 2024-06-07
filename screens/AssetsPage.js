@@ -135,23 +135,27 @@ const { itemId, itemName } = route.params;
   return (
 
     <>
-    <ImageBackground
+    {/* <ImageBackground
       source={require('./../assets/Pulse-mobile.png')}
       resizeMode='cover'
       style={styles.container}
       imageStyle={styles.image}
-    >
+    > */}
     
-        <StatusBar backgroundColor='transparent'
+        <StatusBar backgroundColor='white'
             translucent={true}
             />
             
    
       <InnerContainer>
+       
+
       <PageLogo
-          resizeMode="cover"
+         
           source={require('./../assets/images/civicly-remove.png')}
+          
         />
+     
         <WelcomeContainer>
       <StyledFormArea>
        
@@ -164,14 +168,11 @@ const { itemId, itemName } = route.params;
           </LeftIcon>
           <TenantTitle>{itemName}</TenantTitle>
         </RightCornerContainer>
-        <ScrollView contentContainerStyle={styles2.container}>
+       
         <AssetTitle>Assets</AssetTitle>
         
       
-
-        
-          
-      {data.map((item, index) => (
+        {/* {data.map((item, index) => (
         <ItemCard
           key={index}
           name={item.name}
@@ -180,10 +181,28 @@ const { itemId, itemName } = route.params;
           imageUrl={item.asset_uploads.length > 0 ? item.asset_uploads[0].file : 'https://via.placeholder.com/100'}
           assetTypeName={item.asset_type_name}
         />
-      ))}
+      ))} */}
+        
+          
+        <FlatList
+          data={data}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <ItemCard
+             
+              name={item.name}
+              status={item.status}
+              imageUrl={item.asset_uploads.length > 0 ? item.asset_uploads[0].file : 'https://via.placeholder.com/100'}
+              assetTypeName={item.asset_type_name}
+              condition={item.condition}
+            />
+          )}
+          // contentContainerStyle={styles.listContainer}
+          />
+        
        
     
-       </ScrollView>
+       
       </Container>
       
   
@@ -193,7 +212,7 @@ const { itemId, itemName } = route.params;
     </InnerContainer>
   
   
-      </ImageBackground>
+      {/* </ImageBackground> */}
     </>
   );
 }
@@ -207,7 +226,12 @@ const styles = StyleSheet.create({
   },
   image: {
     opacity: 0.7
-  }
+  },
+
+  // listContainer: {
+  //   paddingBottom: 20,
+  // },
+  
 });
 
 
@@ -225,12 +249,16 @@ const styles = StyleSheet.create({
 //   },
 // });
 const styles2 = StyleSheet.create({
-  container: {
-    padding: 20,
-    backgroundColor: '#f5f5f5',
-    // alignItems: 'center', // Center the items horizontally
-    // justifyContent: 'center',
+  // container: {
+  //   padding: 10,
+  //   backgroundColor: '#f5f5f5',
+  //   // alignItems: 'center', // Center the items horizontally
+  //   // justifyContent: 'center',
     
+  // },
+  container: {
+    flex: 1,
+    padding: 10,
   },
   loading: {
     flex: 1,

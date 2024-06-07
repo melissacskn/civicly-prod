@@ -22,9 +22,10 @@ const ItemCard = ({ name, status, imageUrl,assetTypeName,condition }) => {
 
 
   return (
-    <View style={styles.card}>
-      <Image source={{ uri: imageUrl }} style={styles.image} />
+    <View style={styles2.post}>
       <Text style={styles.assetTypeName}>{assetTypeName}</Text>
+      <Image source={{ uri: imageUrl }} style={styles2.image} />
+      
       <Text style={styles.name}>{name}</Text>
       <View style={styles.row}>
 
@@ -120,8 +121,31 @@ const styles = StyleSheet.create({
             alignItems: 'center', // Center items vertically
             width: '100%', // Ensure it takes full width of the card
             },
+            post: {
+              marginBottom: 20,
+            },
+
+            
         
 
     });
 
+    
+const styles2 = StyleSheet.create({
+  post: {
+    marginBottom: 20,
+  },
+  image: {
+    width: '100%',
+    height: 400,
+    resizeMode: 'cover',
+  },
+  user: {
+    fontWeight: 'bold',
+  },
+});
+
+
+
+ 
 export default ItemCard;
