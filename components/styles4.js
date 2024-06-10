@@ -13,14 +13,14 @@ export const Colors ={
     tertiary: "#1F2937",
     darkLight: "#9CA3AF",
     brand: "#6D28D9",
-    green: "#10B981",
-    red: "#EF4444",
+    green: 'rgb(0, 168, 84)',
     black: "#000000",
     white: "#FFFFFF",
+    red:'rgb(240, 65, 52)'
 
 }; 
 
-const{ primary,secondary,tertiary,darkLight,brand,green,red,black,white}=Colors;
+const{ primary,secondary,tertiary,darkLight,brand,green,red,black,white,}=Colors;
 
 export const StyledContainer=styled.View`
 flex: 1;
@@ -33,16 +33,19 @@ background-color:'transparent';
 export const InnerContainer= styled.View`
 flex: 1 ;
 width: 100%;
-align-items: 
-center;background-color:${white};
+/* align-items:flex-end; CIVICLY LOGOSUNU SAGA DOGRU YATIRDI*/
+background-color:${white};
+align-items:flex-start;
+/* align-items:center;*/
 
 
 
 `;
 
 export const WelcomeContainer=styled(InnerContainer)`
+width: 100%;
 
-
+align-items:center;
 padding-top: 10px;
 
 `;
@@ -101,13 +104,14 @@ font-weight: normal;
 `;
 
 export const StyledFormArea =styled.View`
-width:100%;
+width: 100%;     /*BU KISIM ASSETLERIN GORUNTUSUNU SAGDAN VE SOLDAN TELEFONA BITISIK YAPIYOR*/
+
 height:100%;
 
 border-radius: 5px;
 margin-vertical: 5px;
 background-color: ${primary};
-padding: 14px;
+
 
 
 `;

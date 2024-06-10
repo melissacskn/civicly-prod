@@ -1,8 +1,26 @@
 // ItemCard.js
-import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import React,{useState} from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import AntDesign from "react-native-vector-icons/AntDesign";
+import EditingAssets from '../screens/EditingAssets';
+const { darkLight, primary, green,black,red } = Colors;
+import { useNavigation } from '@react-navigation/native';
+import {
+
+  Colors,
+
+
+  
+} from '../components/styles4';
 
 const ItemCard = ({ name, status, imageUrl,assetTypeName,condition }) => {
+  const navigation = useNavigation();
+  const handlePress = () => {
+    navigation.navigate("EditingAssets");
+  };
+  
+  
+  const [selection, setSelection] = useState(1);
 
     const statusStyles = status === 'ACTIVE' ? styles.activeStatus : styles.inactiveStatus;
     const conditionStyles = () => {
@@ -22,9 +40,13 @@ const ItemCard = ({ name, status, imageUrl,assetTypeName,condition }) => {
 
 
   return (
-    <View style={styles2.post}>
+
+      <View style={styles.post}>
+ 
+        
       <Text style={styles.assetTypeName}>{assetTypeName}</Text>
-      <Image source={{ uri: imageUrl }} style={styles2.image} />
+      <Image source={{ uri: imageUrl }} style={styles.image} />
+     
       
       <Text style={styles.name}>{name}</Text>
       <View style={styles.row}>
@@ -33,7 +55,28 @@ const ItemCard = ({ name, status, imageUrl,assetTypeName,condition }) => {
       <Text style={[styles.condition, conditionStyles()]}>{condition}</Text>
       <Text style={[styles.status, statusStyles]}>{status}</Text>
      
+ 
     </View>
+    <View style={styles.btnGroup}>
+                <TouchableOpacity style={[styles.btn]}  onPress={() =>handlePress()} >
+                  { <AntDesign name='edit' size={23} color={green} style={styles.btnIcon}></AntDesign> }
+             
+                    {/* <Text style={[styles.btnText, ]}>Edit</Text> */}
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.btn]} >
+                { <AntDesign name='delete' size={23} color={red} style={styles.btnIcon}></AntDesign> }
+                    {/* <Text style={[styles.btnText, selection === 2 ? { color: "white" } : null]}>Delete</Text> */}
+                </TouchableOpacity>
+                </View>
+    
+    {/* <View style={styles.row}>
+    <TouchableOpacity style={styles.button} >
+        <Text>Press Here</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} >
+        <Text>Press Here</Text>
+      </TouchableOpacity>
+      </View> */}
     </View>
   );
 };
@@ -49,11 +92,20 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         width: '100%', // Ensure a fixed width or percentage widt
       },
-      image: {
-        width: 100,
-        height: 100,
-        // borderRadius: 10,
+      post: {
+        marginBottom: 20,
+       
+        width: '100%',
+        
+    
       },
+      image: {
+        width: '100%',
+        height: 400,
+        resizeMode: 'cover',
+       
+      },
+      
       assetTypeName: {
         fontSize: 18,
         fontWeight: 'bold',
@@ -62,6 +114,7 @@ const styles = StyleSheet.create({
       name: {
         fontSize: 14,
         color: 'gray',
+        // color:"rgb(38, 38, 38)",
         marginTop: 5,
       },
       status: {
@@ -114,36 +167,64 @@ const styles = StyleSheet.create({
       },
        
 
-        row: {
-            flexDirection: 'row',
-            marginTop: 5,
-            justifyContent: 'center', // Center items horizontally
-            alignItems: 'center', // Center items vertically
-            width: '100%', // Ensure it takes full width of the card
-            },
-            post: {
-              marginBottom: 20,
-            },
+      row: {
+          flexDirection: 'row',
+          marginTop: 5,
+          justifyContent: 'center', // Center items horizontally
+          alignItems: 'center', // Center items vertically
+          width: '100%', // Ensure it takes full width of the card
+          },
+      post: {
+        marginBottom: 20,
+      },
+      button: {
+        alignItems: 'center',
+        backgroundColor: '#DDDDDD',
+        padding: 10,
+        marginRight:10,
+        marginTop: 5,
 
+        
+      },
+      btnGroup: {
+        marginTop:12,
+        paddingBottom:6,
+        paddingTop:6,
+        // paddingVertical:3,
+        flexDirection: 'row',
+        alignItems: "center",
+        borderBottomWidth: 0.25,
+        borderTopWidth:0.25,
+        borderBottomColor: '#6B7280',
+        borderTopColor:'#6B7280',
+       
+    },
+    btn: {
+        flex: 1,
+        borderRightWidth: 0.25,
+        borderLeftWidth: 0.25,
+        borderColor: '#6B7280'
+    },
+    btnIcon: {
+        textAlign: 'center',
+        padding: 6
+        
+        
+    }
+
+
+      
+}
+
+
+   
             
         
 
-    });
+    );
 
     
-const styles2 = StyleSheet.create({
-  post: {
-    marginBottom: 20,
-  },
-  image: {
-    width: '100%',
-    height: 400,
-    resizeMode: 'cover',
-  },
-  user: {
-    fontWeight: 'bold',
-  },
-});
+
 
 
 

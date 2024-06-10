@@ -109,14 +109,24 @@ const { itemId, itemName } = route.params;
     // console.log("Response JSON:", jsonnn);
     setCount(jsonnn.count)
     const newData = jsonnn.results.map((item) => ({
+      id:item.id,
       name: item.name,
       asset_uploads: item.asset_uploads,
       status: item.status,
       condition:item.condition,
-      asset_type_name: item.asset_type?.name || 'Unknown'
+      asset_type_name: item.asset_type?.name || 'Unknown',
+      
+     
+  
+
     })
   );
   // console.log(newData[1].asset_type_name)
+  // console.log(newData[0].name)
+  // console.log(newData[0].id) ASSET'IN ID'SI ITEMCARD'A GONDEREBILIRSIN
+
+  
+
 
     return newData
 
@@ -189,6 +199,7 @@ const { itemId, itemName } = route.params;
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <ItemCard
+             key={item.id}
              
               name={item.name}
               status={item.status}

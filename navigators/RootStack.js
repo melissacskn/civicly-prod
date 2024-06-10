@@ -9,6 +9,7 @@ import ForgotPassword from '../screens/ForgotPassword';
 import NewPasswordScreen from '../screens/NewPasswordScreen';
 import InnerStack from './InnerStack';
 import AssetsPage from '../screens/AssetsPage';
+import EditingAssets from '../screens/EditingAssets';
 import { Auth } from 'aws-amplify';
 
 import  {Colors} from './../components/styles';
@@ -152,6 +153,7 @@ const RootStack=()=>{
                 <> 
                 <Stack.Screen name="Welcome" component={Welcome} />
                 <Stack.Screen name="AssetsPage" component={AssetsPage}></Stack.Screen>
+                <Stack.Screen name="EditingAssets" component={EditingAssets}></Stack.Screen>
               
                 </>}
             
