@@ -12,17 +12,30 @@ import {
 
   
 } from '../components/styles4';
+import {
+  Grayscale,
+  ColorMatrix,
+  concatColorMatrices,
 
-const ItemCard = ({ name, status, imageUrl,assetTypeName,condition }) => {
-  const navigation = useNavigation();
-  const handlePress = () => {
-    navigation.navigate("EditingAssets");
-  };
+} from 'react-native-color-matrix-image-filters'
+
+const ItemCard = ({ name, status, imageUrl,assetTypeName,condition, onEdit,onDelete,tenantId,assetId }) => {
+  // const navigation = useNavigation();
+  // // const handlePressEditButton = () => {
+  // //   navigation.navigate("EditingAssets");
+  // // };
   
   
   const [selection, setSelection] = useState(1);
 
-    const statusStyles = status === 'ACTIVE' ? styles.activeStatus : styles.inactiveStatus;
+    // const statusStyles = status === 'ACTIVE' ? styles.activeStatus : styles.inactiveStatus;
+    const statusStyles = status === 'ACTIVE' 
+    ? styles.activeStatus 
+    : status === 'DRAFT' ? styles.draftStatus 
+      : styles.inactiveStatus;
+  
+  
+
     const conditionStyles = () => {
         switch (condition) {
           case 'GOOD':
@@ -37,6 +50,24 @@ const ItemCard = ({ name, status, imageUrl,assetTypeName,condition }) => {
             return styles.defaultCondition;
         }
       };
+      // const handlePressDeleteButton = async () => {
+      //   const session = await fetchAuthSession({ forceRefresh: true });
+      //   const accessToken = session.tokens.accessToken.toString();
+      //   const myHeaders = new Headers();
+      //   myHeaders.append("Authorization", `Bearer ${accessToken}`);
+
+      //   const requestOptions = {
+      //     method: "DELETE",
+      //     headers: myHeaders,
+      //     redirect: "follow"
+      //   };
+
+      //   const response1 = fetch(`https://api.dev.nonprod.civic.ly/assets/${itemId}/asset/${assetId}`, requestOptions)
+      //   const json1 = await response1.json();
+        
+  
+      // };
+
 
 
   return (
@@ -45,7 +76,13 @@ const ItemCard = ({ name, status, imageUrl,assetTypeName,condition }) => {
  
         
       <Text style={styles.assetTypeName}>{assetTypeName}</Text>
-      <Image source={{ uri: imageUrl }} style={styles.image} />
+      {
+        status==='DRAFT' ?(
+          <Grayscale>
+          <Image source={{ uri: imageUrl }} style={styles.image} />
+        </Grayscale>
+        ):(
+        <Image source={{ uri: imageUrl }} style={styles.image} />)}
      
       
       <Text style={styles.name}>{name}</Text>
@@ -58,12 +95,12 @@ const ItemCard = ({ name, status, imageUrl,assetTypeName,condition }) => {
  
     </View>
     <View style={styles.btnGroup}>
-                <TouchableOpacity style={[styles.btn]}  onPress={() =>handlePress()} >
+                <TouchableOpacity style={[styles.btn]}  onPress={() =>onEdit(assetId)} >
                   { <AntDesign name='edit' size={23} color={green} style={styles.btnIcon}></AntDesign> }
              
                     {/* <Text style={[styles.btnText, ]}>Edit</Text> */}
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.btn]} >
+                <TouchableOpacity style={[styles.btn]}   onPress={() => onDelete(assetId)} >
                 { <AntDesign name='delete' size={23} color={red} style={styles.btnIcon}></AntDesign> }
                     {/* <Text style={[styles.btnText, selection === 2 ? { color: "white" } : null]}>Delete</Text> */}
                 </TouchableOpacity>
@@ -107,26 +144,32 @@ const styles = StyleSheet.create({
       },
       
       assetTypeName: {
-        fontSize: 18,
-        fontWeight: 'bold',
+        fontSize: 20,
         marginTop: 10,
+        color:'rgb(38, 38, 38)',
+        fontFamily:'PublicSans-SemiBold'
+        
+       
       },
       name: {
-        fontSize: 14,
-        color: 'gray',
+        fontSize: 18,
+        color: 'rgb(38, 38, 38)',
         // color:"rgb(38, 38, 38)",
-        marginTop: 5,
+        marginTop: 5, 
+        fontFamily:'PublicSans-Regular'
       },
       status: {
         fontSize: 14,
         color: 'gray',
         marginTop: 5,
+        fontFamily:'PublicSans-Regular',
       },
       condition: {
         fontSize: 14,
         color: 'gray',
         marginTop: 5,
         marginRight: 10,
+        fontFamily:'PublicSans-Regular',
       },
     
       goodCondition: {
@@ -162,6 +205,12 @@ const styles = StyleSheet.create({
       inactiveStatus: {
         color: 'red',
         backgroundColor: '#fce4e4', // Light red background
+        padding:3
+        
+      },
+      draftStatus: {
+        color: 'rgb(140, 140, 140)', // Light gray
+        backgroundColor: 'rgb(217, 217, 217)', // Beige background
         padding:3
         
       },

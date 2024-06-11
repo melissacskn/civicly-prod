@@ -5,6 +5,7 @@ import { signOut, getCurrentUser, fetchAuthSession } from 'aws-amplify/auth';
 import styled from 'styled-components';
 
 import AntDesign from "react-native-vector-icons/AntDesign";
+import { useNavigation } from '@react-navigation/native';
 
 
 import ItemCard from '../components/itemCard';
@@ -23,7 +24,9 @@ import {
   TenantTitle,
   Container,
   LeftIcon,
-  RightCornerContainer
+  RightCornerContainer,
+  LeftCornerContainer,
+  RightIcon,
 
   
 } from '../components/styles4';
@@ -31,6 +34,7 @@ import {
 const { darkLight, primary, green,black } = Colors;
 
 const AssetsPage = ({ route }) => {
+  const navigation = useNavigation();
  
 
 const { itemId, itemName } = route.params;
@@ -141,6 +145,48 @@ const { itemId, itemName } = route.params;
     loadData();
   }, []);
 
+  const handlePressAddButton = () => {
+    console.log('Icon pressed!');
+    // Add your logic here
+  };
+
+  const handlePressDeleteButton = async (assetId) => {
+    const session = await fetchAuthSession({ forceRefresh: true });
+    const accessToken = session.tokens.accessToken.toString();
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${accessToken}`);
+
+    const requestOptions = {
+      method: "DELETE",
+      headers: myHeaders,
+      redirect: "follow"
+    };
+
+    const response1 = fetch(`https://api.dev.nonprod.civic.ly/assets/${itemId}/asset/${assetId}`, requestOptions)
+    const json1 = await response1.json();
+    
+
+  };
+  const handlePressEditButton = async (assetId) => {
+    navigation.navigate("EditingAssets")
+  
+  };
+  const renderItem = ({ item }) => (
+    <ItemCard
+      onEdit={handlePressEditButton}
+      onDelete={handlePressDeleteButton}
+      key={item.id}
+
+      tenantId={itemId}
+      assetId={item.id}
+      name={item.name}
+      status={item.status}
+      imageUrl={item.asset_uploads.length > 0 ? item.asset_uploads[0].file : 'https://via.placeholder.com/100'}
+      assetTypeName={item.asset_type_name}
+      condition={item.condition}
+      
+    />
+  );
 
   return (
 
@@ -154,6 +200,7 @@ const { itemId, itemName } = route.params;
     
         <StatusBar backgroundColor='white'
             translucent={true}
+            barStyle={'dark-content'}
             />
             
    
@@ -170,16 +217,27 @@ const { itemId, itemName } = route.params;
       <StyledFormArea>
        
       <Container>
+    
       
      
-        <RightCornerContainer>
+        {/* <RightCornerContainer>
           <LeftIcon>
             <AntDesign name='user' size={23} color='green' />
           </LeftIcon>
           <TenantTitle>{itemName}</TenantTitle>
-        </RightCornerContainer>
-       
+        </RightCornerContainer> */}
+         
+      <LeftCornerContainer>
         <AssetTitle>Assets</AssetTitle>
+        
+        <TouchableOpacity onPress={handlePressAddButton} style={styles.iconButton}>
+        <AntDesign name="pluscircleo" size={23} color="black" />
+      </TouchableOpacity>
+      
+      </LeftCornerContainer>
+      
+       
+        
         
       
         {/* {data.map((item, index) => (
@@ -197,23 +255,17 @@ const { itemId, itemName } = route.params;
         <FlatList
           data={data}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <ItemCard
-             key={item.id}
-             
-              name={item.name}
-              status={item.status}
-              imageUrl={item.asset_uploads.length > 0 ? item.asset_uploads[0].file : 'https://via.placeholder.com/100'}
-              assetTypeName={item.asset_type_name}
-              condition={item.condition}
-            />
-          )}
+          renderItem={renderItem}
+          // renderItem={({ item }) => (
+          //   <ItemCard
+          //     key={item.id}
+
+          //     renderItem={renderItem}
+          //   />
+          // )}
           // contentContainerStyle={styles.listContainer}
           />
-        
-       
-    
-       
+      
       </Container>
       
   
@@ -237,6 +289,12 @@ const styles = StyleSheet.create({
   },
   image: {
     opacity: 0.7
+  },
+  iconButton: {
+    padding: 15,
+    marginTop:10
+  
+   
   },
 
   // listContainer: {

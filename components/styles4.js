@@ -52,9 +52,9 @@ padding-top: 10px;
 
 
 export const PageLogo= styled.Image`
+width: 100px;
 
-width: 150px;
-height: 40px;
+height: 30px;
 margin-top:65px;
 
 
@@ -276,14 +276,22 @@ export const RightCornerContainer = styled.View`
   width: 100%; /* Take full width to push content to the right */
   margin-bottom: 10px; /* Adjust as needed */
 `;
+export const LeftCornerContainer = styled.View`
+  flex-direction: row;
+  align-items: center; /* Align items in the row */
+  justify-content: flex-start; /* Align items to the right */
+  width: 100%; /* Take full width to push content to the right */
+  margin-bottom: 10px; /* Adjust as needed */
+`;
 
 export const AssetTitle = styled.Text`
-  font-size: 20px;
-  font-weight: bold;
-  color: ${tertiary};
+  font-size: 21px;
+
+  color:'rgb(38, 38, 38)';
   text-align: left;
   padding-bottom: 20px; 
   padding-top: 30px; 
+  fontFamily:'PublicSans-SemiBold';
 `;
 
 export const TenantTitle = styled.Text`

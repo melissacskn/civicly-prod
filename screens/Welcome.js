@@ -61,6 +61,7 @@ const Welcome = ({ route }) => {
   const handlePress = (item) => {
     navigation.navigate('AssetsPage', { itemId: item.id, itemName: item.title });
   };
+  
     return (
       <Item
         item={item}
