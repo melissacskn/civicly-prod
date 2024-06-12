@@ -68,6 +68,11 @@ const ItemCard = ({ name, status, imageUrl,assetTypeName,condition, onEdit,onDel
   
       // };
 
+  if (typeof onDelete !== 'function') {
+    console.error('PostItem received invalid onDelete function');
+    return null; // Ensure onDelete is a function
+  }
+
 
 
   return (

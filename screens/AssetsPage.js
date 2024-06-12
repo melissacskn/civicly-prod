@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState ,useMemo} from 'react';
 import { Alert, StatusBar, ImageBackground,StyleSheet,View, Text,FlatList,TouchableOpacity,Button,ScrollView} from "react-native";
 import { signOut, getCurrentUser, fetchAuthSession } from 'aws-amplify/auth';
 import styled from 'styled-components';
@@ -108,9 +108,11 @@ const { itemId, itemName } = route.params;
       headers: myHeaders,
       redirect: "follow"
     };
+
+
     const responseee = await fetch(`https://api.dev.nonprod.civic.ly/assets/${itemId}/asset/`,requestOptionsss)
     const jsonnn = await responseee.json();
-    // console.log("Response JSON:", jsonnn);
+    console.log("Response JSON:", jsonnn);
     setCount(jsonnn.count)
     const newData = jsonnn.results.map((item) => ({
       id:item.id,
@@ -125,7 +127,7 @@ const { itemId, itemName } = route.params;
 
     })
   );
-  // console.log(newData[1].asset_type_name)
+  // console.log(newData)
   // console.log(newData[0].name)
   // console.log(newData[0].id) ASSET'IN ID'SI ITEMCARD'A GONDEREBILIRSIN
 
@@ -141,7 +143,6 @@ const { itemId, itemName } = route.params;
       setdata(newData);
       
     };
-
     loadData();
   }, []);
 
@@ -151,6 +152,7 @@ const { itemId, itemName } = route.params;
   };
 
   const handlePressDeleteButton = async (assetId) => {
+   try{
     const session = await fetchAuthSession({ forceRefresh: true });
     const accessToken = session.tokens.accessToken.toString();
     const myHeaders = new Headers();
@@ -162,16 +164,47 @@ const { itemId, itemName } = route.params;
       redirect: "follow"
     };
 
-    const response1 = fetch(`https://api.dev.nonprod.civic.ly/assets/${itemId}/asset/${assetId}`, requestOptions)
-    const json1 = await response1.json();
-    
+    // const response1 = fetch(`https://api.dev.nonprod.civic.ly/assets/${itemId}/asset/${assetId}`, requestOptions)
+    // const json1 = await response1.json();
+    // console.log(json1)
+    fetch(`https://api.dev.nonprod.civic.ly/assets/${itemId}/asset/${assetId}`, requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+  }
+  catch (error) {
+    Alert.alert('Oops', error.message)
 
-  };
+  }
+  try {
+    console.log('Deleting post with assetId:', assetId); // Debug log
+    // Call your API to delete the post
+    // For example: await deletePostApi(assetId);
+
+    // Remove the post from the state
+    const newData = data.filter(item => item.assetId !== assetId);
+    // console.log('Updated data:', newData); // Debug log
+    setdata(newData);
+  } catch (error) {
+    console.error('Error deleting the post:', error);
+  }
+
+
+
+}
+// useEffect(() => {
+//   console.log('Data has been updated:');
+//   // Any additional operations to handle after data update
+// }, [data]);
+
+    
   const handlePressEditButton = async (assetId) => {
     navigation.navigate("EditingAssets")
   
   };
+  
   const renderItem = ({ item }) => (
+    
     <ItemCard
       onEdit={handlePressEditButton}
       onDelete={handlePressDeleteButton}
@@ -302,7 +335,6 @@ const styles = StyleSheet.create({
   // },
   
 });
-
 
 // const styles = StyleSheet.create({
 //   container: {
