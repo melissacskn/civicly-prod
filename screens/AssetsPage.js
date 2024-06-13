@@ -1,11 +1,12 @@
 
 import React, { useEffect, useState ,useMemo} from 'react';
-import { Alert, StatusBar, ImageBackground,StyleSheet,View, Text,FlatList,TouchableOpacity,Button,ScrollView} from "react-native";
+import { Alert, StatusBar, ImageBackground,StyleSheet,View, Text,FlatList,TouchableOpacity,Button,ScrollView,ActivityIndicator} from "react-native";
 import { signOut, getCurrentUser, fetchAuthSession } from 'aws-amplify/auth';
 import styled from 'styled-components';
 
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { useNavigation } from '@react-navigation/native';
+
 
 
 import ItemCard from '../components/itemCard';
@@ -27,6 +28,7 @@ import {
   RightCornerContainer,
   LeftCornerContainer,
   RightIcon,
+  
 
   
 } from '../components/styles4';
@@ -39,6 +41,7 @@ const AssetsPage = ({ route }) => {
 
 const { itemId, itemName } = route.params;
  const [count,setCount]=useState(0)
+ const [loading, setLoading] = useState(false);
  
  const [data,setdata]=useState([])
 
@@ -98,6 +101,8 @@ const { itemId, itemName } = route.params;
 
   // GETTING ASSETS OF AN INDIVUAL TENANT
       const fetchData=async ()=>{
+        setLoading(true);
+        try {
       const session = await fetchAuthSession({ forceRefresh: true });
       const accessToken = session.tokens.accessToken.toString();
       const myHeaders = new Headers();
@@ -121,20 +126,20 @@ const { itemId, itemName } = route.params;
       status: item.status,
       condition:item.condition,
       asset_type_name: item.asset_type?.name || 'Unknown',
-      
-     
-  
 
     })
   );
+  return newData
+}
+catch (error) {
+  console.error('Error fetching data:', error);
+} finally {
+  setLoading(false);
+}
   // console.log(newData)
   // console.log(newData[0].name)
   // console.log(newData[0].id) ASSET'IN ID'SI ITEMCARD'A GONDEREBILIRSIN
-
-  
-
-
-    return newData
+ 
 
   }
   useEffect(() => {
@@ -146,12 +151,38 @@ const { itemId, itemName } = route.params;
     loadData();
   }, []);
 
+  useEffect(()=>{
+
+  },[data])
+
   const handlePressAddButton = () => {
     console.log('Icon pressed!');
     // Add your logic here
   };
+  
+  const handlePressDeleteButton = (assetId) => {
+    Alert.alert(
+      "Are you sure you want to delete?",
+      "This action cannot be undone.",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        {
+          text: "Delete",
+          onPress: () => deletePost(assetId)
+        }
+      ],
+      { cancelable: false }
+    );
+  };
 
-  const handlePressDeleteButton = async (assetId) => {
+
+  const deletePost = async (assetId) => {
+    setLoading(true);
+
    try{
     const session = await fetchAuthSession({ forceRefresh: true });
     const accessToken = session.tokens.accessToken.toString();
@@ -171,24 +202,25 @@ const { itemId, itemName } = route.params;
   .then((response) => response.text())
   .then((result) => console.log(result))
   .catch((error) => console.error(error));
-  }
-  catch (error) {
-    Alert.alert('Oops', error.message)
 
-  }
-  try {
-    console.log('Deleting post with assetId:', assetId); // Debug log
-    // Call your API to delete the post
-    // For example: await deletePostApi(assetId);
+  console.log('Deleting post with assetId:', assetId); // Debug log
+  // Call your API to delete the post
+  // For example: await deletePostApi(assetId);
 
-    // Remove the post from the state
-    const newData = data.filter(item => item.assetId !== assetId);
-    // console.log('Updated data:', newData); // Debug log
-    setdata(newData);
-  } catch (error) {
+  // Remove the post from the state
+  const newData = data.filter(item => item.assetId !== assetId);
+  // console.log('Updated data:', newData); // Debug log
+  setdata(newData);
+  const newDataa = await fetchData();
+  setdata(newDataa);
+  }
+
+ catch (error) {
     console.error('Error deleting the post:', error);
   }
-
+  finally {
+    setLoading(false);
+  }
 
 
 }
@@ -207,7 +239,7 @@ const { itemId, itemName } = route.params;
     
     <ItemCard
       onEdit={handlePressEditButton}
-      onDelete={handlePressDeleteButton}
+      onDelete={() => handlePressDeleteButton(item.id)}
       key={item.id}
 
       tenantId={itemId}
@@ -220,6 +252,14 @@ const { itemId, itemName } = route.params;
       
     />
   );
+
+  if (loading) {
+    return (
+      <View style={styles.containerForLoading}>
+        <ActivityIndicator size="large" color='green' />
+      </View>
+    );
+  }
 
   return (
 
@@ -284,7 +324,8 @@ const { itemId, itemName } = route.params;
         />
       ))} */}
         
-          
+      
+     
         <FlatList
           data={data}
           keyExtractor={(item) => item.id}
@@ -298,6 +339,7 @@ const { itemId, itemName } = route.params;
           // )}
           // contentContainerStyle={styles.listContainer}
           />
+        
       
       </Container>
       
@@ -329,6 +371,15 @@ const styles = StyleSheet.create({
   
    
   },
+  containerForLoading: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  // horizontal: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-around',
+  //   padding: 10,
+  // },
 
   // listContainer: {
   //   paddingBottom: 20,
