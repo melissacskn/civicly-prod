@@ -157,7 +157,7 @@ catch (error) {
 
   const handlePressAddButton = () => {
     console.log('Icon pressed!');
-    navigation.navigate("CreateAsset")
+    navigation.navigate("CreateAsset2")
     // Add your logic here
   };
   
