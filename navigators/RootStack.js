@@ -21,92 +21,16 @@ const{primary,tertiary}=Colors
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack'
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import {
-    fetchAuthSession,
-    getCurrentUser
-  } from 'aws-amplify/auth';
 
 const Stack= createStackNavigator();
 
 export const LogInContext =createContext()
 
-/*
-function Welstack(){
-    const wel= createStackNavigator();
-    return(
-        
-        <wel.Navigator
-        screenOptions={{
-            
-            headerStyle:{
-                backgroundColor: "transparent"
-            },
-            headerTintColor: primary,
-            headerTransparent: true,
-            headerTitle:'',
-            headerLeftContainerStyle:{
-                paddingLeft:20
-            }
-           
-            
-          }}
-     >
-        <Stack.Screen options={{headerTintColor: primary}} name='Welcome' component={Welcome}/>
 
-        </wel.Navigator>
-       
-    )
-}
-
-function Logstack(){
-    const log= createStackNavigator();
-    return(
-        
-        <log.Navigator
-        screenOptions={{
-            
-            headerStyle:{
-                backgroundColor: "transparent"
-            },
-            headerTintColor: primary,
-            headerTransparent: true,
-            headerTitle:'',
-            headerLeftContainerStyle:{
-                paddingLeft:20
-            }
-           
-            
-          }}
-     >
-        <Stack.Screen name='Login' component={Login}/>
-        <Stack.Screen name='Signup' component={Signup}/>
-        <Stack.Screen name='ConfirmEmail' component={ConfirmEmail}/>
-        <Stack.Screen name='ForgotPassword' component={ForgotPassword}/>
-        <Stack.Screen name='NewPasswordScreen' component={NewPasswordScreen}/>
-        </log.Navigator>
-        
-    )
-}
-*/
 const RootStack=()=>{
     const [isUser,setIsUser]=useState(false)
-    /*
-    
-    const checkUser = async () => {
-        try {
-            const session = await fetchAuthSession({ forceRefresh: true });
-            //console.log('Session:', session);  // Log to see if the session is returned correctly
-            const currentUser = await getCurrentUser();
-            //console.log('CurrentUser:', currentUser);  // Check what is returned here
-            Setuser(currentUser);
-        } catch (err) {
-            console.log('Error fetching user:', err);
-            Setuser(null);
-        }
-    };
-    */
+
   
     return (
         <LogInContext.Provider value={setIsUser}>
@@ -117,11 +41,11 @@ const RootStack=()=>{
                 headerStyle:{
                     backgroundColor: "transparent"
                 },
-                headerTintColor: primary,
+                headerTintColor: '#000000',
                 headerTransparent: true,
                 headerTitle:'',
                 headerLeftContainerStyle:{
-                    paddingLeft:20
+                    paddingLeft:10
                 }
                
                 
@@ -160,17 +84,10 @@ const RootStack=()=>{
                 <Stack.Screen name="CreateAsset" component={CreateAsset}></Stack.Screen>
               
                 </>}
-            
-
-               
-            
-                        
-                      
 
             
             
-                      
-           
+        
         </Stack.Navigator>
         </NavigationContainer>
         </LogInContext.Provider>

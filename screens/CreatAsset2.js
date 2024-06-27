@@ -1,22 +1,37 @@
 
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, Text, TextInput, Button, Image, StyleSheet, TouchableOpacity, Dimensions,StatusBar } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation,useRoute } from '@react-navigation/native';
+import AntDesign from "react-native-vector-icons/AntDesign"
 
 import Modal from 'react-native-modal';
 
 import { RadioButton } from 'react-native-paper';
 
-const CreateAsset2=({route})=>{
+
+
+const CreateAsset2=()=>{
     const [imageUri, setImageUri] = useState(null);
     const [name, setName] = useState('');
     const [assetType, setassetType] = useState('');
+    const [selectedAsset, setSelectedAsset] = useState(null);
     const [checkedStatus, setCheckedStatus] = React.useState('ACTIVE');
     const [checkedCondition, setCheckedCondition] = React.useState();
     const [modalVisible, setModalVisible] = useState(false);
-  
+   
+    const route = useRoute();
+
     const navigation = useNavigation();
+  
+    useEffect(() => {
+      if (route.params?.selectedAsset) {
+        setSelectedAsset(route.params.selectedAsset);
+      }
+    }, [route.params?.selectedAsset]);
+    
+
+    // const accessToken=route.params
   
     const selectImage = () => {
       setModalVisible(true);
@@ -54,6 +69,9 @@ const CreateAsset2=({route})=>{
       console.log('Edit cancelled');
       // Reset the form or perform any other necessary action
     };
+
+ 
+  
   
     return (
       
@@ -74,6 +92,7 @@ const CreateAsset2=({route})=>{
           )}
         </TouchableOpacity>
 
+{/* 
         <View style={styles.nameField}>
         <Text style={styles.label}>Asset Type*</Text>
         <TextInput
@@ -83,7 +102,32 @@ const CreateAsset2=({route})=>{
             onChangeText={setassetType}
             onFocus={() => navigation.navigate('AssetTypeSearch')}
           />
-           </View>
+           </View> */}    
+
+<     View style={styles.container2}>
+<Text style={styles.label2} >Asset Type*</Text>
+<TouchableOpacity onPress={() => navigation.navigate('AssetTypeSearch')} style={styles.assetContainer}>
+        <View style={styles.nameField2}>
+         
+          <Text style={styles.input2}>
+            {selectedAsset ? selectedAsset.name : 'Asset Type'}
+          </Text>
+          <AntDesign name="right" size={20} color="black"/>
+        </View>
+
+        {/* {selectedAsset && (
+          <View style={styles.assetDetails}>
+            <Text style={styles.detailText}>
+                      {selectedAsset.asset_category.name} - {selectedAsset.asset_category.parent.name}
+                    </Text>
+          </View>
+        )} */}
+      </TouchableOpacity>
+      </View>
+    
+
+           
+
        
         <View style={styles.nameField}>
           <Text style={styles.label}>Name</Text>
@@ -92,6 +136,7 @@ const CreateAsset2=({route})=>{
             placeholder="Name"
             value={name}
             onChangeText={setName}
+            placeholderTextColor="#999"
           />
         </View>
       
@@ -262,6 +307,7 @@ const styles = StyleSheet.create({
     placeholder: {
       justifyContent: 'center',
       alignItems: 'center',
+      
     },
     input: {
       height: 40,
@@ -270,6 +316,7 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       marginBottom: 20,
       paddingHorizontal: 10,
+      color: '#333',
     
     },
     buttonContainer: {
@@ -354,6 +401,55 @@ const styles = StyleSheet.create({
       fontSize: 18,
       marginBottom: 10,
     },
+    assetDetails: {
+      marginTop: 5,
+    },
+    detailText: {
+      fontSize: 16,
+      marginBottom: 5,
+    },
+    container2:{
+   
+      width: Dimensions.get('window').width - 40, // Width minus padding (20px on each side)
+      paddingHorizontal: 20, // Horizontal padding
+      marginVertical: 10, // Vertical margin if needed
+      alignItems: 'flex-start', // Align children to the start of the container
+      marginVertical: 10, // Add some vertical margin if needed
+    
+    },
+
+
+    assetContainer: {
+    
+      borderWidth: 1,
+      padding: 10,
+      borderRadius: 4,
+      borderColor: 'gray',
+      
+      
+      width:310
+      
+    },
+    nameField2: {
+      marginBottom: 5,
+      flexDirection:'row',
+      justifyContent: 'space-between',
+    },
+    label2: {
+      
+      marginBottom: 8,
+    },
+    input2: {
+      
+    },
+    assetDetails: {
+      fontSize: 14,
+      color: '#333',
+    },
+    detailText: {
+      fontSize: 16,
+      marginBottom: 10,
+    },
   
   });
   
@@ -375,6 +471,13 @@ const styles = StyleSheet.create({
       marginBottom: 20,
       paddingHorizontal: 10,
      
+    },
+    assetDetails: {
+      marginTop: 20,
+    },
+    detailText: {
+      fontSize: 16,
+      marginBottom: 10,
     },
   });
 export default CreateAsset2

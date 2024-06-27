@@ -36,7 +36,10 @@ width: 100%;
 /* align-items:flex-end; CIVICLY LOGOSUNU SAGA DOGRU YATIRDI*/
 background-color:${white};
 align-items:flex-start;
-/* align-items:center;*/
+ align-items:center;
+
+
+
 
 
 
@@ -55,8 +58,8 @@ export const PageLogo= styled.Image`
 width: 100px;
 
 height: 30px;
-margin-top:65px;
-
+margin-top:77px;
+left:9px;
 
 
 
