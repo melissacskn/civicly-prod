@@ -16,6 +16,8 @@ const CreateAsset2=()=>{
     const [name, setName] = useState('');
     const [assetType, setassetType] = useState('');
     const [selectedAsset, setSelectedAsset] = useState(null);
+    const [selectedItems, setSelectedItems] = useState([]);
+
     const [checkedStatus, setCheckedStatus] = React.useState('ACTIVE');
     const [checkedCondition, setCheckedCondition] = React.useState();
     const [modalVisible, setModalVisible] = useState(false);
@@ -30,7 +32,12 @@ const CreateAsset2=()=>{
       }
     }, [route.params?.selectedAsset]);
     
-
+    // useEffect(() => {
+    //   if (route.params?.selectedAsset) {
+    //     setSelectedAsset(route.params.selectedAsset);
+    //     setSelectedItems([...selectedItems, route.params.selectedAsset]);
+    //   }
+    // }, [route.params?.selectedAsset]);
     // const accessToken=route.params
   
     const selectImage = () => {

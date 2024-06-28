@@ -1,21 +1,19 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { FlatList, SafeAreaView, StyleSheet, View, Text, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, TextInput, StyleSheet, TouchableOpacity, SafeAreaView, FlatList, Text, ActivityIndicator } from "react-native";
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { fetchAuthSession } from 'aws-amplify/auth';
-import { useNavigation,useRoute } from '@react-navigation/native';
-import AntDesign from "react-native-vector-icons/AntDesign"
 
 const AssetTypeSearch = () => {
   const [filterData, setFilteredData] = useState([]);
-  const [masterData, setMasterData] = useState([]);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(''); // State to hold the user's search input
   const [loading, setLoading] = useState(false);
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [selectedItem, setSelectedItem] = useState(null);
   const navigation = useNavigation();
-
   const route = useRoute();
 
-  const fetchPosts =async () => {
+  // Function to fetch data from the API based on the search query
+  const fetchPosts = async (searchParam) => {
+    setLoading(true); // Set loading state to true
     try {
       const session = await fetchAuthSession({ forceRefresh: true });
       const accessToken = session.tokens.accessToken.toString();
@@ -32,55 +30,39 @@ const requestOptions = {
   body: raw,
   redirect: "follow"
 };
-
-
-    setLoading(true);
-    const apiURL = "https://api.dev.nonprod.civic.ly/assets/asset-type/?search=Bin"; // Replace with your actual API URL
-    fetch(apiURL,requestOptions)
-      .then((response) => response.json())
-      .then((responseJson) => {
-        setMasterData(responseJson.results);
-        setLoading(false);
-      }).catch((error) => {
-        console.log("Error you have is: ", error);
-        setLoading(false);
-      });
-  }
-  catch(error) {
-    console.log("Error you have is: ", error);
-  }
-}
-
-  const searchFilter = (text) => {
-    setSearch(text);
-    if (text) {
-        const newData =  masterData && masterData.filter((item) => {
-        const itemData = (item.name ? item.name.toUpperCase() : '') +
-        (item.asset_category.name ? item.asset_category.name.toUpperCase() : '') +
-        (item.asset_category.parent.name ? item.asset_category.parent.name.toUpperCase() : '');
-        const textData = text.toUpperCase();
-        return itemData.indexOf(textData) > -1;
-      });
-      if(newData){
-      newData.sort((a, b) => a.name.localeCompare(b.name)); // Sort the filtered data alphabetically
-      setFilteredData(newData);
-      
-    } else {
-      setFilteredData([]);
+      const response = await fetch(`https://api.dev.nonprod.civic.ly/assets/asset-type/?search=${searchParam}`,requestOptions); // Fetch data from API with dynamic query
+      const responseJson = await response.json();
+      setFilteredData(responseJson.results); // Set the filtered data to be the API response
+    } catch (error) {
+      console.log("Error you have is: ", error);
+    } finally {
+      setLoading(false); // Set loading state to false
     }
-  } else {
-    setFilteredData([]);
   }
-}
 
-    const selectItem = (item) => {
-        setSearch(item.name);
-        setFilteredData([]);
-        if (!selectedItems.some(selected => selected.name === item.name)) {
-          setSelectedItems([...selectedItems, item]);
-        }
-        navigation.navigate('CreateAsset2', {selectedAsset: item });
-      }
+  useEffect(() => {
+    if (route.params?.previousSelected) {
+      setFilteredData([route.params.previousSelected]);
+    }
+  }, [route.params?.previousSelected]);
+
+  // Trigger fetchPosts whenever the search state changes
+  useEffect(() => {
+    if (search) {
+      fetchPosts(search); // Call fetchPosts with the current search value
+    } else {
+      setFilteredData([]); // Clear data when search is empty
+    }
+  }, [search]);
+
+  const clearSearch = () => {
+    setSearch(''); // Clear the search input
+    setFilteredData([]); // Clear the data when search is cleared
+  };
+
+  const selectItem = (item) => {
+    navigation.navigate('CreateAssets', { selectedAsset: item }); // Navigate to CreateAssets with the selected item
+  }
 
   const MemoizedItemView = React.memo(({ item }) => (
     <TouchableOpacity onPress={() => selectItem(item)}>
@@ -95,24 +77,9 @@ const requestOptions = {
     </TouchableOpacity>
   ), (prevProps, nextProps) => prevProps.item === nextProps.item);
 
-  const ItemSeparatorView = () => {
-    return (
-      <View style={{ height: 0.5, width: '100%', backgroundColor: '#c8c8c8' }}></View>
-    );
-  }
-
-  const getItemLayout = (data, index) => (
-    { length: 70, offset: 70 * index, index }
+  const ItemSeparatorView = () => (
+    <View style={{ height: 0.5, width: '100%', backgroundColor: '#c8c8c8' }} />
   );
-  const clearSearch = () => {
-    setSearch('');
-    setFilteredData(masterData); // Reset to master data when search is cleared
-  };
-
-  useEffect(() => {
-    fetchPosts();
-    return () => { }
-  }, [])
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
@@ -121,11 +88,11 @@ const requestOptions = {
           <AntDesign name="search1" size={14} color="#000" />
           <TextInput
             style={{ flex: 1 }}
-            value={search}
+            value={search} // Bind the search input to the search state
             placeholder="Search and select asset type"
             placeholderTextColor="#999"
             underlineColorAndroid="transparent"
-            onChangeText={(text) => searchFilter(text)}
+            onChangeText={(text) => setSearch(text)} // Update the search state with user input
           />
           {search ? (
             <TouchableOpacity onPress={clearSearch}>
@@ -135,40 +102,52 @@ const requestOptions = {
         </View>
         <View style={styles.loadingContainer}>
           {loading ? (
-            <ActivityIndicator size="large" color="green" />
+            <ActivityIndicator size="large" color="#0000ff" />
           ) : null}
         </View>
         <FlatList
-          data={search ? filterData : selectedItems}
+          data={filterData}
           keyExtractor={(item, index) => `${item.name}-${index}`}
           ItemSeparatorComponent={ItemSeparatorView}
           renderItem={({ item }) => (
-            search ?
-              <MemoizedItemView item={item} /> :
-              <TouchableOpacity onPress={() => selectItem(item)}>
-                <View style={styles.itemContainer}>
-                  <Text style={styles.itemTitle}>
-                    {item.name}
-                  </Text>
-                  <Text style={styles.itemSubtitle}>
-                    {item.asset_category.name} - {item.asset_category.parent.name}
-                  </Text>
-                </View>
-              </TouchableOpacity>
+            <MemoizedItemView item={item} />
           )}
-          getItemLayout={getItemLayout}
+          getItemLayout={(data, index) => (
+            { length: 70, offset: 70 * index, index }
+          )}
         />
       </View>
     </SafeAreaView>
   )
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 16,
+    backgroundColor: 'white',
+    margin: 10,
+    paddingTop:95,
+  },
+  sectionStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F0F0F0',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginBottom: 16,
+  },
+  input: {
+    flex: 1,
+    height: 40,
+    fontSize: 16,
+    color: '#333',
+  },
+  loadingContainer: {
+    height: 40, // Fixed height to prevent layout shift
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 10,
-    paddingTop:80,
+    marginBottom: 16,
   },
   itemContainer: {
     padding: 15,
@@ -176,34 +155,11 @@ const styles = StyleSheet.create({
   itemTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color:'#999'
   },
   itemSubtitle: {
     fontSize: 14,
     color: 'gray',
-  },
- 
-   sectionStyle: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e5e5e5',
-    borderWidth: 0.5,
-    borderColor: '#000',
-    height: 40,
-    borderRadius: 5,
-    margin: 15,
-    marginHorizontal:5,
-    paddingLeft:4, //Search Icon is starts with a bit space between the textfield and the icon
-    paddingRight:4 //Cancel Icon is ends with a bit space between the textfield and the icon
-  },
-  loadingContainer: {
-    height: 40, // Fixed height to prevent layout shift
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  
   }
-)
+})
 
 export default AssetTypeSearch;
