@@ -2,7 +2,7 @@
 import React,{useState} from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import AntDesign from "react-native-vector-icons/AntDesign";
-import CreateAsset from '../screens/CreateAsset';
+
 const { darkLight, primary, green,black,red } = Colors;
 import { useNavigation } from '@react-navigation/native';
 import {

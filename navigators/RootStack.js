@@ -7,12 +7,10 @@ import Welcome from './../screens/Welcome';
 import ConfirmEmail from '../screens/ConfirmEmail';
 import ForgotPassword from '../screens/ForgotPassword';
 import NewPasswordScreen from '../screens/NewPasswordScreen';
-import InnerStack from './InnerStack';
 import AssetsPage from '../screens/AssetsPage';
-import CreateAsset from '../screens/CreateAsset';
 import CreateAsset2 from '../screens/CreatAsset2';
 import AssetTypeSearch from '../screens/AssetTypeSearch';
-import { Auth } from 'aws-amplify';
+
 
 import  {Colors} from './../components/styles';
 const{primary,tertiary}=Colors
@@ -81,7 +79,6 @@ const RootStack=()=>{
                 <Stack.Screen name="AssetsPage" component={AssetsPage}></Stack.Screen>
                 <Stack.Screen name="CreateAsset2" component={CreateAsset2}></Stack.Screen>
                 <Stack.Screen name="AssetTypeSearch" component={AssetTypeSearch}></Stack.Screen>
-                <Stack.Screen name="CreateAsset" component={CreateAsset}></Stack.Screen>
               
                 </>}
 

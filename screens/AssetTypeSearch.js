@@ -20,7 +20,7 @@ const AssetTypeSearch = () => {
       
 
     const myHeaders = new Headers();
-myHeaders.append("Authorization", `Bearer ${accessToken}`);
+    myHeaders.append("Authorization", `Bearer ${accessToken}`);
 
 const raw = "";
 
@@ -30,6 +30,7 @@ const requestOptions = {
   body: raw,
   redirect: "follow"
 };
+
       const response = await fetch(`https://api.dev.nonprod.civic.ly/assets/asset-type/?search=${searchParam}`,requestOptions); // Fetch data from API with dynamic query
       const responseJson = await response.json();
       setFilteredData(responseJson.results); // Set the filtered data to be the API response
@@ -40,18 +41,34 @@ const requestOptions = {
     }
   }
 
+  // useEffect(() => {
+  //   if (route.params?.previousSelected) {
+  //     setFilteredData([route.params.previousSelected]);
+  //   }
+  // }, [route.params?.previousSelected]);
+
+  // // Trigger fetchPosts whenever the search state changes
+  // useEffect(() => {
+  //   if (search) {
+  //     fetchPosts(search); // Call fetchPosts with the current search value
+  //   } else {
+  //     setFilteredData([]); // Clear data when search is empty
+  //   }
+  // }, [search]);
+
   useEffect(() => {
     if (route.params?.previousSelected) {
       setFilteredData([route.params.previousSelected]);
     }
   }, [route.params?.previousSelected]);
 
-  // Trigger fetchPosts whenever the search state changes
   useEffect(() => {
     if (search) {
-      fetchPosts(search); // Call fetchPosts with the current search value
+      fetchPosts(search);
+    } else if (route.params?.previousSelected) {
+      setFilteredData([route.params.previousSelected]);
     } else {
-      setFilteredData([]); // Clear data when search is empty
+      setFilteredData([]);
     }
   }, [search]);
 
@@ -61,7 +78,7 @@ const requestOptions = {
   };
 
   const selectItem = (item) => {
-    navigation.navigate('CreateAssets', { selectedAsset: item }); // Navigate to CreateAssets with the selected item
+    navigation.navigate('CreateAsset2', { selectedAsset: item }); // Navigate to CreateAssets with the selected item
   }
 
   const MemoizedItemView = React.memo(({ item }) => (

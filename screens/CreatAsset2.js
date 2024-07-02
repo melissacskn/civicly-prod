@@ -1,6 +1,6 @@
 
 import React, { useState,useEffect } from 'react';
-import { View, Text, TextInput, Button, Image, StyleSheet, TouchableOpacity, Dimensions,StatusBar } from 'react-native';
+import { View, Text, TextInput, Button, Image, StyleSheet, TouchableOpacity, Dimensions,StatusBar,Alert } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { useNavigation,useRoute } from '@react-navigation/native';
 import AntDesign from "react-native-vector-icons/AntDesign"
@@ -9,20 +9,23 @@ import Modal from 'react-native-modal';
 
 import { RadioButton } from 'react-native-paper';
 
+import { CreateNewAsset } from '../components/HandleCreateAsset';
 
 
-const CreateAsset2=()=>{
+const CreateAsset2=({route})=>{
+ 
     const [imageUri, setImageUri] = useState(null);
     const [name, setName] = useState('');
-    const [assetType, setassetType] = useState('');
+    
+    const{tenantid}=route.params
     const [selectedAsset, setSelectedAsset] = useState(null);
-    const [selectedItems, setSelectedItems] = useState([]);
+  
 
     const [checkedStatus, setCheckedStatus] = React.useState('ACTIVE');
     const [checkedCondition, setCheckedCondition] = React.useState();
     const [modalVisible, setModalVisible] = useState(false);
    
-    const route = useRoute();
+    const isSaveDisabled = !checkedStatus || !checkedCondition || !selectedAsset;
 
     const navigation = useNavigation();
   
@@ -32,13 +35,7 @@ const CreateAsset2=()=>{
       }
     }, [route.params?.selectedAsset]);
     
-    // useEffect(() => {
-    //   if (route.params?.selectedAsset) {
-    //     setSelectedAsset(route.params.selectedAsset);
-    //     setSelectedItems([...selectedItems, route.params.selectedAsset]);
-    //   }
-    // }, [route.params?.selectedAsset]);
-    // const accessToken=route.params
+
   
     const selectImage = () => {
       setModalVisible(true);
@@ -62,23 +59,27 @@ const CreateAsset2=()=>{
     const openGallery = () => {
       launchImageLibrary({ mediaType: 'photo', maxHeight: 200, maxWidth: 200 }, handleImagePickerResponse);
     };
-  
-  
-    
-  
-    const handleSave = () => {
-      // Handle save logic here
-      console.log('Profile saved:', { name, email, address, country });
-    };
+   
+  const handleSave = async () => {
+    try {
+ 
+      const result = await CreateNewAsset({ name, checkedStatus, checkedCondition,selectedAsset });
+      Alert.alert('Success', 'Asset saved successfully');
+      // Handle the result as needed
+    } catch (error) {
+      Alert.alert('Error', 'Failed to save asset');
+    }
+  };
   
     const handleCancel = () => {
       // Handle cancel logic here
+      navigation.navigate("AssetsPage",{tenantid:tenantid})
       console.log('Edit cancelled');
       // Reset the form or perform any other necessary action
     };
 
  
-  
+
   
     return (
       
@@ -99,21 +100,11 @@ const CreateAsset2=()=>{
           )}
         </TouchableOpacity>
 
-{/* 
-        <View style={styles.nameField}>
-        <Text style={styles.label}>Asset Type*</Text>
-        <TextInput
-            style={styles.input}
-            placeholder="Asset Type"
-            value={assetType}
-            onChangeText={setassetType}
-            onFocus={() => navigation.navigate('AssetTypeSearch')}
-          />
-           </View> */}    
+
 
 <     View style={styles.container2}>
 <Text style={styles.label2} >Asset Type*</Text>
-<TouchableOpacity onPress={() => navigation.navigate('AssetTypeSearch')} style={styles.assetContainer}>
+<TouchableOpacity onPress={() => navigation.navigate('AssetTypeSearch',{ previousSelected: selectedAsset })} style={styles.assetContainer}>
         <View style={styles.nameField2}>
          
           <Text style={styles.input2}>
@@ -122,13 +113,7 @@ const CreateAsset2=()=>{
           <AntDesign name="right" size={20} color="black"/>
         </View>
 
-        {/* {selectedAsset && (
-          <View style={styles.assetDetails}>
-            <Text style={styles.detailText}>
-                      {selectedAsset.asset_category.name} - {selectedAsset.asset_category.parent.name}
-                    </Text>
-          </View>
-        )} */}
+    
       </TouchableOpacity>
       </View>
     
@@ -150,20 +135,7 @@ const CreateAsset2=()=>{
       
           
     
-         {/* <RNPickerSelect
-          onValueChange={(value) => setCountry(value)}
-           items={[
-             { label: 'United States', value: 'us' },
-            { label: 'Canada', value: 'ca' },
-             { label: 'United Kingdom', value: 'uk' },
-           ]}
-           style={pickerSelectStyles}
-           placeholder={{ label: 'Search and select asset type...', value: null }}
-           
-         /> */}
      
-      
-         
         
          <View style={styles.statu}>
           <Text>Status*</Text>
@@ -242,21 +214,25 @@ const CreateAsset2=()=>{
           />
           <Text style={styles.label}>POOR</Text>
         </View>
-          
-        
-       
           </View>
-      
-  
-  
       </View>
   
-        <View style={styles.buttonContainer}>
-        <Button title="Save" onPress={handleSave} color="rgb(0, 168, 84)" />
-         
-          <View style={styles.buttonSpacer} />
-          <Button title="Cancel" onPress={handleCancel} color="rgb(240, 65, 52)" />
-        </View>
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={[styles.saveButton, isSaveDisabled ? styles.saveButtonDisabled : styles.saveButtonEnabled]}
+          onPress={handleSave}
+          disabled={isSaveDisabled}
+        >
+          <Text style={styles.saveButtonText}>Save</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.cancelButton}
+          onPress={handleCancel}
+        >
+          <Text style={styles.cancelButtonText}>Cancel</Text>
+        </TouchableOpacity>
+      </View>
   
         <Modal
           isVisible={modalVisible}
@@ -264,23 +240,21 @@ const CreateAsset2=()=>{
           onBackButtonPress={() => setModalVisible(false)}
           style={styles.modal}
         >
-           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>Upload Photo</Text>
-            <Button title="Take Photo" onPress={openCamera} />
-            <Button title="Choose from Library" onPress={openGallery} />
-            <Button title="Cancel" onPress={() => setModalVisible(false)} />
-          </View> 
-  
-          {/*
-           <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalText}>Upload Photo</Text>
-            <Button title="Take Photo" onPress={() => {openCamera}} />
-            <Button title="Choose from Library" onPress={() => {openGallery}} />
-            <Button title="Cancel" onPress={() => setModalVisible(false)} />
-            </View>
-            </View>
-        */}
+        <View style={styles.modalContent}>
+        <Text style={styles.modalText}>Upload Photo</Text>
+        <TouchableOpacity style={styles.button} onPress={openCamera}>
+          <Text style={styles.buttonText}>Take Photo</Text>
+          <AntDesign name="camera" size={20} color="#000" style={styles.buttonIcon} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={openGallery}>
+          <Text style={styles.buttonText}>Choose from Library</Text>
+          <AntDesign name="picture" size={20} color="#000" style={styles.buttonIcon} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => setModalVisible(false)}>
+          <Text style={styles.buttonText}>Cancel</Text>
+          <AntDesign name="close" size={20} color="#000" style={styles.buttonIcon} />
+        </TouchableOpacity>
+      </View>
         </Modal>
       </View>
     );
@@ -326,41 +300,13 @@ const styles = StyleSheet.create({
       color: '#333',
     
     },
-    buttonContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
   
-      width: '100%',
-    },
-    buttonSpacer: {
-      width: 10,
-    },
     modal: {
       justifyContent: 'flex-end',
-  
       margin: 0,
-     
-      
     },
-    modalContent: {
-      backgroundColor: 'white',
-      padding: 30,
-      
-    
-      marginTop:15,
-      borderTopLeftRadius: 10,
-      borderTopRightRadius: 10,
-    
-      alignItems: 'center',
-  
-      justifyContent:"space-between"
-     
-    },
-    modalText: {
-      fontSize: 18,
-      marginBottom: 15,
-   
-    },
+ 
+ 
     nameField: {
       width: Dimensions.get('window').width - 40, // Width minus padding (20px on each side)
       paddingHorizontal: 20, // Horizontal padding
@@ -392,22 +338,8 @@ const styles = StyleSheet.create({
       marginBottom: 10,
     },
   
-    modalContainer: {
-      flex: 1,
-      justifyContent: 'flex-end', // Align content at the end of the modal
-      backgroundColor: 'rgba(0, 0, 0, 0.3)', // Semi-transparent background
-    
-    },
-    modalContent: {
-      backgroundColor: 'white',
-      padding:10,
-      borderTopLeftRadius: 10,
-      borderTopRightRadius: 10,
-    },
-    modalText: {
-      fontSize: 18,
-      marginBottom: 10,
-    },
+   
+ 
     assetDetails: {
       marginTop: 5,
     },
@@ -456,6 +388,85 @@ const styles = StyleSheet.create({
     detailText: {
       fontSize: 16,
       marginBottom: 10,
+    },
+
+
+  
+
+    modalContent: {
+      backgroundColor: 'white',
+      padding: 10,
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+    },
+    modalText: {
+      fontSize: 18,
+      marginBottom: 10,
+    },
+  
+    button: {
+      padding: 12,
+      borderRadius: 4,
+      alignItems: 'center',
+      marginBottom: 16,
+    },
+    buttonSelected: {
+      backgroundColor: 'rgb(0, 168, 84)',
+    },
+    buttonUnselected: {
+      backgroundColor: '#ccc',
+    },
+    buttonText: {
+      color: 'white',
+      fontSize: 16,
+    },
+    buttonContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    saveButton: {
+      flex: 1,
+      padding: 12,
+      borderRadius: 4,
+      alignItems: 'center',
+      marginRight: 10,
+    },
+    saveButtonEnabled: {
+      backgroundColor: 'rgb(0, 168, 84)',
+    },
+    saveButtonDisabled: {
+      backgroundColor: '#ccc',
+    },
+    saveButtonText: {
+      color: 'white',
+      fontSize: 16,
+    },
+
+    // buttonContainer: {
+    //   flexDirection: 'row',
+    //   justifyContent: 'center',
+  
+    //   width: '100%',
+    // },
+    buttonSpacer: {
+      width: 10,
+    },
+    CancelButton: {
+      padding: 15,
+      borderRadius: 4,
+      alignItems: 'center',
+
+    }, 
+    cancelButton: {
+      flex: 1,
+      padding: 12,
+      borderRadius: 4,
+      alignItems: 'center',
+      backgroundColor: '#f44336',
+    },
+    cancelButtonText: {
+      color: 'white',
+      fontSize: 16,
     },
   
   });
