@@ -41,20 +41,7 @@ const requestOptions = {
     }
   }
 
-  // useEffect(() => {
-  //   if (route.params?.previousSelected) {
-  //     setFilteredData([route.params.previousSelected]);
-  //   }
-  // }, [route.params?.previousSelected]);
 
-  // // Trigger fetchPosts whenever the search state changes
-  // useEffect(() => {
-  //   if (search) {
-  //     fetchPosts(search); // Call fetchPosts with the current search value
-  //   } else {
-  //     setFilteredData([]); // Clear data when search is empty
-  //   }
-  // }, [search]);
 
   useEffect(() => {
     if (route.params?.previousSelected) {

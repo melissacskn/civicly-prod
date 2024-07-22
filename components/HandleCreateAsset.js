@@ -1,7 +1,8 @@
 import {  fetchAuthSession } from 'aws-amplify/auth';
+import { handleAssetFileUpload } from './AssetUploads';
     
-   export const CreateNewAsset = async ( {name,checkedStatus, checkedCondition,selectedAsset}) => {
-        console.log(name,checkedCondition,checkedStatus,selectedAsset.asset_category.id)
+   export const CreateNewAsset = async ( {name, checkedStatus, checkedCondition,selectedAsset,tenantId,location,fileName,fileType,image}) => {
+        // console.log(name,checkedCondition,checkedStatus,selectedAsset.asset_category.id)
         
 
         try{
@@ -16,19 +17,14 @@ import {  fetchAuthSession } from 'aws-amplify/auth';
 const formdata = new FormData();
 
 
-// formdata.append("name", name);
-// formdata.append("description", "\"\"");
-// formdata.append("asset_type_id", selectedAsset.asset_category.id);
-// formdata.append("status", checkedStatus);
-// formdata.append("location",  "{\"latitude\": 52.6798, \"longitude\": 1.280531, \"comment\": \"Local Test\"}");
-// formdata.append("condition", checkedCondition);
+
 
 formdata.append("name", name);
 formdata.append("description", "\"\"");
 formdata.append("asset_type_id", selectedAsset.id);
-formdata.append("status", "ACTIVE");
-formdata.append("location", "{\"latitude\": 52.6798, \"longitude\": 1.280531, \"comment\": \"Local Test\"}");
-formdata.append("condition", "GOOD");
+formdata.append("status", checkedStatus);
+formdata.append("location", `{\"latitude\": ${location.latitude}, \"longitude\": ${location.longitude}, \"comment\": \"Local Test\"}`);
+formdata.append("condition", checkedCondition);
 
 const requestOptions = {
   method: "POST",
@@ -37,16 +33,23 @@ const requestOptions = {
   redirect: "follow"
 };
 
-
-fetch("https://api.dev.nonprod.civic.ly/assets/e5bd087d-3f8a-413c-b3d6-84011a7ff644/asset/", requestOptions) // tenant id
-  .then((response) => response.text())
-  .then((result) => console.log(result))
-  .catch((error) => console.error(error));
-    }
+const response= await fetch("https://api.dev.nonprod.civic.ly/assets/e5bd087d-3f8a-413c-b3d6-84011a7ff644/asset/", requestOptions) // tenant id
+const json = await response.json();
+// console.log(json)
+// console.log(json.id)
+const assetId = json.id;
+await handleAssetFileUpload({
+  assetId: assetId,
+  fileName: fileName,
+  fileType: fileType,
+  tenantId: tenantId,
+  image: image
+});
+  
+        }
   
     
     catch (error) {
         console.log("Error you have is: ", error);
       } 
 }
-

@@ -36,21 +36,7 @@ const Welcome = ({ route }) => {
   const tenantsIds=[]
   const stringArray=[]
 
-  // const DATA = [
-  //   {
-  //     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-  //     title: 'First Item',
-  //   },
-  //   {
-  //     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-  //     title: 'Second Item',
-  //   },
-  //   {
-  //     id: '58694a0f-3da1-471f-bd96-145571e29d72',
-  //     title: 'Third Item',
-  //   },
-  // ];
-
+  
   const [data,setdata]=useState()
   const [selectedId, setSelectedId] = useState();
 
@@ -119,21 +105,6 @@ const Welcome = ({ route }) => {
       }
 
 
-      //   const response = await fetch("https://api.dev.nonprod.civic.ly/core/user/tenant", {
-      //   method: "GET",
-      //   headers: {
-      //     "Authorization": `Bearer ${accessToken}`
-      //   }
-      // });
-
-      // const json = await response.json();
-      // console.log("Response JSON:", json);
-      // const tenantid = json.results[0].id
-      // const tenantname=json.results[0].name
-
-      // console.log(tenantid)
-      // console.log(tenantname)
-      
 
     }
     catch (error) {
@@ -173,17 +144,7 @@ const Welcome = ({ route }) => {
     const count = json.count
     console.log("Response JSON:", json);
 
-    // const tenantid1 = json.results[0].id
-    // const tenantname1=json.results[0].name
-    // const tenantid2 = json.results[1].id
-    // const tenantname2=json.results[1].name
 
-
-    // console.log(tenantid1)
-    // console.log(tenantname1)
-    // console.log(tenantid2)
-    // console.log(tenantname2)
-    /*/*/
 
     console.log(count)
     for (let i = 0; i < count; i++) {
@@ -205,75 +166,6 @@ const Welcome = ({ route }) => {
     stringArray.push(tenantname2)
     stringArray.push(tenantname1)
  
-   // console.log(stringArray[0])
-
-  
-    
-    /*/*/
-
-// console.log(json.results.length)
-
-// for(let i=0;i<json.results.length;i++){
-//     const name=json.results[i].name
-//     const id=json.results[i].id
-  
-//     tenantNames.push(name)
-//     tenantsIds.push(id)
-//     }
-   
-    //console.log(tenantNames[1])
-
-   
-  
-                            /////////////CREATING AN ASSET//////////////////////
-    //   const myHeaderss = new Headers();
-    //   myHeaderss.append("Authorization", `Bearer ${x}`);
-
-
-    // const formdata = new FormData();
-    // formdata.append("name", "Trademark");
-    // formdata.append("description", "\"\"");
-    // formdata.append("asset_type_id", "002097e2-4f65-481a-adfd-7ab1d98a5573");
-    // formdata.append("status", "ACTIVE");
-    // formdata.append("location", "{\"latitude\": 52.67566641051758, \"longitude\": 1.2828212154745984, \"comment\":\"Local Test\"}");
-    // formdata.append("condition", "FAIR");
-
-    // const requestOptionss = {
-    //   method: "POST",
-    //   headers: myHeaderss,
-    //   body: formdata,
-    //   redirect: "follow"
-    // };
-
-
-    //   const responsee = await fetch(`https://api.dev.nonprod.civic.ly/assets/${tenantid3}/asset/`,requestOptionss)
-    //   const jsonn = await responsee.json();
-    //    console.log("Response JSON:", jsonn);
-    //////////////////////////////////////////////////////////////////////////////////
-
-
-    //GETTING ASSETS OF AN INDIVUAL TENANT
-
-    //     const myHeadersss = new Headers();
-    //     myHeadersss.append("Authorization", `Bearer ${x}`);
-
-    // const requestOptionsss = {
-    //   method: "GET",
-    //   headers: myHeadersss,
-    //   redirect: "follow"
-    // };
-    // const responseee = await fetch(`https://api.dev.nonprod.civic.ly/assets/${tenantid3}/asset/`,requestOptionsss)
-    // const jsonnn = await responseee.json();
-    //  console.log("Response JSON:", jsonnn);
-    //  const count2 = jsonnn.count
-
-    //  for(let i=0; i<count2;i++){
-
-    //   console.log("Asset Name: ",jsonnn.results[i].name)
-
-
-
-    // }
 
 
 

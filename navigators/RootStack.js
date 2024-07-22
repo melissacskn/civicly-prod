@@ -10,7 +10,10 @@ import NewPasswordScreen from '../screens/NewPasswordScreen';
 import AssetsPage from '../screens/AssetsPage';
 import CreateAsset2 from '../screens/CreatAsset2';
 import AssetTypeSearch from '../screens/AssetTypeSearch';
-
+import MapMap from '../screens/MapMap';
+import LocationServiceCheck from '../screens/LocationServiceCheck';
+import AssetUploads from '../components/AssetUploads';
+import { LocationProvider } from '../components/LocationContext';
 
 import  {Colors} from './../components/styles';
 const{primary,tertiary}=Colors
@@ -31,10 +34,13 @@ const RootStack=()=>{
 
   
     return (
+        <LocationProvider>
         <LogInContext.Provider value={setIsUser}>
         <NavigationContainer>
         <Stack.Navigator
+        // initialRouteName='LocationServiceCheck'
             screenOptions={{
+                
             
                 headerStyle:{
                     backgroundColor: "transparent"
@@ -45,10 +51,13 @@ const RootStack=()=>{
                 headerLeftContainerStyle:{
                     paddingLeft:10
                 }
+                
+            
                
                 
-              }}>
+              }} >
                 {!isUser &&   <>
+                
                         <Stack.Screen 
                             name='Login' 
                             component={Login} 
@@ -79,6 +88,8 @@ const RootStack=()=>{
                 <Stack.Screen name="AssetsPage" component={AssetsPage}></Stack.Screen>
                 <Stack.Screen name="CreateAsset2" component={CreateAsset2}></Stack.Screen>
                 <Stack.Screen name="AssetTypeSearch" component={AssetTypeSearch}></Stack.Screen>
+                <Stack.Screen name="MapMap" component={MapMap}></Stack.Screen>
+            
               
                 </>}
 
@@ -88,6 +99,7 @@ const RootStack=()=>{
         </Stack.Navigator>
         </NavigationContainer>
         </LogInContext.Provider>
+        </LocationProvider>
     );
 }
 

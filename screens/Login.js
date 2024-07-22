@@ -22,6 +22,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LocationServiceCheck from "./LocationServiceCheck";
 
 import{
     StyledContainer,
@@ -175,11 +176,14 @@ setTimeout(()=>navigation.navigate("Welcome",{email},10))
         
         <ImageBackground source={require('./../assets/Pulse-mobile.png')} resizeMode='cover' style={styles.container} imageStyle= {styles.image}>
         <StyledContainer>
+          <LocationServiceCheck/>
+        
         <StatusBar backgroundColor='transparent'
             translucent={true}
             />
             
             <InnerContainer>
+            
                 
                 <PageLogo resizeMode="cover" source={require('./../assets/images/civicly-remove.png')}/>
                 <PageTitle >Smart Assets for Sustainable Communities</PageTitle>

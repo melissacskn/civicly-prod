@@ -3,7 +3,9 @@
 import React from 'react';
 import { ImageBackground,StyleSheet,View } from "react-native";
 
-
+import "react-native-devsettings";
+// OR if you are using AsyncStorage
+import "react-native-devsettings/withAsyncStorage";
 
 
 
