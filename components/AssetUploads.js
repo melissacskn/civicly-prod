@@ -241,8 +241,7 @@
 
 
 
-import { View, Text } from 'react-native'
-import React from 'react'
+
 import { fetchAuthSession } from 'aws-amplify/auth';
 import axios from 'axios'
 
@@ -305,12 +304,16 @@ export const handleAssetFileUpload = async ({ assetId, fileName, fileType, tenan
       for (const key in d.fields) {
         postData.append(key, d.fields[key]);
       }
-      // postData.append('file', file);
+      
       console.log(image)
-      postData.append('file', file);
+      console.log()
+     
+      // postData.append('file', { uri: file.uri,  URIname: file.name, type: file.type});
+      postData.append('file', { uri: Platform.OS === 'ios' ? image.sourceURL : image.path, name: image.filename, type: image.mime, });
      
 
       console.log(`Uploading file to ${d.url}`);
+      console.log(postData)
       try {
         const uploadResponse = await fetch(d.url, {
           method: 'POST',

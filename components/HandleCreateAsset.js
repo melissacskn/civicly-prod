@@ -39,11 +39,22 @@ const json = await response.json();
 // console.log(json.id)
 const assetId = json.id;
 await handleAssetFileUpload({
+  // assetId: assetId,
+  // fileName: fileName,
+  // fileType: fileType,
+  // tenantId: tenantId,
+  // image: image
+
   assetId: assetId,
-  fileName: fileName,
-  fileType: fileType,
+  fileName: fileName ,
+  fileType: image.mime,
   tenantId: tenantId,
-  image: image
+  image: {
+    path: image.path,
+    filename: fileName,
+    mime: image.mime
+  }
+  
 });
   
         }
