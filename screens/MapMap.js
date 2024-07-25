@@ -114,10 +114,14 @@ const MapMap = () => {
     <View style={styles.page}>
       <Mapbox.MapView style={styles.map} onPress={handleMapPress}>
         <Mapbox.Camera ref={cameraRef} zoomLevel={zoomLevel} animationMode={'flyTo'} animationDuration={1000} />
-        <Mapbox.UserLocation visible={true} onUpdate={(location) => setUserLocation(location)} />
+        <Mapbox.UserLocation
+          visible={true}
+          onUpdate={(location) => setUserLocation(location)}
+        
+        />
         {selectedLocation && (
           <Mapbox.PointAnnotation
-            id="selected-location" // Add a unique id here
+            id="selected-location"
             coordinate={[selectedLocation.longitude, selectedLocation.latitude]}
           />
         )}

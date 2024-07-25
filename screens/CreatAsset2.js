@@ -88,8 +88,7 @@ useEffect(() => {
       }
     };
 
-// console.log(selectedAsset.id + " \n"+imageUri)
-// console.log(image)
+
   
   const handleSave = async () => {
     try {
@@ -101,6 +100,7 @@ useEffect(() => {
 
       ///THIS IS THE PLACE TO UPLOAD THE IMAGE////
       Alert.alert('Success', 'Asset saved successfully');
+      navigation.navigate("AssetsPage",{tenantid:tenantId})
       // Handle the result as needed
     } catch (error) {
       Alert.alert('Error', 'Failed to save asset');
@@ -350,8 +350,9 @@ useEffect(() => {
         // cropping: true, // Enable cropping
         includeExif: true, // Ensure EXIF data is included
       }).then(image => {
+        setImage(image)
         setImageUri(image.path);
-        console.log('Picked and cropped image:', image);
+        console.log('Picked and cropped image: camera', image);
 
                // Extract file name from the path
       const extractedFileName = image.path.split('/').pop();

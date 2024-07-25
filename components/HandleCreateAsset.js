@@ -35,8 +35,7 @@ const requestOptions = {
 
 const response= await fetch("https://api.dev.nonprod.civic.ly/assets/e5bd087d-3f8a-413c-b3d6-84011a7ff644/asset/", requestOptions) // tenant id
 const json = await response.json();
-// console.log(json)
-// console.log(json.id)
+
 const assetId = json.id;
 await handleAssetFileUpload({
   // assetId: assetId,

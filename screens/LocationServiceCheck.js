@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { Alert, Platform, Linking } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
@@ -6,6 +6,7 @@ import { LocationContext } from '../components/LocationContext';
 
 const LocationServiceCheck = () => {
   const { setLocation } = useContext(LocationContext);
+  const [highAccuracyUsed, setHighAccuracyUsed] = useState(false);
 
   useEffect(() => {
     askUserPermission();
@@ -81,16 +82,32 @@ const LocationServiceCheck = () => {
   };
   
   const checkLocationServices = () => {
-    Geolocation.getCurrentPosition(
-      (position) => {
-        console.log('Current Location:', position.coords);  // Log the position to console
-        setLocation(position.coords);  // Save the location in context
-      },
-      (error) => {
-        Alert.alert('Location services disabled', 'Please enable location services.');
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-    );
+    const getLocation = (enableHighAccuracy) => {
+      Geolocation.getCurrentPosition(
+        (position) => {
+          console.log('Current Location:', position.coords);  // Log the position to console
+          setLocation(position.coords);  // Save the location in context
+          if (enableHighAccuracy) {
+            setHighAccuracyUsed(true);
+          }
+        },
+        (error) => {
+          Alert.alert('Location services disabled', 'Please enable location services.');
+        },
+        { 
+          enableHighAccuracy: enableHighAccuracy, 
+          timeout: 20000, 
+          maximumAge: 300000, 
+          distanceFilter: 50 
+        }
+      );
+    };
+
+    if (!highAccuracyUsed) {
+      getLocation(true); // Initial high accuracy request
+    } else {
+      getLocation(false); // Subsequent low accuracy requests
+    }
   };
 
   return null;  // No UI elements are returned
