@@ -412,17 +412,14 @@ useEffect(() => {
 
 <     View style={styles.container2}>
 <Text style={styles.label2} >Asset Type*</Text>
-<TouchableOpacity onPress={() => navigation.navigate('AssetTypeSearch',{ previousSelected: selectedAsset })} style={styles.assetContainer}>
-        <View style={styles.nameField2}>
-         
-          <Text style={styles.input2}>
-            {selectedAsset ? selectedAsset.name : 'Asset Type'}
-          </Text>
-          <AntDesign name="right" size={20} color="black"/>
-        </View>
-
-    
-      </TouchableOpacity>
+<TouchableOpacity onPress={() => navigation.navigate('AssetTypeSearch', { previousSelected: selectedAsset, sourcePage: 'CreateAsset2' })} style={styles.assetContainer}>
+  <View style={styles.nameField2}>
+    <Text style={styles.input2}>
+      {selectedAsset ? selectedAsset.name : 'Asset Type'}
+    </Text>
+    <AntDesign name="right" size={20} color="black"/>
+  </View>
+</TouchableOpacity>
       </View>
     
 
@@ -440,7 +437,7 @@ useEffect(() => {
       
         <View style={styles.container2}>
 <Text style={styles.label2} >Add Location*</Text>
-<TouchableOpacity  style={styles.assetContainer} onPress={() => navigation.navigate('MapMap',{locationData:location})}>
+<TouchableOpacity  style={styles.assetContainer} onPress={() => navigation.navigate('MapMap', { locationData: location, sourcePage: 'CreateAsset2' })}>
         <View style={styles.nameField2}>
          
           <Text style={styles.input2}>

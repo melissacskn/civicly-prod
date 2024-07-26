@@ -13,6 +13,7 @@ import AssetTypeSearch from '../screens/AssetTypeSearch';
 import MapMap from '../screens/MapMap';
 import LocationServiceCheck from '../screens/LocationServiceCheck';
 import AssetUploads from '../components/AssetUploads';
+import EditingAssets from '../screens/EditingAssets';
 import { LocationProvider } from '../components/LocationContext';
 
 import  {Colors} from './../components/styles';
@@ -89,6 +90,7 @@ const RootStack=()=>{
                 <Stack.Screen name="CreateAsset2" component={CreateAsset2}></Stack.Screen>
                 <Stack.Screen name="AssetTypeSearch" component={AssetTypeSearch}></Stack.Screen>
                 <Stack.Screen name="MapMap" component={MapMap}></Stack.Screen>
+                <Stack.Screen name="EditingAssets" component={EditingAssets}></Stack.Screen> 
             
               
                 </>}

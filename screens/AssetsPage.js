@@ -1,38 +1,27 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Alert, StatusBar, ImageBackground, StyleSheet, View, Text, FlatList, TouchableOpacity, Button, ScrollView, ActivityIndicator } from "react-native";
-import { signOut, getCurrentUser, fetchAuthSession } from 'aws-amplify/auth';
-import styled from 'styled-components';
-
-import AntDesign from "react-native-vector-icons/AntDesign";
+import { Alert, StatusBar, StyleSheet, View, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { fetchAuthSession } from 'aws-amplify/auth';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import ItemCard from '../components/itemCard';
 import {
-  StyledContainer,
   InnerContainer,
   PageLogo,
-  PageTitle,
-  SubTitle,
   StyledFormArea,
-  StyledButton,
-  ButtonText,
+  Container,
+  LeftCornerContainer,
+  AssetTitle,
   WelcomeContainer,
   Colors,
-  AssetTitle,
-  TenantTitle,
-  Container,
-  LeftIcon,
-  RightCornerContainer,
-  LeftCornerContainer,
-  RightIcon,
 } from '../components/styles4';
 
 const { darkLight, primary, green, black } = Colors;
 
 const AssetsPage = ({ route }) => {
   const navigation = useNavigation();
-  const { itemId, itemName } = route.params;
-  const [count, setCount] = useState(0);
+  const { itemId } = route.params;
+  const [tenantId, setTenantId] = useState(itemId);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
 
@@ -44,18 +33,17 @@ const AssetsPage = ({ route }) => {
       const myHeaders = new Headers();
       myHeaders.append("Authorization", `Bearer ${accessToken}`);
 
-      const requestOptionsss = {
+      const requestOptions = {
         method: "GET",
         headers: myHeaders,
-        redirect: "follow"
+        redirect: "follow",
       };
 
-      const responseee = await fetch(`https://api.dev.nonprod.civic.ly/assets/${itemId}/asset/`, requestOptionsss);
-      const jsonnn = await responseee.json();
-      console.log("Response JSON:", jsonnn);
-      setCount(jsonnn.count);
+      const response = await fetch(`https://api.dev.nonprod.civic.ly/assets/${itemId}/asset/`, requestOptions);
+      const json = await response.json();
+      console.log("Response JSON:", json);
 
-      const newData = jsonnn.results.map((item) => {
+      const newData = json.results.map((item) => {
         const coordinates = item.asset_location?.features[0]?.geometry?.coordinates || [null, null];
         return {
           id: item.id,
@@ -64,12 +52,11 @@ const AssetsPage = ({ route }) => {
           status: item.status,
           condition: item.condition,
           asset_type_name: item.asset_type?.name || 'Unknown',
-          latitude: coordinates[1], // Extracted latitude
-          longitude: coordinates[0], // Extracted longitude
+          latitude: coordinates[1],
+          longitude: coordinates[0],
         };
       });
       setData(newData);
-
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -121,16 +108,11 @@ const AssetsPage = ({ route }) => {
         redirect: "follow"
       };
 
-      fetch(`https://api.dev.nonprod.civic.ly/assets/${itemId}/asset/${assetId}`, requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.error(error));
-
+      await fetch(`https://api.dev.nonprod.civic.ly/assets/${itemId}/asset/${assetId}`, requestOptions);
       console.log('Deleting post with assetId:', assetId);
-      const newData = data.filter(item => item.assetId !== assetId);
+      const newData = data.filter(item => item.id !== assetId);
       setData(newData);
       await fetchData();
-
     } catch (error) {
       console.error('Error deleting the post:', error);
     } finally {
@@ -138,13 +120,14 @@ const AssetsPage = ({ route }) => {
     }
   };
 
-  const handlePressEditButton = async (assetId) => {
-    navigation.navigate("EditingAssets");
+  const handlePressEditButton = (assetItem) => {
+    console.log(assetItem)
+    navigation.navigate("EditingAssets", { tenantId: tenantId, asset: assetItem });
   };
 
   const renderItem = ({ item }) => (
     <ItemCard
-      onEdit={handlePressEditButton}
+      onEdit={() => handlePressEditButton(item)} //Passing item as assetItem
       onDelete={() => handlePressDeleteButton(item.id)}
       key={item.id}
       tenantId={itemId}
@@ -199,9 +182,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  image: {
-    opacity: 0.7
-  },
   iconButton: {
     padding: 15,
     marginTop: 10
@@ -209,18 +189,6 @@ const styles = StyleSheet.create({
   containerForLoading: {
     flex: 1,
     justifyContent: 'center',
-  },
-});
-
-const styles2 = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-  },
-  loading: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 
