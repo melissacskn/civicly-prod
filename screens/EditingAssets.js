@@ -594,7 +594,7 @@ const EditingAssets = ({ route }) => {
   const [fileName, setFileName] = useState('');
   const [fileType, setFileType] = useState('');
   const { location: currentLocation } = useContext(LocationContext);  // Access current location from context
-  const [highAccuracyUsed, setHighAccuracyUsed] = useState(false);
+  // const [highAccuracyUsed, setHighAccuracyUsed] = useState(false);
 
   const initialData = useMemo(() => ({
    
