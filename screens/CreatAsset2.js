@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useContext } from 'react';
 import { View, Text, TextInput, Button, Image, StyleSheet, TouchableOpacity, Dimensions,StatusBar,Alert,PermissionsAndroid,Linking } from 'react-native';
 
 import { useNavigation,useRoute } from '@react-navigation/native';
@@ -15,8 +15,8 @@ import { CreateNewAsset } from '../components/HandleCreateAsset';
 
 Mapbox.setAccessToken('sk.eyJ1IjoiY2l2aWNseSIsImEiOiJjbHk4a3NjcmcwZGxzMmpzYnA5dGw4OWV1In0.oCECiSHLJO6qnEzyBmQoNw');
 import axios from 'axios';
-import { handleAssetFileUpload } from '../components/AssetUploads';
 
+import { LocationContext } from '../components/LocationContext';
 const CreateAsset2=({route})=>{
  
     const [imageUri, setImageUri] = useState(null);
@@ -42,6 +42,8 @@ const CreateAsset2=({route})=>{
     const [address, setAddress] = useState(null);
     const [fileName, setFileName] = useState('');
     const [fileType, setFileType] = useState('');
+    const { location: currentLocation } = useContext(LocationContext);  // Access current location from context
+    const [highAccuracyUsed, setHighAccuracyUsed] = useState(false);
 
     useEffect(() => {
       if (route.params?.selectedAsset) {
@@ -300,95 +302,113 @@ useEffect(() => {
     const pickAndCropImage = () => {
       ImagePicker.openPicker({
         mediaType: 'photo',
-        // cropping: true, // Enable cropping
         includeExif: true, // Ensure EXIF data is included
       }).then(image => {
-        setImage(image)
-       console.log(image)
+        setImage(image);
         setImageUri(image.path);
         console.log('Picked and cropped image:', image);
-
-          // Extract file name from the path
-      const extractedFileName = image.path.split('/').pop();
-      setFileName(extractedFileName);
-      console.log('File name:', extractedFileName);
-
-      // Extract file extension from the file name
-      const extractedFileType = extractedFileName.split('.').pop();
-      setFileType(extractedFileType);
-      console.log('File type:', extractedFileType);
-
+  
+        // Extract file name from the path
+        const extractedFileName = image.path.split('/').pop();
+        setFileName(extractedFileName);
+        console.log('File name:', extractedFileName);
+  
+        // Extract file extension from the file name
+        const extractedFileType = extractedFileName.split('.').pop();
+        setFileType(extractedFileType);
+        console.log('File type:', extractedFileType);
   
         if (image.exif) {
           const { Latitude, Longitude } = image.exif;
           if (Latitude && Longitude) {
-            setLocation({
+            setReturnedLocation({
               latitude: Latitude,
               longitude: Longitude,
             });
           } else {
             console.log('No GPS location data found in EXIF');
-            setLocation(null);
+            if (currentLocation) {
+              setReturnedLocation(currentLocation);
+            } else {
+              console.log('Current location not available');
+            }
           }
         } else {
           console.log('No EXIF data found');
-          setLocation(null);
+          if (currentLocation) {
+            setReturnedLocation(currentLocation);
+          } else {
+            console.log('Current location not available');
+          }
         }
       }).catch(error => {
         if (error.message !== 'User cancelled image selection') {
           console.error('Error picking and cropping image:', error);
         }
-        setLocation(null);
+        if (currentLocation) {
+          setReturnedLocation(currentLocation);
+        } else {
+          console.log('Current location not available');
+        }
       });
       setModalVisible(false); // Hide the modal
     };
-
- 
+  
     const pickAndCropImageCamera = () => {
       ImagePicker.openCamera({
         mediaType: 'photo',
-        // cropping: true, // Enable cropping
         includeExif: true, // Ensure EXIF data is included
       }).then(image => {
-        setImage(image)
+        setImage(image);
         setImageUri(image.path);
         console.log('Picked and cropped image: camera', image);
-
-               // Extract file name from the path
-      const extractedFileName = image.path.split('/').pop();
-      setFileName(extractedFileName);
-      console.log('File name:', extractedFileName);
-
-      // Extract file extension from the file name
-      const extractedFileType = extractedFileName.split('.').pop();
-      setFileType(extractedFileType);
-      console.log('File type:', extractedFileType);
-      
+  
+        // Extract file name from the path
+        const extractedFileName = image.path.split('/').pop();
+        setFileName(extractedFileName);
+        console.log('File name:', extractedFileName);
+  
+        // Extract file extension from the file name
+        const extractedFileType = extractedFileName.split('.').pop();
+        setFileType(extractedFileType);
+        console.log('File type:', extractedFileType);
   
         if (image.exif) {
           const { Latitude, Longitude } = image.exif;
           if (Latitude && Longitude) {
-            setLocation({
+            setReturnedLocation({
               latitude: Latitude,
               longitude: Longitude,
             });
           } else {
             console.log('No GPS location data found in EXIF');
-            setLocation(null);
+            if (currentLocation) {
+              setReturnedLocation(currentLocation);
+            } else {
+              console.log('Current location not available');
+            }
           }
         } else {
           console.log('No EXIF data found');
-          setLocation(null);
+          if (currentLocation) {
+            setReturnedLocation(currentLocation);
+          } else {
+            console.log('Current location not available');
+          }
         }
       }).catch(error => {
         if (error.message !== 'User cancelled image selection') {
           console.error('Error capturing image:', error);
         }
-        setLocation(null);
+        if (currentLocation) {
+          setReturnedLocation(currentLocation);
+        } else {
+          console.log('Current location not available');
+        }
       });
       setModalVisible(false); // Hide the modal
     };
-
+  
   
     return (
       

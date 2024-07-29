@@ -54,9 +54,14 @@ const AssetsPage = ({ route }) => {
           asset_type_name: item.asset_type?.name || 'Unknown',
           latitude: coordinates[1],
           longitude: coordinates[0],
+          asset_type_id:item.asset_type?.id || 0
+         
         };
       });
       setData(newData);
+      
+      
+    
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -137,6 +142,8 @@ const AssetsPage = ({ route }) => {
       imageUrl={item.asset_uploads.length > 0 ? item.asset_uploads[0].file : 'https://via.placeholder.com/100'}
       assetTypeName={item.asset_type_name}
       condition={item.condition}
+      assetTypeId={item.asset_type_id}
+      
     />
   );
 

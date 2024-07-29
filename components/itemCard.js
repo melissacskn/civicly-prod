@@ -19,11 +19,8 @@ import {
 
 } from 'react-native-color-matrix-image-filters'
 
-const ItemCard = ({ name, status, imageUrl,assetTypeName,condition, onEdit,onDelete,tenantId,assetId }) => {
-  // const navigation = useNavigation();
-  // // const handlePressEditButton = () => {
-  // //   navigation.navigate("EditingAssets");
-  // // };
+const ItemCard = ({ name, status, imageUrl,assetTypeName,condition,assetTypeId, onEdit,onDelete,tenantId,assetId }) => {
+ 
   
   
   const [selection, setSelection] = useState(1);
@@ -50,23 +47,7 @@ const ItemCard = ({ name, status, imageUrl,assetTypeName,condition, onEdit,onDel
             return styles.defaultCondition;
         }
       };
-      // const handlePressDeleteButton = async () => {
-      //   const session = await fetchAuthSession({ forceRefresh: true });
-      //   const accessToken = session.tokens.accessToken.toString();
-      //   const myHeaders = new Headers();
-      //   myHeaders.append("Authorization", `Bearer ${accessToken}`);
-
-      //   const requestOptions = {
-      //     method: "DELETE",
-      //     headers: myHeaders,
-      //     redirect: "follow"
-      //   };
-
-      //   const response1 = fetch(`https://api.dev.nonprod.civic.ly/assets/${itemId}/asset/${assetId}`, requestOptions)
-      //   const json1 = await response1.json();
-        
   
-      // };
 
 
 
