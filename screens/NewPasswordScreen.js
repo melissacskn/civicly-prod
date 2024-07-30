@@ -27,7 +27,7 @@ import{
     Colors,
     TextLinkContent,
     StyledTextInput,StyledInputLabel,StyledTextInput2
-} from '../components/styles2';
+} from '../components/stylesSignUp';
 import Login from "./Login";
 import { Formik } from "formik";
 

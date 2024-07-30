@@ -11,7 +11,7 @@ import {
 
 
   
-} from '../components/styles4';
+} from './stylesAssetsPage';
 import {
   Grayscale,
   ColorMatrix,

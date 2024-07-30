@@ -25,7 +25,7 @@ import {
     TextLink,
     TextLinkContent,
     StyledTextInput2,
-} from './../components/styles2';
+} from '../components/stylesSignUp';
 import { View } from 'react-native';
 
 const { darkLight, primary, green } = Colors;

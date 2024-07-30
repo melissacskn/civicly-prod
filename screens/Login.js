@@ -45,7 +45,7 @@ import{
     TextLink,
     TextLinkContent,
     BackgroundImage
-} from './../components/styles';
+} from '../components/stylesLogin';
 import {View} from 'react-native';
 
 import {

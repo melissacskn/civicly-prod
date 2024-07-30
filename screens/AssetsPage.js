@@ -14,7 +14,7 @@ import {
   AssetTitle,
   WelcomeContainer,
   Colors,
-} from '../components/styles4';
+} from '../components/stylesAssetsPage';
 
 const { darkLight, primary, green, black } = Colors;
 

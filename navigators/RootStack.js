@@ -16,7 +16,7 @@ import AssetUploads from '../components/AssetUploads';
 import EditingAssets from '../screens/EditingAssets';
 import { LocationProvider } from '../components/LocationContext';
 
-import  {Colors} from './../components/styles';
+import  {Colors} from '../components/stylesLogin';
 const{primary,tertiary}=Colors
 
 //React navigation 
