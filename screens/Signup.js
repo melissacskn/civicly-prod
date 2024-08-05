@@ -39,6 +39,15 @@ const Signup = ({ navigation }) => {
     const [lastname, setLastname] = useState('');
     const myHeaders = new Headers();
 myHeaders.append("Content-Type", "application/json");
+const generateRandomString = (length) => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+  };
+  const randomSuffix = generateRandomString(5); // Generates a 5-character random string
 
     async function handleSignUp({ firstname, lastname, username, email, password }) {
         try {
@@ -54,12 +63,12 @@ myHeaders.append("Content-Type", "application/json");
 
             const payload = {
                 tenant: {
-                    name: "tenant17",
-                    subdomain: "subdomain17",
+                    name: `tenant_${randomSuffix}`,
+                    subdomain: `subdomain_${randomSuffix}`,
                     address: "5432 Test Ave, Test City, TC",
                     latitude: "34.0522",
                     longitude: "-118.2437"
-                },
+                  },
                 user: {
                     firstname,
                     lastname,

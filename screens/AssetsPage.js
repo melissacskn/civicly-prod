@@ -54,14 +54,10 @@ const AssetsPage = ({ route }) => {
           asset_type_name: item.asset_type?.name || 'Unknown',
           latitude: coordinates[1],
           longitude: coordinates[0],
-          asset_type_id:item.asset_type?.id || 0
-         
+          asset_type_id: item.asset_type?.id || 0
         };
       });
       setData(newData);
-      
-      
-    
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -92,47 +88,54 @@ const AssetsPage = ({ route }) => {
         },
         {
           text: "Delete",
-          onPress: () => deletePost(assetId)
+          onPress: () => deleteAsset(assetId)
         }
       ],
       { cancelable: false }
     );
   };
 
-  const deletePost = async (assetId) => {
-    setLoading(true);
+  const deleteAsset = async (assetId) => {
     try {
       const session = await fetchAuthSession({ forceRefresh: true });
       const accessToken = session.tokens.accessToken.toString();
+  
       const myHeaders = new Headers();
       myHeaders.append("Authorization", `Bearer ${accessToken}`);
-
+  
       const requestOptions = {
         method: "DELETE",
         headers: myHeaders,
         redirect: "follow"
       };
-
-      await fetch(`https://api.dev.nonprod.civic.ly/assets/${itemId}/asset/${assetId}`, requestOptions);
-      console.log('Deleting post with assetId:', assetId);
-      const newData = data.filter(item => item.id !== assetId);
-      setData(newData);
+  
+      // Perform the DELETE request
+      const response = await fetch(`https://api.dev.nonprod.civic.ly/assets/${tenantId}/asset/${assetId}`, requestOptions);
+      
+      if (!response.ok) {
+        // Log response status and status text for debugging
+        const errorText = await response.text();
+        console.error(`HTTP Error: ${response.status} ${response.statusText}`);
+        throw new Error(errorText);
+      }
+      
+     
+      
+      // Fetch the updated data
       await fetchData();
     } catch (error) {
-      console.error('Error deleting the post:', error);
-    } finally {
-      setLoading(false);
+      console.error('Error deleting the asset:', error);
     }
   };
 
   const handlePressEditButton = (assetItem) => {
-    console.log(assetItem)
+    console.log(assetItem);
     navigation.navigate("EditingAssets", { tenantId: tenantId, asset: assetItem });
   };
 
   const renderItem = ({ item }) => (
     <ItemCard
-      onEdit={() => handlePressEditButton(item)} //Passing item as assetItem
+      onEdit={() => handlePressEditButton(item)}
       onDelete={() => handlePressDeleteButton(item.id)}
       key={item.id}
       tenantId={itemId}
@@ -143,7 +146,6 @@ const AssetsPage = ({ route }) => {
       assetTypeName={item.asset_type_name}
       condition={item.condition}
       assetTypeId={item.asset_type_id}
-      
     />
   );
 
@@ -171,7 +173,7 @@ const AssetsPage = ({ route }) => {
               </LeftCornerContainer>
               <FlatList
                 data={data}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item.id.toString()}
                 renderItem={renderItem}
               />
             </Container>

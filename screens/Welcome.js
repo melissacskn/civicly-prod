@@ -1,10 +1,8 @@
-
-import React, { useContext, useEffect, useState } from "react";
-import { Alert, StatusBar, ImageBackground, StyleSheet,Text,FlatList,TouchableOpacity,Button} from "react-native";
-import { useNavigation } from '@react-navigation/native';
+import React, { useContext, useState } from "react";
+import { Alert, StatusBar, ImageBackground, StyleSheet, Text, FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { signOut, getCurrentUser, fetchAuthSession } from 'aws-amplify/auth';
 import { LogInContext } from "../navigators/RootStack";
-import AssetsPage from "./AssetsPage";
 import {
   StyledContainer,
   InnerContainer,
@@ -16,15 +14,13 @@ import {
   ButtonText,
   WelcomeContainer,
   Colors
-} from '../components/styles3';
+} from '../components/stylesWelcome';
 
+const { darkLight, primary, green } = Colors;
 
-// Colors
-const { darkLight, primary, green,black } = Colors;
-
-const Item = ({item, onPress, backgroundColor, textColor}) => (
-  <TouchableOpacity onPress={onPress} style={[styles2.item, {backgroundColor}]}>
-    <Text style={[styles2.title,styles2.itemText, {color: textColor}]}>{item.title}</Text>
+const Item = ({ item, onPress, backgroundColor, textColor }) => (
+  <TouchableOpacity onPress={onPress} style={[styles2.item, { backgroundColor }]}>
+    <Text style={[styles2.title, styles2.itemText, { color: textColor }]}>{item.title}</Text>
   </TouchableOpacity>
 );
 
@@ -32,28 +28,26 @@ const Welcome = ({ route }) => {
   const setIsUser = useContext(LogInContext);
   const navigation = useNavigation();
   const email = route.params?.email;
-  const tenantNames=[]
-  const tenantsIds=[]
-  const stringArray=[]
 
-  
-  const [data,setdata]=useState()
+  const [data, setData] = useState([]);
   const [selectedId, setSelectedId] = useState();
+  const [loading, setLoading] = useState(true);
 
-  const renderItem = ({item}) => {
+  const renderItem = ({ item }) => {
     const backgroundColor = item.id === selectedId ? green : primary;
     const color = item.id === selectedId ? 'white' : 'black';
 
-    
-  const handlePress = (item) => {
-    navigation.navigate('AssetsPage', { itemId: item.id, itemName: item.title });
-  };
-  
+    const handlePress = (item) => {
+      navigation.navigate('AssetsPage', { itemId: item.id, itemName: item.title });
+    };
+
     return (
       <Item
         item={item}
-        onPress={() => setSelectedId(item.id,
-          handlePress(item))}
+        onPress={() => {
+          setSelectedId(item.id);
+          handlePress(item);
+        }}
         backgroundColor={backgroundColor}
         textColor={color}
       />
@@ -69,139 +63,62 @@ const Welcome = ({ route }) => {
       Alert.alert('Oops', error.message);
     }
   };
-/////////Fetching authdata (access Token)///////////
+
   const fetchAuthData = async () => {
     try {
-
-      // Fetch current authenticated user
       const currentUser = await getCurrentUser();
-      // console.log("Current User:", currentUser);
-
-      ////////////// Fetch current session////////////////////
       const session = await fetchAuthSession({ forceRefresh: true });
-      if (!session) {
-        throw new Error('Session is undefined');
-      }
-
-      //console.log("Session:", session);
-
-      if (!session.tokens) {
-        throw new Error('Session tokens are undefined');
-      }
-
-      //console.log("Session Tokens:", session.tokens);
+      if (!session || !session.tokens) throw new Error('Session tokens are undefined');
 
       const idToken = session.tokens.idToken.toString();
       const accessToken = session.tokens.accessToken.toString();
 
       console.log(`Access Token: ${accessToken}`);
-
-      if (!idToken) {
-        throw new Error('ID token is undefined');
-      }
-
-      if (!accessToken) {
-        throw new Error('Access token is undefined');
-      }
-
-
-
-    }
-    catch (error) {
-      Alert.alert('Oops', error.message)
+    } catch (error) {
+      Alert.alert('Oops', error.message);
       console.error('Error fetching auth session', error);
     }
-  }
-
-
-  ///////////////Getting all the tenants//////////////////
-  const getTenants = async () => {
-    const session = await fetchAuthSession({ forceRefresh: true });
-    if (!session) {
-      throw new Error('Session is undefined');
-    }
-
-    //console.log("Session:", session);
-
-    if (!session.tokens) {
-      throw new Error('Session tokens are undefined');
-    }
-
-    //console.log("Session Tokens:", session.tokens);
-
- 
-    const accessToken = session.tokens.accessToken.toString();
-
-    const myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${accessToken}`);
-    const requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      redirect: "follow"
-    };
-    const response = await fetch("https://api.dev.nonprod.civic.ly/core/user/tenant", requestOptions)
-    const json = await response.json();
-    const count = json.count
-    console.log("Response JSON:", json);
-
-
-
-    console.log(count)
-    for (let i = 0; i < count; i++) {
-      console.log("Tenant Id: ", json.results[i].id)
-      console.log("Tenant Name: ", json.results[i].name)
-
-
-
-    }
-    const tenantid1 = json.results[0].id
-    const tenantname1 = json.results[0].name
-    const tenantid2 = json.results[1].id
-    const tenantname2 = json.results[1].name
-    const tenantid3 = json.results[2].id
-    const tenantname3 = json.results[2].id
-
-
-
-    stringArray.push(tenantname2)
-    stringArray.push(tenantname1)
- 
-
-
-
-  }
-const populate=async ()=>{
-
-  const session = await fetchAuthSession({ forceRefresh: true });
-  const accessToken = session.tokens.accessToken.toString();
-  const myHeaders = new Headers();
-  myHeaders.append("Authorization", `Bearer ${accessToken}`);
-  const requestOptions = {
-    method: "GET",
-    headers: myHeaders,
-    redirect: "follow"
   };
-  const response = await fetch("https://api.dev.nonprod.civic.ly/core/user/tenant", requestOptions)
-  const json = await response.json();
 
+  const getTenants = async () => {
+    setLoading(true); // Start loading indicator
+    setData([]); // Clear previous data
+    try {
+      const session = await fetchAuthSession({ forceRefresh: true });
+      if (!session || !session.tokens) throw new Error('Session tokens are undefined');
 
-  const newData = json.results.map((item) => ({
-    id: item.id,
-    title: item.name,
-  }));
-  setdata(newData); // Assign values to the state
+      const accessToken = session.tokens.accessToken.toString();
+      const myHeaders = new Headers();
+      myHeaders.append("Authorization", `Bearer ${accessToken}`);
 
+      const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow"
+      };
 
-}
+      const response = await fetch("https://api.dev.nonprod.civic.ly/core/user/tenant", requestOptions);
+      const json = await response.json();
+      const newData = json.results.map((item) => ({
+        id: item.id,
+        title: item.name,
+      }));
 
-  /////////// Creating a tenant/////////////
+      setData(newData);
+    } catch (error) {
+      Alert.alert('Oops', error.message);
+      console.error('Error fetching tenants', error);
+    } finally {
+      setLoading(false); // Stop loading indicator
+    }
+  };
+
   const createTenant = async () => {
     try {
       const session = await fetchAuthSession({ forceRefresh: true });
       const accessToken = session.tokens.accessToken.toString();
 
       const myHeaders = new Headers();
-
       myHeaders.append("Authorization", `Bearer ${accessToken}`);
       myHeaders.append("Content-Type", "application/json");
 
@@ -211,7 +128,6 @@ const populate=async ()=>{
         "address": "Accra",
         "longitude": "11.3232",
         "latitude": "53.343"
-
       });
 
       const requestOptions = {
@@ -221,76 +137,61 @@ const populate=async ()=>{
         redirect: "follow"
       };
 
-      const responsee = fetch("https://api.dev.nonprod.civic.ly/core/user/tenant/", requestOptions)
-
-
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.error(error));
-
+      const response = await fetch("https://api.dev.nonprod.civic.ly/core/user/tenant/", requestOptions);
+      const result = await response.text();
+      console.log(result);
+    } catch (error) {
+      Alert.alert('Oops', error.message);
+      console.error('Error creating tenant', error);
     }
-    catch (error) {
-      Alert.alert('Oops', error.message)
+  };
 
-    }
-  }
-
-
-  useEffect(() => {
-    fetchAuthData()
-    getTenants()
-    populate(); // Call populateData when the component mounts
-  }, []); 
-  
-
+  // Using useFocusEffect to fetch data when the screen gains focus
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchAuthData();
+      getTenants();
+    }, [])
+  );
 
   return (
-    <>
-      <ImageBackground
-        source={require('./../assets/Pulse-mobile.png')}
-        resizeMode='cover'
-        style={styles.container}
-        imageStyle={styles.image}
-      >
-        <StatusBar backgroundColor='transparent' translucent={true} />
-        <InnerContainer>
-          <PageLogo
-            resizeMode="cover"
-            source={require('./../assets/images/civicly-remove.png')}
-          />
-          <WelcomeContainer>
-            <StyledFormArea>
-              <PageTitle welcome={true}>Welcome</PageTitle>
-              <SubTitle welcome={true}>{JSON.stringify(email)}</SubTitle>
-              <SubTitle welcome={true}  >Select Organisation</SubTitle>
-              
-              
+    <ImageBackground
+      source={require('./../assets/Pulse-mobile.png')}
+      resizeMode='cover'
+      style={styles.container}
+      imageStyle={styles.image}
+    >
+      <StatusBar backgroundColor='transparent' translucent={true} />
+      <InnerContainer>
+        <PageLogo
+          resizeMode="cover"
+          source={require('./../assets/images/civicly-remove.png')}
+        />
+        <WelcomeContainer>
+          <StyledFormArea>
+            <PageTitle welcome={true}>Welcome</PageTitle>
+            <SubTitle welcome={true}>{JSON.stringify(email)}</SubTitle>
+            <SubTitle welcome={true}>Select Organisation</SubTitle>
+            {loading ? (
+              <ActivityIndicator size="large" color={primary} />
+            ) : (
               <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        extraData={selectedId}
-      />
-              
-              
-
-              <StyledButton onPress={createTenant}>
-                <ButtonText>Create tenant</ButtonText>
-              </StyledButton>
-
-              <StyledButton onPress={handleLogout}>
-                <ButtonText>Logout</ButtonText>
-              </StyledButton>
-             
-             
-              
-            </StyledFormArea>
-
-            
-          </WelcomeContainer>
-        </InnerContainer>
-      </ImageBackground>
-    </>
+                data={data}
+                renderItem={renderItem}
+                keyExtractor={item => item.id}
+                extraData={selectedId}
+              />
+            )}
+            <StyledButton onPress={createTenant}>
+              <ButtonText>Create tenant</ButtonText>
+            </StyledButton>
+            <StyledButton onPress={handleLogout}>
+              <ButtonText>Logout</ButtonText>
+            </StyledButton>
+          </StyledFormArea>
+        </WelcomeContainer>
+      </InnerContainer>
+    </ImageBackground>
   );
 }
 
@@ -306,28 +207,20 @@ const styles = StyleSheet.create({
   }
 });
 
-
 const styles2 = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
   },
-
   item: {
     padding: 15,
     marginVertical: 8,
     backgroundColor: primary,
-   
-    // borderColor: black, // Set the border color to black
-    borderWidth: 1, // Set the border width to define the thickness
-
- 
+    borderWidth: 1,
   },
   itemText: {
     fontSize: 19,
   },
-
-
 });
 
 export default Welcome;
