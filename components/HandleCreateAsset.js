@@ -3,6 +3,8 @@ import { handleAssetFileUpload } from './AssetUploads';
     
    export const CreateNewAsset = async ( {name, checkedStatus, checkedCondition,selectedAsset,tenantId,location,fileName,fileType,image}) => {
         // console.log(name,checkedCondition,checkedStatus,selectedAsset.asset_category.id)
+        const tenantid = tenantId;
+        console.log(tenantid);
         
 
         try{
@@ -33,10 +35,11 @@ const requestOptions = {
   redirect: "follow"
 };
 
-const response= await fetch("https://api.dev.nonprod.civic.ly/assets/e5bd087d-3f8a-413c-b3d6-84011a7ff644/asset/", requestOptions) // tenant id
+const response= await fetch(`https://api.dev.nonprod.civic.ly/assets/${tenantid}/asset/`, requestOptions) // tenant id
 const json = await response.json();
 
 const assetId = json.id;
+
 await handleAssetFileUpload({
   // assetId: assetId,
   // fileName: fileName,

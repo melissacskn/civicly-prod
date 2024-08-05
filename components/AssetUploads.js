@@ -4,7 +4,8 @@ import { fetchAuthSession } from 'aws-amplify/auth';
 import axios from 'axios'
 
 export const handleAssetFileUpload = async ({ assetId, fileName, fileType, tenantId, image }) => {
-
+  const tenantid = tenantId;
+  console.log(tenantid);
 
   try {
     console.log('Fetching auth session...');
@@ -34,7 +35,7 @@ export const handleAssetFileUpload = async ({ assetId, fileName, fileType, tenan
       redirect: "follow"
     };
 
-    const url = "https://api.dev.nonprod.civic.ly/assets/e5bd087d-3f8a-413c-b3d6-84011a7ff644/asset/uploads/";
+    const url = `https://api.dev.nonprod.civic.ly/assets/${tenantid}/asset/uploads/`;
     console.log(`Sending request to ${url}`);
     
     let response;
@@ -89,7 +90,7 @@ export const handleAssetFileUpload = async ({ assetId, fileName, fileType, tenan
         redirect: "follow"
       };
 
-      const completeUrl = "https://api.dev.nonprod.civic.ly/assets/e5bd087d-3f8a-413c-b3d6-84011a7ff644/asset/uploads/complete/";
+      const completeUrl = `https://api.dev.nonprod.civic.ly/assets/${tenantid}/asset/uploads/complete/`;
       console.log(`Completing upload to ${completeUrl}`);
       let completeResponse;
       try {
