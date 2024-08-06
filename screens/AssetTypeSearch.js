@@ -345,6 +345,7 @@ import { View, TextInput, StyleSheet, TouchableOpacity, SafeAreaView, FlatList, 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { fetchAuthSession } from 'aws-amplify/auth';
+import config from "../src/config";
 
 const AssetTypeSearch = () => {
   const [filterData, setFilteredData] = useState([]);

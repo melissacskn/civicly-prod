@@ -3,6 +3,7 @@ import { Alert, StatusBar, ImageBackground, StyleSheet, Text, FlatList, Touchabl
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { signOut, getCurrentUser, fetchAuthSession } from 'aws-amplify/auth';
 import { LogInContext } from "../navigators/RootStack";
+import config from "../src/config";
 import {
   StyledContainer,
   InnerContainer,

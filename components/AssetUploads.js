@@ -2,7 +2,7 @@
 
 import { fetchAuthSession } from 'aws-amplify/auth';
 import axios from 'axios'
-
+import config from '../src/config';
 export const handleAssetFileUpload = async ({ assetId, fileName, fileType, tenantId, image }) => {
   const tenantid = tenantId;
   console.log(tenantid);

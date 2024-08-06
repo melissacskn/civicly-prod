@@ -1,5 +1,6 @@
 import {  fetchAuthSession } from 'aws-amplify/auth';
 import { handleAssetFileUpload } from './AssetUploads';
+import config from '../src/config';
     
    export const CreateNewAsset = async ( {name, checkedStatus, checkedCondition,selectedAsset,tenantId,location,fileName,fileType,image}) => {
         // console.log(name,checkedCondition,checkedStatus,selectedAsset.asset_category.id)

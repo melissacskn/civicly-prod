@@ -7,9 +7,10 @@ import { signIn, signOut,} from 'aws-amplify/auth';
 import { getCurrentUser } from 'aws-amplify/auth';
 import styled from 'styled-components';
 
+
 import { confirmSignUp } from 'aws-amplify/auth';
 import {resendSignUp} from 'aws-amplify/auth'
-
+import config from "../src/config";
 
 
 import{

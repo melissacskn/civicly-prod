@@ -5,6 +5,7 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import Entypo from "react-native-vector-icons/Entypo";
 import { ImageBackground, StyleSheet, ScrollView } from "react-native";
 import { signUp } from 'aws-amplify/auth';
+import config from "../src/config";
 
 import {
     StyledContainer,

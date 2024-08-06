@@ -209,6 +209,7 @@ import { Alert, StatusBar, StyleSheet, View, FlatList, TouchableOpacity, Activit
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import config from '../src/config';
 
 import ItemCard from '../components/itemCard';
 import {
@@ -249,9 +250,14 @@ const AssetsPage = ({ route }) => {
       const response = await fetch(`https://api.dev.nonprod.civic.ly/assets/${itemId}/asset/`, requestOptions);
       const json = await response.json();
       console.log("Response JSON:", json);
+      
 
       const newData = json.results.map((item) => {
         const coordinates = item.asset_location?.features[0]?.geometry?.coordinates || [null, null];
+        const assetUploads = item.asset_uploads || [];
+        // console.log(`Asset uploads for asset ${item.id}:`, assetUploads);
+        const imageUrl = assetUploads.length > 0 ? assetUploads[0].medium_file_url : 'https://via.placeholder.com/100';
+        // console.log(`Image URL for asset ${item.id}: ${imageUrl}`);
         return {
           id: item.id,
           name: item.name,
@@ -261,7 +267,8 @@ const AssetsPage = ({ route }) => {
           asset_type_name: item.asset_type?.name || 'Unknown',
           latitude: coordinates[1],
           longitude: coordinates[0],
-          asset_type_id: item.asset_type?.id || 0
+          asset_type_id: item.asset_type?.id || 0,
+          imageUrl: imageUrl
         };
       });
       setData(newData);
@@ -340,6 +347,7 @@ const AssetsPage = ({ route }) => {
     setRefreshing(true);
     fetchData();
   }, []);
+  
 
   const renderItem = ({ item }) => (
     <ItemCard
@@ -350,7 +358,7 @@ const AssetsPage = ({ route }) => {
       assetId={item.id}
       name={item.name}
       status={item.status}
-      imageUrl={item.asset_uploads.length > 0 ? item.asset_uploads[0].file : 'https://via.placeholder.com/100'}
+      imageUrl={item.imageUrl}
       assetTypeName={item.asset_type_name}
       condition={item.condition}
       assetTypeId={item.asset_type_id}
