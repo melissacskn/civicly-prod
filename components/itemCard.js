@@ -5,6 +5,8 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 
 const { darkLight, primary, green,black,red } = Colors;
 import { useNavigation } from '@react-navigation/native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
 import {
 
   Colors,
@@ -25,7 +27,7 @@ const ItemCard = ({ name, status, imageUrl,assetTypeName,condition,assetTypeId, 
   
   const [selection, setSelection] = useState(1);
 
-    // const statusStyles = status === 'ACTIVE' ? styles.activeStatus : styles.inactiveStatus;
+    
     const statusStyles = status === 'ACTIVE' 
     ? styles.activeStatus 
     : status === 'DRAFT' ? styles.draftStatus 
@@ -80,28 +82,23 @@ const ItemCard = ({ name, status, imageUrl,assetTypeName,condition,assetTypeId, 
                 <TouchableOpacity style={[styles.btn]}  onPress={() =>onEdit(assetId)} >
                   { <AntDesign name='edit' size={23} color={green} style={styles.btnIcon}></AntDesign> }
              
-                    {/* <Text style={[styles.btnText, ]}>Edit</Text> */}
+                  
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.btn]}   onPress={() => onDelete(assetId)} >
                 { <AntDesign name='delete' size={23} color={red} style={styles.btnIcon}></AntDesign> }
-                    {/* <Text style={[styles.btnText, selection === 2 ? { color: "white" } : null]}>Delete</Text> */}
+                   
                 </TouchableOpacity>
                 </View>
     
-    {/* <View style={styles.row}>
-    <TouchableOpacity style={styles.button} >
-        <Text>Press Here</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} >
-        <Text>Press Here</Text>
-      </TouchableOpacity>
-      </View> */}
+ 
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-    card: {
+ 
+
+       card: {
         borderWidth: 1,
         borderColor: '#ddd',
         borderRadius: 8,
@@ -111,153 +108,172 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         width: '100%', // Ensure a fixed width or percentage widt
       },
+      
       post: {
-        marginBottom: 20,
-       
+        marginBottom: hp('2%'), 
         width: '100%',
-        
     
       },
       image: {
-        width: '100%',
-        height: 400,
-        resizeMode: 'cover',
-       
-      },
+        width: '100%', // Maintain full width
+        height: undefined, // Allow height to be determined by aspect ratio
+        aspectRatio: 1, // Maintain a 1:1 aspect ratio for a square shape
+        resizeMode: 'cover', // Ensure the image covers the entire space
       
-      assetTypeName: {
-        fontSize: 20,
-        marginTop: 10,
-        color:'rgb(38, 38, 38)',
-        fontFamily:'PublicSans-SemiBold'
-        
-       
-      },
-      name: {
-        fontSize: 18,
-        color: 'rgb(38, 38, 38)',
-        // color:"rgb(38, 38, 38)",
-        marginTop: 5, 
-        fontFamily:'PublicSans-Regular'
-      },
-      status: {
-        fontSize: 14,
-        color: 'gray',
-        marginTop: 5,
-        fontFamily:'PublicSans-Regular',
-      },
-      condition: {
-        fontSize: 14,
-        color: 'gray',
-        marginTop: 5,
-        marginRight: 10,
-        fontFamily:'PublicSans-Regular',
-      },
-    
-      goodCondition: {
-        backgroundColor: 'rgb(0, 168, 84)', // Light green background
-        color: 'white', 
-        padding:3
-      },
-      newCondition: {
-        backgroundColor: 'rgb(0, 162, 174)', // Light blue background
-        color: '#004085', 
-        padding:3
-      },
-      fairCondition: {
-        backgroundColor: 'rgb(255, 191, 0)', // Light yellow background
-        color: 'white', 
-        padding:3
-      },
-      poorCondition: {
-        backgroundColor: 'rgb(240, 65, 52)', // Light red background
-        color: 'white', 
-        padding:3
-      },
-      defaultCondition: {
-        backgroundColor: '#e2e3e5', // Light gray background
-        color: 'white',
-        padding:3
-      },
-      activeStatus: {
-        color: 'green',
-        backgroundColor: '#e0fce4', // Light green background
-        padding:3
-      },
-      inactiveStatus: {
-        color: 'red',
-        backgroundColor: '#fce4e4', // Light red background
-        padding:3
-        
-      },
-      draftStatus: {
-        color: 'rgb(140, 140, 140)', // Light gray
-        backgroundColor: 'rgb(217, 217, 217)', // Beige background
-        padding:3
-        
-      },
-       
-
-      row: {
-          flexDirection: 'row',
-          marginTop: 5,
-          justifyContent: 'center', // Center items horizontally
-          alignItems: 'center', // Center items vertically
-          width: '100%', // Ensure it takes full width of the card
-          },
-      post: {
-        marginBottom: 20,
-      },
-      button: {
-        alignItems: 'center',
-        backgroundColor: '#DDDDDD',
-        padding: 10,
-        marginRight:10,
-        marginTop: 5,
-
-        
-      },
-      btnGroup: {
-        marginTop:12,
-        paddingBottom:6,
-        paddingTop:6,
-        // paddingVertical:3,
-        flexDirection: 'row',
-        alignItems: "center",
-        borderBottomWidth: 0.25,
-        borderTopWidth:0.25,
-        borderBottomColor: '#6B7280',
-        borderTopColor:'#6B7280',
-       
     },
-    btn: {
-        flex: 1,
-        borderRightWidth: 0.25,
-        borderLeftWidth: 0.25,
-        borderColor: '#6B7280'
-    },
-    btnIcon: {
-        textAlign: 'center',
-        padding: 6
-        
-        
-    }
-
-
       
-}
+    assetTypeName: {
+      fontSize: wp('5%'), // Dynamic font size based on screen width
+      marginTop: hp('1%'), // Dynamic margin top based on screen height
+      color: 'rgb(38, 38, 38)',
+      fontFamily: 'PublicSans-SemiBold',
+      // textAlign: 'center', // Center the text for a balanced look
+  },
+  name: {
+    fontSize: wp('4.5%'), // Dynamic font size based on screen width
+    color: 'rgb(38, 38, 38)',
+    marginTop: hp('0.5%'), // Dynamic margin top based on screen height
+    fontFamily: 'PublicSans-Regular',
+    // textAlign: 'center', // Center the text for a balanced look
+},
 
+status: {
+  fontSize: wp('3.5%'), // Dynamic font size based on screen width
+  color: 'gray',
+  marginTop: hp('0.5%'), // Dynamic margin top based on screen height
+  fontFamily: 'PublicSans-Regular',
+  // textAlign: 'center', // Center the text for a balanced look
+},
 
-   
-            
-        
-
-    );
+condition: {
+  fontSize: wp('3.5%'), // Dynamic font size based on screen width
+  color: 'gray',
+  marginTop: hp('0.5%'), // Dynamic margin top based on screen height
+  marginRight: wp('2%'), // Dynamic margin right based on screen width
+  fontFamily: 'PublicSans-Regular',
+  // textAlign: 'center', // Center the text for a balanced look
+},
 
     
+goodCondition: {
+  backgroundColor: 'rgb(0, 168, 84)', // Light green background
+  color: 'white',
+  paddingVertical: hp('0.5%'), // Dynamic vertical padding based on screen height
+  paddingHorizontal: wp('2%'), // Dynamic horizontal padding based on screen width
+  borderRadius: wp('2%'), // Adding border radius for a rounded badge look
+  textAlign: 'center', // Center the text within the badge
+},
+newCondition: {
+  backgroundColor: 'rgb(0, 162, 174)', // Light blue background
+  color: '#004085',
+  paddingVertical: hp('0.5%'),
+  paddingHorizontal: wp('2%'),
+  borderRadius: wp('2%'),
+  textAlign: 'center',
+},
+fairCondition: {
+  backgroundColor: 'rgb(255, 191, 0)', // Light yellow background
+  color: 'white',
+  paddingVertical: hp('0.5%'),
+  paddingHorizontal: wp('2%'),
+  borderRadius: wp('2%'),
+  textAlign: 'center',
+},
+poorCondition: {
+  backgroundColor: 'rgb(240, 65, 52)', // Light red background
+  color: 'white',
+  paddingVertical: hp('0.5%'),
+  paddingHorizontal: wp('2%'),
+  borderRadius: wp('2%'),
+  textAlign: 'center',
+},
 
+defaultCondition: {
+  backgroundColor: '#e2e3e5', // Light gray background
+  color: 'white',
+  paddingVertical: hp('0.5%'), // Dynamic vertical padding based on screen height
+  paddingHorizontal: wp('2%'), // Dynamic horizontal padding based on screen width
+  borderRadius: wp('2%'), // Adding border radius for a rounded badge look
+  textAlign: 'center', // Center the text within the badge
+},
+activeStatus: {
+  color: 'green',
+  backgroundColor: '#e0fce4', // Light green background
+  paddingVertical: hp('0.5%'),
+  paddingHorizontal: wp('2%'),
+  borderRadius: wp('2%'),
+  textAlign: 'center',
+},
+inactiveStatus: {
+  color: 'red',
+  backgroundColor: '#fce4e4', // Light red background
+  paddingVertical: hp('0.5%'),
+  paddingHorizontal: wp('2%'),
+  borderRadius: wp('2%'),
+  textAlign: 'center',
+},
+draftStatus: {
+  color: 'rgb(140, 140, 140)', // Light gray text color
+  backgroundColor: 'rgb(217, 217, 217)', // Beige background
+  paddingVertical: hp('0.5%'),
+  paddingHorizontal: wp('2%'),
+  borderRadius: wp('2%'),
+  textAlign: 'center',
+},
 
+row: {
+  flexDirection: 'row',
+  marginTop: hp('1%'), // Dynamic margin top based on screen height
+  justifyContent: 'center', // Center items horizontally
+  alignItems: 'center', // Center items vertically
+  width: '100%', // Ensure it takes full width of the card
+  paddingHorizontal: wp('2%'), // Add horizontal padding to provide spacing from the edges
+},
 
+post: {
+  marginBottom: 20,
+},
+button: {
+  alignItems: 'center',
+  backgroundColor: '#DDDDDD', // Light gray background
+  paddingVertical: hp('1%'), // Dynamic vertical padding based on screen height
+  paddingHorizontal: wp('3%'), // Dynamic horizontal padding based on screen width
+  marginRight: wp('2%'), // Dynamic margin right based on screen width
+  marginTop: hp('0.5%'), // Dynamic margin top based on screen height
+  borderRadius: wp('2%'), // Adding a border radius for a rounded button look
+},
 
+btnGroup: {
+  marginTop:12,
+  paddingBottom:6,
+  paddingTop:6,
+  flexDirection: 'row',
+  alignItems: "center",
+  borderBottomWidth: 0.25,
+  borderTopWidth:0.25,
+  borderBottomColor: '#6B7280',
+  borderTopColor:'#6B7280',
  
+},
+btn: {
+  flex: 1,
+  borderRightWidth: 0.5, // Increased border width for better visibility
+  borderLeftWidth: 0.5, // Increased border width for better visibility
+  borderColor: '#6B7280', // Consistent border color
+  paddingVertical: hp('0.3%'), // Add vertical padding for better touch area
+  alignItems: 'center', // Center the content inside the button
+  justifyContent: 'center', // Center the content inside the button
+},
+
+btnIcon: {
+  textAlign: 'center', // Center the icon text within the button
+  paddingVertical: hp('0.5%'), // Dynamic vertical padding based on screen height
+  paddingHorizontal: wp('2%'), // Dynamic horizontal padding based on screen width
+},
+
+
+
+      
+});
+
 export default ItemCard;

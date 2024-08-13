@@ -13,7 +13,7 @@ import { ImageBackground,Text,StyleSheet } from "react-native";
 
 import { getCurrentUser } from 'aws-amplify/auth';
 import { signIn, signOut,} from 'aws-amplify/auth';
-import {Auth} from "aws-amplify"
+
 
 import { fetchAuthSession } from 'aws-amplify/auth';
 
@@ -72,25 +72,7 @@ const Login= ()=>{
     const navigation=useNavigation()
     const [data, setData] = useState(null);
 
-    // const fetchAuthData = async () => {
-    //   try {
-    //     // Fetch current authenticated user
-    //     const currentUser = await getCurrentUser();
-    //     console.log("Current User:", currentUser);
-  
-    //     // Fetch current session
-      
 
-    //     const session = await fetchAuthSession({forceRefresh: true });
-    //     const idToken= session.tokens.idToken.toString()
-    //     const accessToken =session.tokens.accessToken.toString()
-    //     console.log("id token", idToken)
-    //     console.log("access token", accessToken)
-    //   } catch (error) {
-    //     console.error('Error fetching auth session', error);
-    //   }
-      
-    // };
  
   
     async function sign({ username, password }) {
@@ -104,46 +86,6 @@ const Login= ()=>{
         console.log("navigating to welcome")
        
 
-      //  const currentUser = await getCurrentUser();
-      //  console.log("Current User:", currentUser);
- 
-
-       // Fetch current session
-
-       //const session = await fetchAuthSession({forceRefresh: true });
-       //const idToken= session.tokens.idToken.toString()
-      // const accessToken =session.tokens.accessToken.toString()
-    //    console.log("id token", idToken)
-      // console.log("access token", accessToken)
-      // setTimeout(()=>navigation.navigate("Welcome",({email,accessToken,tenantname}),10))
-      
-       //console.log(`Access Token: ${accessToken}`);
-
-
-//        const myHeaders = new Headers();
-//        myHeaders.append("Authorization", `Bearer ${accessToken}`);
-//     const requestOptions = {
-//         method: "GET",
-//         headers: myHeaders,
-//         redirect: "follow"
-// };
-       
-//   fetch("https://api.dev.nonprod.civic.ly/core/user/tenant", requestOptions)
-//   .then((response) => response.text())
-//   .then((result) => console.log(result))
-//   .catch((error) => console.error(error));
-// const response = await fetch("https://api.dev.nonprod.civic.ly/core/user/tenant", {
-//     method: "GET",
-//     headers: {
-//       "Authorization": `Bearer ${accessToken}`
-//     }
-//   });
-//   const json = await response.json();
-//   console.log("Response JSON:", json);
-//   const tenantid = json.results[0].id
-//   const tenantname=json.results[0].name
-// console.log(tenantid)
-// console.log(tenantname)
 
 
       
@@ -228,7 +170,7 @@ setTimeout(()=>navigation.navigate("Welcome",{email},10))
                              <StyledButton onPress={()=>{
                             
                             handleLogin()
-                            // Assuming you are navigating from a component that is not part of InnerSta
+                           
 
                              }}
                              

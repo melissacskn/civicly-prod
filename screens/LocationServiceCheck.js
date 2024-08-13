@@ -9,28 +9,9 @@ const LocationServiceCheck = () => {
   const [highAccuracyUsed, setHighAccuracyUsed] = useState(false);
 
   useEffect(() => {
-    askUserPermission();
+   checkLocationPermission();
   }, []);
 
-  const askUserPermission = () => {
-    Alert.alert(
-      'Location Access',
-      'This app needs access to your location to provide better services. Do you want to enable location services?',
-      [
-        {
-          text: 'No',
-          onPress: () => {
-            Alert.alert('Location services disabled', 'Some features may not be available.');
-          },
-          style: 'cancel',
-        },
-        {
-          text: 'Yes',
-          onPress: () => checkLocationPermission(),
-        },
-      ]
-    );
-  };
 
   const checkLocationPermission = async () => {
     const permission = Platform.OS === 'ios' 
@@ -114,3 +95,6 @@ const LocationServiceCheck = () => {
 };
 
 export default LocationServiceCheck;
+
+
+

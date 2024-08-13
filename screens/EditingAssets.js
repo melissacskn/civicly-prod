@@ -13,6 +13,8 @@ import { fetchAuthSession } from 'aws-amplify/auth';
 import { handleAssetFileUpload } from '../components/AssetUploads';
 Mapbox.setAccessToken('sk.eyJ1IjoiY2l2aWNseSIsImEiOiJjbHk4a3NjcmcwZGxzMmpzYnA5dGw4OWV1In0.oCECiSHLJO6qnEzyBmQoNw');
 import { LocationContext } from '../components/LocationContext';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
 const EditingAssets = ({ route }) => {
   const navigation = useNavigation();
   const { tenantId} = route.params || {};
@@ -20,7 +22,7 @@ const EditingAssets = ({ route }) => {
   const[tenantId2, setTenantId] = useState(tenantId);
   const[assetId2, setAssetId] = useState(asset?.id);
   const[image,setImage]=useState(null);
-  const [imageUri, setImageUri] = useState(asset?.asset_uploads?.[0]?.file || null);
+  const [imageUri, setImageUri] = useState(asset?.imageUrl || 'https://via.placeholder.com/100');
   const [imageUpdated, setImageUpdated] = useState(false);
   const [name, setName] = useState(asset?.name || '');
   const [selectedAsset, setSelectedAsset] = useState(asset?.asset_type_name ? { name: asset.asset_type_name, id: asset.asset_type_id } : null);
@@ -39,7 +41,7 @@ const EditingAssets = ({ route }) => {
 
   const initialData = useMemo(() => ({
    
-    imageUri: asset?.asset_uploads?.[0]?.file || null,
+    imageUri: asset?.imageUrl || 'https://via.placeholder.com/100',
     name: asset?.name || '',
     selectedAsset: asset?.asset_type_name ? { name: asset.asset_type_name, id: asset.asset_type_id } : null,
     checkedStatus: asset?.status || 'ACTIVE',
@@ -470,16 +472,16 @@ const EditingAssets = ({ route }) => {
           <Image source={{ uri: imageUri }} style={styles.image} />
         ) : (
           <View style={styles.placeholder}>
-            <Text>Upload Photo</Text>
+            <Text  style={{color: '#333',fontFamily:'PublicSans-Regular'}}>Upload Photo</Text>
           </View>
         )}
       </TouchableOpacity>
 
       <View style={styles.container2}>
-        <Text style={styles.label2}>Asset Type*</Text>
+        <Text style={styles.label}>Asset Type*</Text>
         <TouchableOpacity onPress={() => navigation.navigate('AssetTypeSearch', { previousSelected: selectedAsset, sourcePage: 'EditingAssets' })} style={styles.assetContainer}>
           <View style={styles.nameField2}>
-            <Text style={styles.input2}>
+            <Text style={{fontFamily:'PublicSans-Regular',color: '#333'}} >
               {selectedAsset ? selectedAsset.name : 'Asset Type'}
             </Text>
             <AntDesign name="right" size={20} color="black" />
@@ -494,15 +496,15 @@ const EditingAssets = ({ route }) => {
           placeholder="Name"
           value={name}
           onChangeText={setName}
-          placeholderTextColor="#999"
+          placeholderTextColor={ "#333"}
         />
       </View>
 
       <View style={styles.container2}>
-        <Text style={styles.label2}>Add Location*</Text>
+        <Text style={styles.label}>Add Location*</Text>
         <TouchableOpacity style={styles.assetContainer} onPress={() => navigation.navigate('MapMap', { locationData: returnedLocation, sourcePage: 'EditingAssets' })}>
           <View style={styles.nameField2}>
-            <Text style={styles.input2}>
+            <Text style={{fontFamily:'PublicSans-Regular',color: '#333'}}>
               {address ? address : 'Location'}
             </Text>
             <AntDesign name="right" size={20} color="black" />
@@ -511,7 +513,7 @@ const EditingAssets = ({ route }) => {
       </View>
 
       <View style={styles.statu}>
-        <Text>Status*</Text>
+      <Text style={{ color: '#333',fontFamily:'PublicSans-SemiBold'}}>Status*</Text>
         <View style={styles.radioButo}>
           {['ACTIVE', 'INACTIVE', 'DRAFT'].map(status => (
             <View key={status} style={styles.radioContainer}>
@@ -521,14 +523,14 @@ const EditingAssets = ({ route }) => {
                 onPress={() => setCheckedStatus(status)}
                 color={checkedStatus === status ? 'rgb(0, 168, 84)' : undefined}
               />
-              <Text style={styles.label}>{status}</Text>
+              <Text style={styles.label3}>{status}</Text>
             </View>
           ))}
         </View>
       </View>
 
       <View style={styles.statu}>
-        <Text>Condition*</Text>
+        <Text style={{ color: '#333',fontFamily:'PublicSans-SemiBold'}}>Condition*</Text>
         <View style={styles.radioButo}>
           {['NEW', 'FAIR', 'GOOD', 'POOR'].map(condition => (
             <View key={condition} style={styles.radioContainer}>
@@ -538,7 +540,7 @@ const EditingAssets = ({ route }) => {
                 onPress={() => setCheckedCondition(condition)}
                 color={checkedCondition === condition ? 'rgb(0, 168, 84)' : undefined}
               />
-              <Text style={styles.label}>{condition}</Text>
+              <Text style={styles.label3}>{condition}</Text>
             </View>
           ))}
         </View>
@@ -586,57 +588,62 @@ const EditingAssets = ({ route }) => {
   );
 };
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 80,
+    paddingHorizontal: wp('8%'), // 8% of screen width
+    paddingVertical: hp('10%'), // 10% of screen height
     backgroundColor: '#fff',
     alignItems: 'center',
   },
   imagePicker: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: 150,
-    width: 150,
-    borderRadius: 75,
+    height: wp('40%'), // 40% of screen width
+    width: wp('40%'),
+    borderRadius: wp('20%'), // Make it circular
     backgroundColor: '#e0e0e0',
-    marginBottom: 20,
+    marginBottom: hp('1%'), // 2% of screen height
     borderWidth: 1,
     borderColor: '#ccc',
   },
   image: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-  },
-  placeholder: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    borderRadius: wp('20%'),
   },
   input: {
-    height: 40,
+    height: hp('5%'), // 5% of screen height
     width: '100%',
     borderColor: 'gray',
     borderWidth: 1,
-    marginBottom: 20,
-    paddingHorizontal: 10,
+    marginBottom: hp('2%'), // 2% of screen height
+    paddingHorizontal: wp('3%'), // 3% of screen width
     color: '#333',
+    fontFamily:'PublicSans-Regular',
   },
   nameField: {
-    width: Dimensions.get('window').width - 40,
-    paddingHorizontal: 20,
-    marginVertical: 5,
-    marginBottom: -10,
+    width: wp('90%'), // 90% of screen width
+    paddingHorizontal: wp('5%'), // 5% of screen width
+    marginVertical: hp('1%'), // 1% of screen height
     alignItems: 'flex-start',
   },
   label: {
-    marginBottom: 5,
+    marginBottom: hp('0.5%'),
+    color: '#333',
+    fontFamily:'PublicSans-SemiBold',
+  },
+  label3: {
+    marginBottom: hp('0.5%'),
+    color: '#333',
+    fontFamily:'PublicSans-Regular',
   },
   statu: {
-    width: Dimensions.get('window').width - 40,
-    paddingHorizontal: 20,
+    width: wp('90%'), // 90% of screen width
+    paddingHorizontal: wp('5%'), // 5% of screen width
     alignItems: 'flex-start',
-    marginVertical: 10,
+    marginVertical: hp('1%'), // 1% of screen height
   },
   radioButo: {
     flexDirection: 'row',
@@ -644,64 +651,66 @@ const styles = StyleSheet.create({
   radioContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: hp('1%'),
   },
   container2: {
-    width: Dimensions.get('window').width - 40,
-    paddingHorizontal: 20,
-    marginVertical: 7,
+    width: wp('90%'), // 90% of screen width
+    paddingHorizontal: wp('5%'), // 5% of screen width
+    marginVertical: hp('1%'), // 1% of screen height
     alignItems: 'flex-start',
   },
   assetContainer: {
     borderWidth: 1,
-    padding: 10,
+    padding: hp('1.5%'), // 2% of screen height
     borderRadius: 4,
     borderColor: 'gray',
-    width: 310,
+    width: '100%', // Full width of the container
   },
   nameField2: {
-    marginBottom: 5,
+    marginBottom: hp('0.3%'), // 0.3% of screen height
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  label2: {
-    marginBottom: 8,
-  },
-  input2: {},
+
   modalContent: {
     backgroundColor: 'white',
-    padding: 10,
+    padding: hp('2%'), // 2% of screen height
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
   modalText: {
-    fontSize: 18,
-    marginBottom: 10,
+    fontSize: wp('4%'), // 4% of screen width
+    marginBottom: hp('1%'), // 1% of screen height
+    color: '#333',
+    fontFamily:'PublicSans-SemiBold'
   },
+
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 12,
+    padding: hp('2%'), // 2% of screen height
     borderRadius: 4,
-    marginBottom: 16,
+    marginBottom: hp('2%'), // 2% of screen height
   },
   buttonIcon: {
-    marginRight: 10,
+    marginRight: wp('2%'), // 2% of screen width
   },
   buttonText: {
-    color: 'black',
-    fontSize: 16,
+    color: '#333',
+    fontSize: wp('4%'),
+    fontFamily: 'PublicSans-Regular',
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    width: '100%', // Full width of the container
   },
   saveButton: {
     flex: 1,
-    padding: 12,
+    padding: hp('2%'),
     borderRadius: 4,
     alignItems: 'center',
-    marginRight: 10,
+    marginRight: wp('2%'),
   },
   saveButtonEnabled: {
     backgroundColor: 'rgb(0, 168, 84)',
@@ -711,19 +720,26 @@ const styles = StyleSheet.create({
   },
   saveButtonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: wp('4%'),
+    fontFamily: 'PublicSans-SemiBold',
   },
   cancelButton: {
     flex: 1,
-    padding: 12,
+    padding: hp('2%'),
     borderRadius: 4,
     alignItems: 'center',
     backgroundColor: '#f44336',
   },
   cancelButtonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: wp('4%'),
+    fontFamily: 'PublicSans-SemiBold',
+  },
+  placeholder: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
 export default EditingAssets;
+

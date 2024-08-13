@@ -17,6 +17,10 @@ Mapbox.setAccessToken('sk.eyJ1IjoiY2l2aWNseSIsImEiOiJjbHk4a3NjcmcwZGxzMmpzYnA5dG
 import axios from 'axios';
 
 import { LocationContext } from '../components/LocationContext';
+
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const CreateAsset2=({route})=>{
  
     const [imageUri, setImageUri] = useState(null);
@@ -424,7 +428,7 @@ useEffect(() => {
             <Image source={{ uri: imageUri }} style={styles.image} />
           ) : (
             <View style={styles.placeholder}>
-              <Text>Upload Photo</Text>
+              <Text  style={{color: '#333',fontFamily:'PublicSans-Regular'}}>Upload Photo</Text>
             </View>
           )}
         </TouchableOpacity>
@@ -450,7 +454,8 @@ useEffect(() => {
             placeholder="Name"
             value={name}
             onChangeText={setName}
-            placeholderTextColor="#999"
+            
+            placeholderTextColor={ "#333"}
           />
         </View>
 
@@ -473,7 +478,7 @@ useEffect(() => {
      
         
          <View style={styles.statu}>
-          <Text>Status*</Text>
+          <Text style={{color: '#333',fontFamily:'PublicSans-SemiBold'}}>Status*</Text>
           <View style={styles.radioButo}>
           <View style={styles.radioContainer}>
           <RadioButton
@@ -482,7 +487,7 @@ useEffect(() => {
             onPress={() => setCheckedStatus('ACTIVE')}
             color={checkedStatus === 'ACTIVE' ? 'rgb(0, 168, 84)' : undefined}
           />
-          <Text style={styles.label}>ACTIVE</Text>
+          <Text style={styles.label3}>ACTIVE</Text>
         </View>
         <View style={styles.radioContainer}>
           <RadioButton
@@ -491,7 +496,7 @@ useEffect(() => {
             onPress={() => setCheckedStatus('INACTIVE')}
             color={checkedStatus === 'INACTIVE' ? 'rgb(0, 168, 84)' : undefined}
           />
-          <Text style={styles.label}>INACTIVE</Text>
+          <Text style={styles.label3}>INACTIVE</Text>
         </View>
         <View style={styles.radioContainer}>
           <RadioButton
@@ -500,7 +505,7 @@ useEffect(() => {
             onPress={() => setCheckedStatus('DRAFT')}
             color={checkedStatus === 'DRAFT' ? 'rgb(0, 168, 84)' : undefined}
           />
-          <Text style={styles.label}>DRAFT</Text>
+          <Text style={styles.label3}>DRAFT</Text>
         </View>
           
         
@@ -511,7 +516,7 @@ useEffect(() => {
   
       </View>
       <View style={styles.statu}>
-          <Text>Condition*</Text>
+          <Text  style={{color: '#333',fontFamily:'PublicSans-SemiBold'}}>Condition*</Text>
           <View style={styles.radioButo}>
           <View style={styles.radioContainer}>
           <RadioButton
@@ -520,7 +525,7 @@ useEffect(() => {
             onPress={() => setCheckedCondition('NEW')}
             color={checkedCondition === 'NEW' ? 'rgb(0, 168, 84)' : undefined}
           />
-          <Text style={styles.label}>NEW</Text>
+          <Text style={styles.label3}>NEW</Text>
         </View>
         <View style={styles.radioContainer}>
           <RadioButton
@@ -529,7 +534,7 @@ useEffect(() => {
             onPress={() => setCheckedCondition('FAIR')}
             color={checkedCondition === 'FAIR' ? 'rgb(0, 168, 84)' : undefined}
           />
-          <Text style={styles.label}>FAIR</Text>
+          <Text style={styles.label3}>FAIR</Text>
         </View>
         <View style={styles.radioContainer}>
           <RadioButton
@@ -538,7 +543,7 @@ useEffect(() => {
             onPress={() => setCheckedCondition('GOOD')}
             color={checkedCondition === 'GOOD' ? 'rgb(0, 168, 84)' : undefined}
           />
-          <Text style={styles.label}>GOOD</Text>
+          <Text style={styles.label3}>GOOD</Text>
         </View>
         <View style={styles.radioContainer}>
           <RadioButton
@@ -547,7 +552,7 @@ useEffect(() => {
             onPress={() => setCheckedCondition('POOR')}
             color={checkedCondition === 'POOR' ? 'rgb(0, 168, 84)' : undefined}
           />
-          <Text style={styles.label}>POOR</Text>
+          <Text style={styles.label3}>POOR</Text>
         </View>
           </View>
       </View>
@@ -598,202 +603,193 @@ useEffect(() => {
 
 
 }
+
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      padding: 80,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-    },
-    imagePicker: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: 150,
-      width: 150,
-      // borderRadius: 75, EGER KARE DEGIL YUVARLAK ISTERSEN AC
-      borderRadius:75,
-      backgroundColor: '#e0e0e0',
-      marginBottom: 20,
-      borderWidth: 1,
-      borderColor: '#ccc',
-    },
-    image: {
-      width: 150,
-      height: 150,
-      borderRadius: 75,
-    },
-    placeholder: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      
-    },
-    input: {
-      height: 40,
-      width: '100%',
-      borderColor: 'gray',
-      borderWidth: 1,
-      marginBottom: 20,
-      paddingHorizontal: 10,
-      color: '#333',
-    
-    },
-  
-  
- 
- 
-    nameField: {
-      width: Dimensions.get('window').width - 40, // Width minus padding (20px on each side)
-      paddingHorizontal: 20, // Horizontal padding
-      marginVertical: 5, // Vertical margin if needed
-      marginBottom: -10, ///// The space between the add location and the name container when you make minus they come closer
-      
-      alignItems: 'flex-start', // Align children to the start of the container
-   
-     
-    },
-    label: {
-      marginBottom: 5, // Add some space between the label and the TextInput
-    },
-    statu:{
-     
-      width: Dimensions.get('window').width - 40, // Width minus padding (20px on each side)
-      paddingHorizontal: 20, // Horizontal padding
-    
-      alignItems: 'flex-start', // Align children to the start of the container
-      marginVertical: 10, // Add some vertical margin if needed
-    
-      
-    
-    },
-    radioButo:{
-      flexDirection:'row'
-  
-    },
-    radioContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: 10,
-    },
-  
-   
+  container: {
+    flex: 1,
+    paddingHorizontal: wp('8%'), // 8% of screen width
+    paddingVertical: hp('10%'), // 10% of screen height
+    backgroundColor: '#fff',
+    alignItems: 'center',
+  },
+  imagePicker: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: wp('40%'), // 40% of screen width
+    width: wp('40%'),
+    borderRadius: wp('20%'), // Make it circular
+    backgroundColor: '#e0e0e0',
+    marginBottom: hp('1%'), // 2% of screen height
+    borderWidth: 1,
+    borderColor: '#ccc',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    borderRadius: wp('20%'), // Circular image
+  },
+  placeholder: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  placeholderText: {
+    color: '#333',
+  },
+  input: {
+    height: hp('5%'), // 5% of screen height
+    width: '100%',
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: hp('2%'), // 2% of screen height
+    paddingHorizontal: wp('3%'), // 3% of screen width
+    color: '#333',
+    fontFamily:'PublicSans-Regular',
+  },
+  nameField: {
+    width: wp('90%'), // 90% of screen width
+    paddingHorizontal: wp('5%'), // 5% of screen width
+    marginVertical: hp('1%'), // 1% of screen height
+    alignItems: 'flex-start',
+  },
+  label: {
+    marginBottom: hp('0.5%'), // 0.5% of screen height
+    color: '#333',
+    fontFamily:'PublicSans-SemiBold',
+  },
+  statu: {
+    width: wp('90%'), // 90% of screen width
+    paddingHorizontal: wp('5%'), // 5% of screen width
+    alignItems: 'flex-start',
+    marginVertical: hp('1%'), // 1% of screen height
+  },
+  radioButo: {
+    flexDirection: 'row',
+  },
+  radioContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: hp('1%'), // 1% of screen height
+  },
+  radioLabel: {
+    color: '#333',
+  },
+  container2: {
+    width: wp('90%'), // 90% of screen width
+    paddingHorizontal: wp('5%'), // 5% of screen width
+    marginVertical: hp('1%'), // 1% of screen height
+    alignItems: 'flex-start',
+  },
+  assetContainer: {
+    borderWidth: 1,
+    padding: hp('1.5%'), // 1.5% of screen height
+    borderRadius: 4,
+    borderColor: 'gray',
+    width: '100%', // Full width of the container
+  },
+  nameField2: {
+    marginBottom: hp('0.3%'), // 0.3% of screen height
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  label2: {
+    marginBottom: hp('1%'), // 1% of screen height
+    color: '#333',
+    fontFamily:'PublicSans-SemiBold',
+  },
+  input2: {
+    color: '#333',
+    fontFamily:'PublicSans-Regular'
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: hp('2%'), // 2% of screen height
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  modalText: {
+    fontSize: wp('4%'), // 4% of screen width
+    marginBottom: hp('1%'), // 1% of screen height
+    color: '#333',
+    fontFamily:'PublicSans-SemiBold'
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: hp('2%'), // 2% of screen height
+    borderRadius: 4,
+    marginBottom: hp('2%'), // 2% of screen height
+  },
+  buttonIcon: {
+    marginRight: wp('2%'), // 2% of screen width
+  },
+  buttonText: {
+    color: '#333',
+    fontSize: wp('4%'), // 4% of screen width,
+    fontFamily: 'PublicSans-Regular',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%', // Full width of the container
+  },
+  saveButton: {
+    flex: 1,
+    padding: hp('2%'), // 2% of screen height
+    borderRadius: 4,
+    alignItems: 'center',
+    marginRight: wp('2%'), // 2% of screen width
+  },
+  saveButtonEnabled: {
+    backgroundColor: 'rgb(0, 168, 84)',
+  },
+  saveButtonDisabled: {
+    backgroundColor: '#ccc',
+  },
+  saveButtonText: {
+    color: 'white',
+    fontSize: wp('4%'), // 4% of screen width,
+    fontFamily: 'PublicSans-SemiBold',
+  },
+  cancelButton: {
+    flex: 1,
+    padding: hp('2%'), // 2% of screen height
+    borderRadius: 4,
+    alignItems: 'center',
+    backgroundColor: '#f44336',
+  },
+  cancelButtonText: {
+    color: 'white',
+    fontSize: wp('4%'), // 4% of screen width,
+    fontFamily: 'PublicSans-SemiBold',
+  },
+  label3: {
+    marginBottom: hp('0.5%'),
+    color: '#333',
+    fontFamily:'PublicSans-Regular',
+  },
+});
 
-    container2:{
-   
-      width: Dimensions.get('window').width - 40, // Width minus padding (20px on each side)
-      paddingHorizontal: 20, // Horizontal padding
-      marginVertical: 7, // Vertical margin if needed
-      alignItems: 'flex-start', // Align children to the start of the container
-    
-    
-    },
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    height: hp('5%'), // 5% of screen height
+    width: '100%',
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: hp('2%'), // 2% of screen height
+    paddingHorizontal: wp('3%'), // 3% of screen width
+    color: '#333',
+  },
+  inputAndroid: {
+    height: hp('5%'), // 5% of screen height
+    width: '100%',
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: hp('2%'), // 2% of screen height
+    paddingHorizontal: wp('3%'), // 3% of screen width
+    color: '#333',
+  },
+});
 
 
-    assetContainer: {
-    
-      borderWidth: 1,
-      padding: 10,
-      borderRadius: 4,
-      borderColor: 'gray',
-      
-      
-      width:310
-      
-    },
-    nameField2: {
-      marginBottom: 5,
-      flexDirection:'row',
-      justifyContent: 'space-between',
-    },
-    label2: {
-      
-      marginBottom: 8,
-    },
-    input2: {
-      
-    },
 
-    modalContent: {
-      backgroundColor: 'white',
-      padding: 10,
-      borderTopLeftRadius: 10,
-      borderTopRightRadius: 10,
-    },
-    modalText: {
-      fontSize: 18,
-      marginBottom: 10,
-    },
-    button: {
-      flexDirection: 'row',  // Ensure icon and text are in a row
-      alignItems: 'center',  // Center items vertically
-      padding: 12,
-      borderRadius: 4,
-      marginBottom: 16,
-    },
-    buttonIcon: {
-      marginRight: 10,  // Add space between icon and text
-    },
-  
-    buttonText: {
-      color: 'black',
-      fontSize: 16,
-    },
-    buttonContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
-    saveButton: {
-      flex: 1,
-      padding: 12,
-      borderRadius: 4,
-      alignItems: 'center',
-      marginRight: 10,
-    },
-    saveButtonEnabled: {
-      backgroundColor: 'rgb(0, 168, 84)',
-    },
-    saveButtonDisabled: {
-      backgroundColor: '#ccc',
-    },
-    saveButtonText: {
-      color: 'white',
-      fontSize: 16,
-    },
-
-  
-    cancelButton: {
-      flex: 1,
-      padding: 12,
-      borderRadius: 4,
-      alignItems: 'center',
-      backgroundColor: '#f44336',
-    },
-    cancelButtonText: {
-      color: 'white',
-      fontSize: 16,
-    },
-  
-  
-  });
-  
-  const pickerSelectStyles = StyleSheet.create({
-    inputIOS: {
-      height: 40,
-      width: '100%',
-      borderColor: 'gray',
-      borderWidth: 1,
-      marginBottom: 20,
-      paddingHorizontal: 10,
-    
-    },
-    inputAndroid: {
-      height: 40,
-      width: '100%',
-      borderColor: 'gray',
-      borderWidth: 1,
-      marginBottom: 20,
-      paddingHorizontal: 10,
-     
-    },
- 
-  });
-export default CreateAsset2
+export default CreateAsset2;
