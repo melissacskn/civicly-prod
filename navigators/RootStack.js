@@ -6,7 +6,7 @@ import Signup from './../screens/Signup';
 import Welcome from './../screens/Welcome';
 import ConfirmEmail from '../screens/ConfirmEmail';
 import ForgotPassword from '../screens/ForgotPassword';
-import NewPasswordScreen from '../screens/NewPasswordScreen';
+import SetNewPasswordScreen from '../screens/SetNewPasswordScreen';
 import AssetsPage from '../screens/AssetsPage';
 import CreateAsset2 from '../screens/CreatAsset2';
 import AssetTypeSearch from '../screens/AssetTypeSearch';
@@ -15,6 +15,7 @@ import LocationServiceCheck from '../screens/LocationServiceCheck';
 import AssetUploads from '../components/AssetUploads';
 import EditingAssets from '../screens/EditingAssets';
 import { LocationProvider } from '../components/LocationContext';
+import EnterCodeScreen from '../screens/EnterCodeScreen';
 
 import  {Colors} from '../components/stylesLogin';
 const{primary,tertiary}=Colors
@@ -23,6 +24,7 @@ const{primary,tertiary}=Colors
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack'
+
 
 
 const Stack= createStackNavigator();
@@ -77,10 +79,8 @@ const RootStack=()=>{
                             name='ForgotPassword' 
                             component={ForgotPassword} 
                         />
-                        <Stack.Screen 
-                            name='NewPasswordScreen' 
-                            component={NewPasswordScreen} 
-                        />
+                       <Stack.Screen name="EnterCodeScreen" component={EnterCodeScreen} />
+                       <Stack.Screen name="SetNewPasswordScreen" component={SetNewPasswordScreen} />
                     
                 </> }
                 {isUser &&

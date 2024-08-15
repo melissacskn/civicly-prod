@@ -1,5 +1,5 @@
 import React, { useEffect,useState,useRef } from 'react';
-import { StyleSheet, View, PermissionsAndroid, Platform, BackHandler } from 'react-native';
+import { StyleSheet, View, PermissionsAndroid, Platform, BackHandler,StatusBar } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
 
 Mapbox.setAccessToken('sk.eyJ1IjoiY2l2aWNseSIsImEiOiJjbHk4a3NjcmcwZGxzMmpzYnA5dGw4OWV1In0.oCECiSHLJO6qnEzyBmQoNw');
@@ -257,6 +257,7 @@ const MapMap = () => {
 
   return (
     <View style={styles.page}>
+      <StatusBar backgroundColor='transparent' translucent={true} barStyle={'dark-content'} />
       <Mapbox.MapView style={styles.map} onPress={handleMapPress}>
         <Mapbox.Camera ref={cameraRef} zoomLevel={zoomLevel} animationMode={'flyTo'} animationDuration={1000} />
         <Mapbox.UserLocation

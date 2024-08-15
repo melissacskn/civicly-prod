@@ -94,6 +94,7 @@ const AssetTypeSearch = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+      <StatusBar backgroundColor='transparent' translucent={true} barStyle={'dark-content'} />
       <View style={styles.container}>
         <View style={styles.sectionStyle}>
           <AntDesign name="search1" size={14} color="#000" />
