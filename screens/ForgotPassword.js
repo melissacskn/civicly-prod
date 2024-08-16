@@ -12,7 +12,7 @@ const ForgotPassword = ({ navigation }) => {
   async function handleForgotPassword({ username }) {
     try {
       await resetPassword({ username });
-      Alert.alert("Success", 'Code is resent to your email');
+      
     } catch (error) {
       Alert.alert('Oops', error.message);
     }

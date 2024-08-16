@@ -1,26 +1,11 @@
 
-
 // import React, { useContext, useState } from "react";
-// import { Alert, StatusBar, StyleSheet, Text, FlatList, TouchableOpacity, ActivityIndicator, View, Image } from "react-native";
+// import { Alert, StatusBar, Text, FlatList, TouchableOpacity, ActivityIndicator, View, Image } from "react-native";
 // import { useNavigation, useFocusEffect } from '@react-navigation/native';
 // import { signOut, fetchAuthSession } from 'aws-amplify/auth';
+// import AntDesign from 'react-native-vector-icons/AntDesign'; // Import for edit icon
 // import { LogInContext } from "../navigators/RootStack";
-// import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-// import {
-//   StyledContainer,
-//   InnerContainer,
-//   PageLogo,
-//   PageTitle,
-//   SubTitle,
-//   StyledFormArea,
-//   StyledButton,
-//   ButtonText,
-//   WelcomeContainer,
-//   Colors
-// } from '../components/stylesWelcome';
-
-
-// const { darkLight, primary, green, tertiary } = Colors;
+// import styles, { Colors } from '../components/stylesWelcome'; // Ensure this is correctly imported
 
 // const Welcome = ({ route }) => {
 //   const setIsUser = useContext(LogInContext);
@@ -32,9 +17,11 @@
 //   const [firstname, setFirstname] = useState('');
 //   const [lastname, setLastname] = useState('');
 //   const [imageUrl, setImageUrl] = useState('');
+//   const [email, setEmail] = useState('');
+//   const [username, setUsername] = useState('');
 
 //   const renderItem = ({ item }) => {
-//     const backgroundColor = item.id === selectedId ? green : primary;
+//     const backgroundColor = item.id === selectedId ? Colors.green : Colors.primary;
 //     const color = item.id === selectedId ? 'white' : 'black';
 
 //     const handlePress = (item) => {
@@ -82,7 +69,15 @@
 //         .then((result) => {
 //           setFirstname(result.firstname);
 //           setLastname(result.lastname);
-//           setImageUrl(result.profile_image.image);
+//           setEmail(result.email);
+//           setUsername(result.username);
+
+//           // Check if profile_image exists and has an image property
+//           if (result.profile_image && result.profile_image.image) {
+//             setImageUrl(result.profile_image.image);
+//           } else {
+//             setImageUrl(null);  // If no image, set to null
+//           }
 //         })
 //         .catch((error) => console.error(error));
 //     } catch (error) {
@@ -130,159 +125,75 @@
 //   );
 
 //   return (
-//     <StyledContainer>
+//     <View style={styles.container}>
 //       <StatusBar backgroundColor="white" barStyle="dark-content" translucent={true} />
-//       <InnerContainer>
-//         <PageLogo
+//       <View style={styles.innerContainer}>
+//         <Image
 //           resizeMode="cover"
 //           source={require('./../assets/images/civicly-remove.png')}
+//           style={styles.pageLogo}
 //         />
 //         {loading ? (
-//           <View style={styles.loadingContainer}>
-//             <ActivityIndicator size="large" color="green" />
+//           <View style={styles.containerForLoading}>
+//             <ActivityIndicator size="large" color={Colors.green} />
 //           </View>
 //         ) : (
-//           <WelcomeContainer>
-//             <StyledFormArea>
+//           <View style={styles.welcomeContainer}>
+//             <View style={styles.formArea}>
 //               <View style={styles.profileContainer}>
 //                 <View style={styles.profileIconContainer}>
 //                   {imageUrl ? (
 //                     <Image source={{ uri: imageUrl }} style={styles.profileImage} />
 //                   ) : (
-//                     <Text style={styles.profileIcon}>{firstname.charAt(0).toUpperCase()}</Text>
+//                     // Use user's initial or a default placeholder
+//                     <Text style={styles.profileIcon}>{firstname ? firstname.charAt(0).toUpperCase() : 'U'}</Text>
 //                   )}
 //                 </View>
 //                 <Text style={styles.profileName}>{firstname} {lastname}</Text>
+//                      {/* Add Edit Button Here */}
+//                      <TouchableOpacity 
+//                   style={styles.editProfileButton}
+//                   onPress={() => navigation.navigate('EditProfile', { firstname, lastname, email, username, imageUrl })}
+//                 >
+//                   <AntDesign name="edit" size={24} color={Colors.tertiary} />
+//                 </TouchableOpacity>
 //               </View>
-//               <SubTitle style={styles.subTitle} welcome={true}>Select Organisation</SubTitle>
+//               <Text style={styles.subTitle}>Select Organisation</Text>
 //               <FlatList
 //                 data={data}
 //                 renderItem={renderItem}
 //                 keyExtractor={item => item.id}
 //                 extraData={selectedId}
 //               />
-//               <StyledButton onPress={handleLogout}>
-//                 <ButtonText>Logout</ButtonText>
-//               </StyledButton>
-//             </StyledFormArea>
-//           </WelcomeContainer>
+//               <TouchableOpacity style={styles.styledButton} onPress={handleLogout}>
+//                 <Text style={styles.buttonText}>Logout</Text>
+//               </TouchableOpacity>
+//             </View>
+//           </View>
 //         )}
-//       </InnerContainer>
-//     </StyledContainer>
+//       </View>
+//     </View>
 //   );
 // }
 
-// const styles = StyleSheet.create({
-//   loadingContainer: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     paddingHorizontal: wp('5%'), // Responsive horizontal padding
-//   },
-//   profileContainer: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     marginBottom: hp('2%'), // Responsive margin
-//   },
-//   profileIconContainer: {
-//     width: wp('10%'), // Responsive width
-//     height: wp('10%'), // Responsive height (same as width for square)
-//     borderRadius: wp('5%'), // Responsive border radius
-//     backgroundColor: '#E5E7EB',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     marginRight: wp('2.5%'), // Responsive margin right
-//   },
-//   profileIcon: {
-//     fontSize: wp('5%'), // Responsive font size
-//     color: '#10B981', // Use color directly instead of variable for clarity
-//   },
-//   profileImage: {
-//     width: wp('13%'),  // Set the width as a percentage of the screen width
-//     height: wp('13%'), // Set the height equal to the width to keep it square
-//     borderRadius: wp('6.5%'), // Half of the width to make the image circular
-//   },
-//   profileName: {
-//     fontSize: wp('4.5%'), // Responsive font size
-//     fontWeight: 'bold',
-//     color: '#1F2937', // Use color directly instead of variable for clarity
-//   },
-//   subTitle: {
-//     fontSize: wp('4%'), // Responsive font size
-//     marginBottom: hp('2%'), // Responsive margin bottom
-//     letterSpacing: wp('0.25%'), // Responsive letter spacing
-//     fontWeight: 'bold',
-//     color: '#1F2937', // Use color directly instead of variable for clarity
-//     textAlign: 'left',
-//     fontFamily: 'PublicSans-Regular',
-//   },
-//   itemContainer: {
-//     padding: wp('3.5%'), // Responsive padding
-//     marginVertical: hp('1%'), // Responsive vertical margin
-//     backgroundColor: '#ffffff', // Use color directly instead of variable for clarity
-//     borderWidth: 1,
-//     borderRadius: wp('2%'), // Responsive border radius
-//     alignItems: 'center',
-//     flexDirection: 'row',
-//   },
-//   iconContainer: {
-//     width: wp('12%'), // Responsive width
-//     height: wp('12%'), // Responsive height (same as width for square)
-//     borderRadius: wp('6%'), // Responsive border radius
-//     backgroundColor: '#E5E7EB',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     marginRight: wp('2.5%'), // Responsive margin right
-//   },
-//   iconText: {
-//     fontSize: wp('5%'), // Responsive font size
-//     color: '#10B981', // Use color directly instead of variable for clarity
-//   },
-//   itemTitle: {
-//     fontSize: wp('4%'), // Responsive font size
-//     textAlign: 'left',
-//     flex: 1, // Allows text to take available space
-//   },
-// });
-
 // export default Welcome;
 
-import React, { useContext, useState } from "react";
-import { Alert, StatusBar, Text, FlatList, TouchableOpacity, ActivityIndicator, View, Image } from "react-native";
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import React, { useContext, useState, useEffect } from "react";
+import { Alert, StatusBar, Text, View, Image, ActivityIndicator,TouchableOpacity } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 import { signOut, fetchAuthSession } from 'aws-amplify/auth';
+import AntDesign from 'react-native-vector-icons/AntDesign'; 
 import { LogInContext } from "../navigators/RootStack";
-import styles, { Colors } from '../components/stylesWelcome'; // Ensure this is correctly imported
+import styles, { Colors } from '../components/stylesWelcome';  // Import styles
 
-const Welcome = ({ route }) => {
+const Welcome = () => {
   const setIsUser = useContext(LogInContext);
   const navigation = useNavigation();
 
-  const [data, setData] = useState([]);
-  const [selectedId, setSelectedId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [imageUrl, setImageUrl] = useState('');
-
-  const renderItem = ({ item }) => {
-    const backgroundColor = item.id === selectedId ? Colors.green : Colors.primary;
-    const color = item.id === selectedId ? 'white' : 'black';
-
-    const handlePress = (item) => {
-      setSelectedId(item.id);
-      navigation.navigate('AssetsPage', { itemId: item.id, itemName: item.title });
-    };
-
-    return (
-      <TouchableOpacity onPress={() => handlePress(item)} style={[styles.itemContainer, { backgroundColor }]}>
-        <View style={styles.iconContainer}>
-          <Text style={[styles.iconText, { color }]}>{item.title.charAt(0).toUpperCase()}</Text>
-        </View>
-        <Text style={[styles.itemTitle, { color }]}>{item.title}</Text>
-      </TouchableOpacity>
-    );
-  };
 
   const handleLogout = async () => {
     try {
@@ -309,97 +220,77 @@ const Welcome = ({ route }) => {
         redirect: "follow"
       };
 
-      fetch("https://api.dev.nonprod.civic.ly/core/user/", requestOptions)
-        .then((response) => response.json())
-        .then((result) => {
-          setFirstname(result.firstname);
-          setLastname(result.lastname);
-          setImageUrl(result.profile_image.image);
-        })
-        .catch((error) => console.error(error));
+      const response = await fetch("https://api.dev.nonprod.civic.ly/core/user/", requestOptions);
+      const result = await response.json();
+
+      setFirstname(result.firstname || "User");
+      setLastname(result.lastname || "Name");
+      setImageUrl(result.profile_image?.image || null);
     } catch (error) {
-      Alert.alert('Oops', error.message);
-      console.error('Error fetching auth session', error);
-    }
-  };
-
-  const getTenants = async () => {
-    try {
-      const session = await fetchAuthSession({ forceRefresh: true });
-      const accessToken = session.tokens.accessToken.toString();
-      const myHeaders = new Headers();
-      myHeaders.append("Authorization", `Bearer ${accessToken}`);
-
-      const requestOptions = {
-        method: "GET",
-        headers: myHeaders,
-        redirect: "follow"
-      };
-
-      const response = await fetch("https://api.dev.nonprod.civic.ly/core/user/tenant", requestOptions);
-      const json = await response.json();
-      const newData = json.results.map((item) => ({
-        id: item.id,
-        title: item.name,
-      }));
-
-      setData(newData);
-    } catch (error) {
-      Alert.alert('Oops', error.message);
-      console.error('Error fetching tenants', error);
+      Alert.alert('Error', 'Failed to fetch profile data');
     } finally {
-      setLoading(false);
+      setLoading(false); 
     }
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setLoading(true);
-      setSelectedId(null);
-      fetchAuthData();
-      getTenants();
-    }, [])
-  );
+  useEffect(() => {
+    fetchAuthData();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={Colors.green} />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="white" barStyle="dark-content" translucent={true} />
+      
+      {/* Back Arrow and Profile Title */}
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerTitle}>Your Profile</Text>
+      </View>
+
       <View style={styles.innerContainer}>
-        <Image
-          resizeMode="cover"
-          source={require('./../assets/images/civicly-remove.png')}
-          style={styles.pageLogo}
-        />
-        {loading ? (
-          <View style={styles.containerForLoading}>
-            <ActivityIndicator size="large" color={Colors.green} />
-          </View>
-        ) : (
-          <View style={styles.welcomeContainer}>
-            <View style={styles.formArea}>
-              <View style={styles.profileContainer}>
-                <View style={styles.profileIconContainer}>
-                  {imageUrl ? (
-                    <Image source={{ uri: imageUrl }} style={styles.profileImage} />
-                  ) : (
-                    <Text style={styles.profileIcon}>{firstname.charAt(0).toUpperCase()}</Text>
-                  )}
-                </View>
-                <Text style={styles.profileName}>{firstname} {lastname}</Text>
-              </View>
-              <Text style={styles.subTitle}>Select Organisation</Text>
-              <FlatList
-                data={data}
-                renderItem={renderItem}
-                keyExtractor={item => item.id}
-                extraData={selectedId}
-              />
-              <TouchableOpacity style={styles.styledButton} onPress={handleLogout}>
-                <Text style={styles.buttonText}>Logout</Text>
-              </TouchableOpacity>
+        <View style={styles.profileContainer}>
+          <View style={styles.profileDetails}>
+            {/* Profile image, not touchable */}
+            <View style={styles.profileImageContainer}>
+              {imageUrl ? (
+                <Image source={{ uri: imageUrl }} style={styles.profileImage} />
+              ) : (
+                <Text style={styles.profileIcon}>
+                  {firstname ? firstname.charAt(0).toUpperCase() : 'U'}
+                </Text>
+              )}
+            </View>
+            <View style={styles.profileNameContainer}>
+              <Text style={styles.profileName}>{firstname} {lastname}</Text>
+              <Text style={styles.profileSubtitle}>Senior Designer</Text>
             </View>
           </View>
-        )}
+
+          {/* Only the edit icon is touchable */}
+          <AntDesign name="edit" size={24} color={Colors.tertiary} onPress={() => navigation.navigate('EditProfile')} />
+        </View>
+
+        {/* Select Organisation Section */}
+        <View style={styles.dashboardContainer}>
+          <Text style={styles.dashboardTitle}>Dashboard</Text>
+          <TouchableOpacity style={styles.selectOrganisationCard} onPress={() => navigation.navigate('ListingTenants')}>
+            <View style={styles.dashboardCardContent}>
+              <Text style={styles.dashboardCardTitle}>Select Organisation</Text>
+              <AntDesign name="right" size={20} color={Colors.tertiary} />
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Text style={styles.logoutText}>Log Out</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

@@ -16,8 +16,9 @@ import AssetUploads from '../components/AssetUploads';
 import EditingAssets from '../screens/EditingAssets';
 import { LocationProvider } from '../components/LocationContext';
 import EnterCodeScreen from '../screens/EnterCodeScreen';
-
+import EditProfile from '../screens/EditProfile';
 import  {Colors} from '../components/stylesLogin';
+import ListingTenants from '../screens/ListingTenats';
 const{primary,tertiary}=Colors
 
 //React navigation 
@@ -86,6 +87,8 @@ const RootStack=()=>{
                 {isUser &&
                 <> 
                 <Stack.Screen name="Welcome" component={Welcome} />
+                <Stack.Screen name="ListingTenants" component={ListingTenants} />
+                <Stack.Screen name="EditProfile" component={EditProfile} />
                 <Stack.Screen name="AssetsPage" component={AssetsPage}></Stack.Screen>
                 <Stack.Screen name="CreateAsset2" component={CreateAsset2}></Stack.Screen>
                 <Stack.Screen name="AssetTypeSearch" component={AssetTypeSearch}></Stack.Screen>
