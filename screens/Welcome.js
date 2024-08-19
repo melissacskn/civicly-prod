@@ -178,17 +178,19 @@
 
 // export default Welcome;
 
-import React, { useContext, useState, useEffect } from "react";
-import { Alert, StatusBar, Text, View, Image, ActivityIndicator,TouchableOpacity } from "react-native";
-import { useNavigation } from '@react-navigation/native';
+import React, { useContext, useState, useEffect, useCallback } from "react";
+import { Alert, StatusBar, Text, View, Image, ActivityIndicator, TouchableOpacity } from "react-native";
+import { useNavigation, useFocusEffect } from '@react-navigation/native'; // useFocusEffect for re-fetching
 import { signOut, fetchAuthSession } from 'aws-amplify/auth';
 import AntDesign from 'react-native-vector-icons/AntDesign'; 
 import { LogInContext } from "../navigators/RootStack";
 import styles, { Colors } from '../components/stylesWelcome';  // Import styles
 
-const Welcome = () => {
+const Welcome = ({route}) => {
   const setIsUser = useContext(LogInContext);
   const navigation = useNavigation();
+  const { itemId,itemName } = route.params||"";
+  
 
   const [loading, setLoading] = useState(true);
   const [firstname, setFirstname] = useState('');
@@ -207,6 +209,7 @@ const Welcome = () => {
 
   const fetchAuthData = async () => {
     try {
+      setLoading(true); // Show loading when fetching new data
       const session = await fetchAuthSession({ forceRefresh: true });
       if (!session || !session.tokens) throw new Error('Session tokens are undefined');
 
@@ -229,13 +232,16 @@ const Welcome = () => {
     } catch (error) {
       Alert.alert('Error', 'Failed to fetch profile data');
     } finally {
-      setLoading(false); 
+      setLoading(false); // Hide loading when done
     }
   };
 
-  useEffect(() => {
-    fetchAuthData();
-  }, []);
+  // Re-fetch data when the Welcome page comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      fetchAuthData();
+    }, [])
+  );
 
   if (loading) {
     return (
@@ -297,3 +303,4 @@ const Welcome = () => {
 }
 
 export default Welcome;
+

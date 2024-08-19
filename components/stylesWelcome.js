@@ -194,6 +194,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     marginBottom: hp('2%'),
+    paddingHorizontal: wp('4%'), // Ensures padding between profile details and the edit icon
   },
   profileDetails: {
     flexDirection: 'row',
@@ -207,7 +208,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: wp('3%'),
-   
   },
   profileImage: {
     width: wp('20%'),
@@ -241,7 +241,6 @@ const styles = StyleSheet.create({
     fontFamily: 'PublicSans-SemiBold',
     color: Colors.tertiary,
     marginBottom: hp('2%'),
-
   },
   selectOrganisationCard: {
     backgroundColor: '#f8f8f8',
@@ -253,6 +252,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 3,
+    minHeight: hp('7%'), // Ensure card size is consistent with longer tenant names
   },
   dashboardCardContent: {
     flexDirection: 'row',
@@ -281,6 +281,9 @@ const styles = StyleSheet.create({
     color: Colors.primary,
     fontSize: wp('4%'),
     fontWeight: 'bold',
+  },
+  editIcon: {
+    marginRight: wp('4%'), // Ensure space between icon and edges
   },
 });
 

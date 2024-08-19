@@ -247,7 +247,7 @@ const { darkLight, primary, green, black } = Colors;
 
 const AssetsPage = ({ route }) => {
   const navigation = useNavigation();
-  const { itemId } = route.params;
+  const { itemId,itemName } = route.params;
   const [tenantId, setTenantId] = useState(itemId);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
