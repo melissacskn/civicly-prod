@@ -8,7 +8,7 @@ import ConfirmEmail from '../screens/ConfirmEmail';
 import ForgotPassword from '../screens/ForgotPassword';
 import SetNewPasswordScreen from '../screens/SetNewPasswordScreen';
 import AssetsPage from '../screens/AssetsPage';
-import CreateAsset2 from '../screens/CreatAsset2';
+import CreateAsset2 from '../screens/CreateAsset2';
 import AssetTypeSearch from '../screens/AssetTypeSearch';
 import MapMap from '../screens/MapMap';
 import LocationServiceCheck from '../screens/LocationServiceCheck';
