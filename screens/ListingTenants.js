@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useContext} from "react";
 import { Alert, Text, FlatList, TouchableOpacity, View, ActivityIndicator, StyleSheet } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign'; 
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { TenantContext } from "../components/TenantContext";
+import { black } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
 
 const Colors = {
   primary: "#ffffff",
@@ -20,7 +22,7 @@ const ListingTenants = () => {
   const navigation = useNavigation();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const { setTenantName, setTenantId } = useContext(TenantContext); // Get the setter functions from the context
   const getTenants = async () => {
     try {
       const session = await fetchAuthSession({ forceRefresh: true });
@@ -53,9 +55,21 @@ const ListingTenants = () => {
   useEffect(() => {
     getTenants();
   }, []);
+  const handleTenantSelect = (item) => {
+    // console.log('Selected Tenant ID:', item.id, 'Tenant Name:', item.title);  // Verify tenant selection
+    
+    // Set the global tenantName and tenantId
+    setTenantName(item.title);
+    setTenantId(item.id);
+
+    // Navigate to MainTabs without passing tenant params (since they are global now)
+    navigation.navigate('MainTabs');
+  };
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.tenantItem} onPress={() => navigation.navigate('AssetsPage', { itemId: item.id, itemName: item.title })}>
+    <TouchableOpacity 
+      style={styles.tenantItem} 
+      onPress={() => handleTenantSelect(item)}>
       <View style={styles.iconContainer}>
         <Text style={styles.iconText}>
           {item.title.charAt(0).toUpperCase()}
@@ -70,9 +84,12 @@ const ListingTenants = () => {
 
   return (
     <View style={styles.container}>
+     
       {loading ? (
         <ActivityIndicator size="large" color={Colors.green} />
+
       ) : (
+        
         <FlatList
           data={data}
           renderItem={renderItem}

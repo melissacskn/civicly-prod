@@ -19,6 +19,8 @@ import axios from 'axios';
 import { LocationContext } from '../components/LocationContext';
 
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { TenantContext } from '../components/TenantContext';
+
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const CreateAsset2=({route})=>{
@@ -26,12 +28,9 @@ const CreateAsset2=({route})=>{
     const [imageUri, setImageUri] = useState(null);
     const [name, setName] = useState('');
     const[image,setImage]=useState(null);
-    
-    const{tenantid,assetData}=route.params
-    const[tenantId,setTenantId]=useState(tenantid)
-   
+    const { tenantId, tenantName } = useContext(TenantContext);  // Access tenant data from TenantContext
   
-   
+
     const [selectedAsset, setSelectedAsset] = useState(null);
 
     const [checkedStatus, setCheckedStatus] = React.useState('ACTIVE');

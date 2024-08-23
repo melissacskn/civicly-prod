@@ -14,10 +14,11 @@ import { handleAssetFileUpload } from '../components/AssetUploads';
 Mapbox.setAccessToken('sk.eyJ1IjoiY2l2aWNseSIsImEiOiJjbHk4a3NjcmcwZGxzMmpzYnA5dGw4OWV1In0.oCECiSHLJO6qnEzyBmQoNw');
 import { LocationContext } from '../components/LocationContext';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { TenantContext } from '../components/TenantContext';
 
 const EditingAssets = ({ route }) => {
   const navigation = useNavigation();
-  const { tenantId} = route.params || {};
+  const { tenantName, tenantId } = useContext(TenantContext);  // Access tenantId and tenantName from context
   const{asset} = route.params || {};
   const[tenantId2, setTenantId] = useState(tenantId);
   const[assetId2, setAssetId] = useState(asset?.id);
@@ -103,7 +104,7 @@ const EditingAssets = ({ route }) => {
  
 
   const handleSave = useCallback(async () => {
-    console.log('tenantId:', tenantId2);
+    console.log('tenantId:', tenantId);
     console.log('assetId:', assetId2);
 
     try {
@@ -132,7 +133,7 @@ const EditingAssets = ({ route }) => {
 
 
 
-      const url = `https://api.dev.nonprod.civic.ly/assets/${tenantId2}/asset/${assetId2}`;
+      const url = `https://api.dev.nonprod.civic.ly/assets/${tenantId}/asset/${assetId2}`;
       console.log('PATCH URL:', url);
 
       const requestOptions = {
@@ -169,7 +170,7 @@ const EditingAssets = ({ route }) => {
           assetId: assetId2,
           fileName: fileName,
           fileType: image.mime,
-          tenantId: tenantId2,
+          tenantId: tenantId,
           image: {
             path: image.path,
             filename: fileName,
@@ -188,7 +189,7 @@ const EditingAssets = ({ route }) => {
   },[checkedCondition, name, checkedStatus, tenantId2, assetId2, returnedLocation, navigation, selectedAsset]);
 
   const handleCancel = useCallback(() => {
-    navigation.navigate("AssetsPage", { tenantId: tenantId2 });
+    navigation.navigate("AssetsPage", { tenantId: tenantId });
   }, [navigation, tenantId2]);
 
   const requestPermissions = async () => {

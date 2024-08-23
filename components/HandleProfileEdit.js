@@ -1,47 +1,4 @@
-// import { View, Text } from 'react-native'
-// import React from 'react'
-// import { fetchAuthSession } from 'aws-amplify/auth';
-// const HandleProfileEdit =async ({imageName,imageType}) => {
-   
-//         //////////Profile Picture Upload////////////////////
-//         const session =  await fetchAuthSession({ forceRefresh: true });
-//         if (!session || !session.tokens) throw new Error('Session tokens are undefined');
-    
-//         const accessToken = session.tokens.accessToken.toString();
-//         const myHeaders = new Headers();
-//         myHeaders.append("Content-Type", "application/json");
-//         myHeaders.append("Authorization", `Bearer ${accessToken}`);
-//         const raw = JSON.stringify({
-//             "image_name": imageName,
-//             "image_type": imageType,
-//             "meta_data": {
-//               "name": "Test  image name"
-//             }
-//           });
 
-
-
-// const requestOptions = {
-//   method: "POST",
-//   headers: myHeaders,
-//   body: raw,
-//   redirect: "follow"
-// };
-
-// fetch("https://api.dev.nonprod.civic.ly/core/user/profile-image/upload/", requestOptions)
-//   .then((response) => response.text())
-//   .then((result) => console.log(result))
-//   .catch((error) => console.error(error));
-
-    
-//   return (
-//     <View>
-//       <Text>HandleProfileEdit</Text>
-//     </View>
-//   )
-// }
-
-// export default HandleProfileEdit
 import React from 'react';
 import { View, Text } from 'react-native';
 import { fetchAuthSession } from 'aws-amplify/auth';
