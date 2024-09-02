@@ -294,21 +294,22 @@ const AssetsPage = () => {
       condition={item.condition}
     />
   );
-
+  const handlePressTableButton = () => {
+    navigation.navigate("AssetsTable");
+  };
   return (
     <>
       <View style={styles.innerContainer}>
-        <Image
-          resizeMode="cover"
-          source={require('./../assets/images/civicly-remove.png')}
-          style={styles.pageLogo}
-        />
+        
         <View style={styles.welcomeContainer}>
           <View style={styles.styledFormArea}>
             <View style={styles.leftCornerContainer}>
               <TouchableOpacity onPress={handlePressAddButton} style={styles.iconButton}>
                 <AntDesign name="pluscircleo" size={23} color="black" />
               </TouchableOpacity>
+              <TouchableOpacity onPress={handlePressTableButton} style={styles.iconButton}>
+            <AntDesign name="table" size={23} color="black" />
+          </TouchableOpacity>
             </View>
             <FlatList
               data={assets}

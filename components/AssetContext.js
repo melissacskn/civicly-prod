@@ -38,9 +38,21 @@ export const AssetProvider = ({ children }) => {
           latitude: coordinates[1],
           longitude: coordinates[0],
           asset_type_id: item.asset_type?.id || 0,
-          imageUrl: imageUrl
+          imageUrl: imageUrl,
+          insurance_value: item.insurance_value || 0, // Additional fields
+          purchase_value: item.purchase_value || 0,
+          warranty_expiry_date: item.warranty_expiry_date,
+          date_acquired: item.date_acquired,
+          next_inspection_date:item.next_inspection_date,
+          last_inspection_date: item.last_inspection_date,
+          estimated_life_months: item.estimated_life_months || 0,
+          charges: item.charges || 0,
+          main_category: item.asset_type?.asset_category?.parent?.name || 'Unknown',  // Main category name
+          sub_category: item.asset_type?.asset_category?.name || 'Unknown',  // Sub-category name
+        
         };
       });
+      console.log(newData);
 
       setAssets(newData);  
     } catch (error) {

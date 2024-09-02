@@ -137,6 +137,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { TenantProvider } from '../components/TenantContext';
 import { AssetProvider } from '../components/AssetContext';
+import AssetsTable from '../components/AssetTable';
 
 const Stack = createStackNavigator();
 export const LogInContext = createContext();
@@ -177,6 +178,7 @@ const RootStack = () => {
                 <Stack.Screen name="MapMap" component={MapMap} />
                 <Stack.Screen name="EditingAssets" component={EditingAssets} />
                 <Stack.Screen name="EditProfile" component={EditProfile} />
+                <Stack.Screen name="AssetsTable" component={AssetsTable} />
               </>
             )}
           </Stack.Navigator>

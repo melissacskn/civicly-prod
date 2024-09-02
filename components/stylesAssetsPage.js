@@ -78,7 +78,7 @@ export const styles = StyleSheet.create({
   },
   leftCornerContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     width: '100%',
     marginBottom: hp('2%'),
