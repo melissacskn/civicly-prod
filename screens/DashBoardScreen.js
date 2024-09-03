@@ -712,7 +712,7 @@ import { TenantContext } from '../components/TenantContext';
 import { LocationContext } from '../components/LocationContext';
 
 
-const HomeScreen = () => {
+const DashBoardScreen = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const { tenantId } = useContext(TenantContext);
@@ -864,7 +864,7 @@ const HomeScreen = () => {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="green" />
-        <Text>Loading Dashboard...</Text>
+
       </View>
     );
   }
@@ -886,9 +886,9 @@ const HomeScreen = () => {
 
   return (
     <ScrollView contentContainerStyle={{ minHeight: hp('300%') }} style={styles.container}>
-      <View style={styles.header}>
+      {/* <View style={styles.header}>
         <Text style={styles.headerTitle}>Dashboard</Text>
-      </View>
+      </View> */}
 
       {/* Total Assets & Assets Value */}
       <View style={styles.cardRow}>
@@ -1008,52 +1008,9 @@ const HomeScreen = () => {
         </View>
       </View>
 
-        {/* Subcategory Bar Chart
-        <View style={styles.chartContainer}>
-        <Text style={styles.chartTitle}>Asset Categories</Text>
-        
-        <BarChart
-  data={subCategoryData}
-  width={Dimensions.get('window').width - wp('10%')} // Adjust width to fit within screen
-  height={350}
-  yAxisLabel={""}
-  yAxisSuffix={""}
-  fromZero // Ensure chart starts from zero
-  chartConfig={{
-    backgroundColor: '#fff', // Ensure background is white
-    backgroundGradientFrom: '#fff', // No background gradient
-    backgroundGradientTo: '#fff',   // Solid background color
-    decimalPlaces: 0, // No decimal places
-    
-    fillShadowGradientFrom: "rgba(38, 176, 186, 0.85)",
-    fillShadowGradientFromOpacity: 1,   
-    fillShadowGradientTo: `rgba(38, 176, 186, 0.85)`,
-    fillShadowGradientToOpacity: 1,
+     
 
-    color: (opacity = 1) => `rgba(38, 176, 186, ${opacity})`, // Bar color
-    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // Axis label color
-    style: {
-      borderRadius: 16,
-    },
-  
-    yAxisInterval: 1,  // Ensures Y-axis labels are spaced by 1 unit
-    fillShadowGradient: 'rgba(38, 176, 186, 0.85)',  // Bar fill color
-    fillShadowGradientOpacity: 1, // Fully opaque bars
-    propsForBackgroundLines: {
-      strokeDasharray: "", // Make the grid lines solid
-      stroke: "rgba(0, 0, 0, 0.1)", // Light gray grid line color
-      strokeWidth: 1.5, // Adjust the thickness of the grid lines
-    },
-    
-  
-  }}
-  showValuesOnTopOfBars
-  showBarTops={false} // Remove the top line on the bars
-  verticalLabelRotation={45} // Rotate x-axis labels for better readability
-/>
-
-
-        </View> */}
+     
            {/* Subcategory Bar Chart */}
       <View style={styles.chartContainer}>
         <Text style={styles.chartTitle}>Asset Categories</Text>
@@ -1154,6 +1111,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f9f9f9',
     paddingHorizontal: wp('3%'),
+    paddingTop: hp('3%'),
   },
   header: {
     paddingVertical: hp('2%'),
@@ -1328,4 +1286,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default HomeScreen;
+export default DashBoardScreen;

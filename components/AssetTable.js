@@ -1,12 +1,16 @@
 import React, { useContext, useEffect } from 'react';
-import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity,ActivityIndicator } from 'react-native';
 import { AssetContext } from './AssetContext';
+import { TenantContext } from '../components/TenantContext';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native'; // Import navigation
 import AntDesign from 'react-native-vector-icons/AntDesign';
-const AssetTable = ({ tenantId }) => {
+import { Colors } from '../components/stylesSignUp';  
+const AssetTable = () => {
   const { assets, loading, fetchAssets } = useContext(AssetContext);
+  const { tenantId } = useContext(TenantContext);  // Get tenantId from context
   const navigation = useNavigation(); // Initialize navigation
+
 
   useEffect(() => {
     if (tenantId) {
@@ -46,7 +50,11 @@ const AssetTable = ({ tenantId }) => {
   };
 
   if (loading) {
-    return <Text>Loading...</Text>;
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={Colors.green} />
+      </View>
+    );
   }
 
   return (
@@ -283,6 +291,11 @@ const styles = StyleSheet.create({
     elevation: 5,
     backgroundColor: 'rgb(0, 168, 84)', // Green background color
    
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
 });

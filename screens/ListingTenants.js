@@ -5,7 +5,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { TenantContext } from "../components/TenantContext";
-import { black } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
+
 
 const Colors = {
   primary: "#ffffff",
@@ -62,8 +62,7 @@ const ListingTenants = () => {
     setTenantName(item.title);
     setTenantId(item.id);
 
-    // Navigate to MainTabs without passing tenant params (since they are global now)
-    navigation.navigate('MainTabs');
+    navigation.navigate('MainDrawer');
   };
 
   const renderItem = ({ item }) => (
