@@ -30,18 +30,29 @@ const AssetTable = () => {
             </View>
           </View>
           <View style={styles.cardBody}>
+            <View style={styles.assetImageContainer}>
             <Image source={{ uri: item.imageUrl }} style={styles.assetImage} />
+            <View style={styles.statusConditionBelow}>
+                <Text style={[styles.status, getStatusStyle(item.status)]}>{item.status}</Text>
+                <Text style={[styles.condition, getConditionStyle(item.condition)]}>{item.condition}</Text>
+              </View>
+            </View>
             <View style={styles.assetDetails}>
               <Text style={styles.detailText}>{item.main_category}</Text>
               <Text style={styles.detailText}>{item.sub_category}</Text>
               <Text style={styles.detailText}>Current Value: £{item.purchase_value.toFixed(2)}</Text>
               <Text style={styles.detailText}>Insurance Value: £{item.insurance_value.toFixed(2)}</Text>
-              <Text style={styles.boldDetailText}>Last Inspection: {item.last_inspection_date || 'N/A'}</Text>
+              {/* <Text style={styles.boldDetailText}>Last Inspection: {item.last_inspection_date || 'N/A'}</Text>
               <Text style={styles.boldDetailText}>Next Inspection: {item.next_inspection_date || 'N/A'}</Text>
-              <View style={styles.statusContainer}>
-                <Text style={[styles.status, getStatusStyle(item.status)]}>{item.status}</Text>
-                <Text style={[styles.condition, getConditionStyle(item.condition)]}>{item.condition}</Text>
-              </View>
+               */}
+               <Text style={styles.boldDetailText}>
+  Last Inspection: {item.last_inspection_date ? new Date(item.last_inspection_date).toLocaleDateString() : 'N/A'}
+</Text>
+<Text style={styles.boldDetailText}>
+  Next Inspection: {item.next_inspection_date ? new Date(item.next_inspection_date).toLocaleDateString() : 'N/A'}
+</Text>
+
+             
             </View>
           </View>
         </View>
@@ -201,6 +212,7 @@ const styles = StyleSheet.create({
     color: 'gray',
     marginTop: hp('0.5%'),
     fontFamily: 'PublicSans-Regular',
+   
   },
   condition: {
     fontSize: wp('3.5%'),
@@ -208,9 +220,10 @@ const styles = StyleSheet.create({
     marginTop: hp('0.5%'),
     marginRight: wp('2%'),
     fontFamily: 'PublicSans-Regular',
+  
   },
   statusContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: hp('0.5%'),
@@ -296,6 +309,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  assetImageContainer: {
+    flexDirection: 'column', // Align image and status/condition vertically
+    alignItems: 'center', // Center them horizontally
+    marginBottom: 10,
+  },
+  statusConditionBelow: {
+    flexDirection: 'column', // Keep status and condition in a row
+    justifyContent: 'space-between', // Separate status and condition evenly
+    alignItems: 'center',
+  
+    marginTop: 10, // Add some space between image and text
   },
 
 });

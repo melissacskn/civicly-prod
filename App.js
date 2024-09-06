@@ -7,7 +7,7 @@ import "react-native-devsettings";
 // OR if you are using AsyncStorage
 import "react-native-devsettings/withAsyncStorage";
 
-
+import 'react-native-gesture-handler'
 
 // screens
 import Login from './screens/Login';
