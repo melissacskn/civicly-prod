@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity,ActivityIndicator } from 'react-native';
-import { AssetContext } from './AssetContext';
+import { AssetContext } from '../components/AssetContext';
 import { TenantContext } from '../components/TenantContext';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native'; // Import navigation
@@ -10,7 +10,12 @@ const AssetTable = () => {
   const { assets, loading, fetchAssets } = useContext(AssetContext);
   const { tenantId } = useContext(TenantContext);  // Get tenantId from context
   const navigation = useNavigation(); // Initialize navigation
-
+  const { 
+  
+    showMainCategory, showSubCategory, 
+    showCurrentValue, showInsuranceValue, 
+    showLastInspection, showNextInspection,showImage
+  } = useContext(AssetContext);
 
   useEffect(() => {
     if (tenantId) {
@@ -25,40 +30,49 @@ const AssetTable = () => {
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <View style={styles.assetNameContainer}>
+              {/* Always display these */}
               <Text style={styles.assetName}>{item.name}</Text>
               <Text style={styles.assetType}>{item.asset_type_name}</Text>
             </View>
           </View>
+  
           <View style={styles.cardBody}>
             <View style={styles.assetImageContainer}>
-            <Image source={{ uri: item.imageUrl }} style={styles.assetImage} />
-            <View style={styles.statusConditionBelow}>
-                <Text style={[styles.status, getStatusStyle(item.status)]}>{item.status}</Text>
+              {/* Conditionally display the image based on the toggle */}
+              {showImage && (
+                <Image source={{ uri: item.imageUrl }} style={styles.assetImage} />
+              )}
+              <View style={styles.statusConditionBelow}>
+                {/* Always display the status and condition */}
                 <Text style={[styles.condition, getConditionStyle(item.condition)]}>{item.condition}</Text>
+                <Text style={[styles.status, getStatusStyle(item.status)]}>{item.status}</Text>
+                
               </View>
             </View>
+  
             <View style={styles.assetDetails}>
-              <Text style={styles.detailText}>{item.main_category}</Text>
-              <Text style={styles.detailText}>{item.sub_category}</Text>
-              <Text style={styles.detailText}>Current Value: £{item.purchase_value.toFixed(2)}</Text>
-              <Text style={styles.detailText}>Insurance Value: £{item.insurance_value.toFixed(2)}</Text>
-              {/* <Text style={styles.boldDetailText}>Last Inspection: {item.last_inspection_date || 'N/A'}</Text>
-              <Text style={styles.boldDetailText}>Next Inspection: {item.next_inspection_date || 'N/A'}</Text>
-               */}
-               <Text style={styles.boldDetailText}>
-  Last Inspection: {item.last_inspection_date ? new Date(item.last_inspection_date).toLocaleDateString() : 'N/A'}
-</Text>
-<Text style={styles.boldDetailText}>
-  Next Inspection: {item.next_inspection_date ? new Date(item.next_inspection_date).toLocaleDateString() : 'N/A'}
-</Text>
-
-             
+              {/* Conditionally display the below details based on user toggles */}
+              {showMainCategory && <Text style={styles.detailText}>{item.main_category}</Text>}
+              {showSubCategory && <Text style={styles.detailText}>{item.sub_category}</Text>}
+              {showCurrentValue && <Text style={styles.detailText}>Current Value: £{item.purchase_value.toFixed(2)}</Text>}
+              {showInsuranceValue && <Text style={styles.detailText}>Insurance Value: £{item.insurance_value.toFixed(2)}</Text>}
+              {showLastInspection && (
+                <Text style={styles.boldDetailText}>
+                  Last Inspection: {item.last_inspection_date ? new Date(item.last_inspection_date).toLocaleDateString() : 'N/A'}
+                </Text>
+              )}
+              {showNextInspection && (
+                <Text style={styles.boldDetailText}>
+                  Next Inspection: {item.next_inspection_date ? new Date(item.next_inspection_date).toLocaleDateString() : 'N/A'}
+                </Text>
+              )}
             </View>
           </View>
         </View>
       </View>
     );
   };
+  
 
   if (loading) {
     return (
@@ -312,16 +326,16 @@ const styles = StyleSheet.create({
   },
   assetImageContainer: {
     flexDirection: 'column', // Align image and status/condition vertically
-    alignItems: 'center', // Center them horizontally
+    alignItems: 'flex-start', // Align the image to the left
     marginBottom: 10,
   },
   statusConditionBelow: {
-    flexDirection: 'column', // Keep status and condition in a row
-    justifyContent: 'space-between', // Separate status and condition evenly
-    alignItems: 'center',
-  
+    flexDirection: 'column', // Stack status and condition vertically
+    alignItems: 'flex-start', // Align the status and condition to the left
+    justifyContent: 'flex-start', // Ensure alignment starts from the top
     marginTop: 10, // Add some space between image and text
   },
+
 
 });
 

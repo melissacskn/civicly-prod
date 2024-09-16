@@ -379,7 +379,7 @@
 
 // export default MainDrawer;
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, Image, Alert, Switch, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text, Image, Alert, Switch, TouchableWithoutFeedback,ScrollView } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import DashBoardScreen from '../screens/DashBoardScreen';
 import ProfileScreen from '../screens/ProfileScreen';
@@ -389,14 +389,12 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { AssetContext } from '../components/AssetContext';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import AssetTable from '../components/AssetTable';
+import AssetTable from '../screens/AssetTable';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { TenantContext } from '../components/TenantContext';
-import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet'; // Import the Bottom Sheet
+import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
-<FontAwesome name="exchange" size={24} color="black" />
 
 const Drawer = createDrawerNavigator();
 
@@ -407,28 +405,35 @@ const MainDrawer = () => {
   const [email, setEmail] = useState('user@example.com');
   const [userName, setUserName] = useState('');
   const [loading, setLoading] = useState(true);
-  const [viewType, setViewType] = useState('list'); // Default to 'list' view
-  const [showImages, setShowImages] = useState(true); // Toggle for "Show Images"
-  const [showBodyText, setShowBodyText] = useState(true); // Toggle for "Show Body Text"
-  const [showTags, setShowTags] = useState(true); // Toggle for "Show Tags"
+  const [viewType, setViewType] = useState('list');
+ 
   const [showSortOptions, setShowSortOptions] = useState(false);
-
   const { fetchAssets } = useContext(AssetContext);
   const { tenantId } = useContext(TenantContext);
-  // Ref for the bottom sheet
   const bottomSheetRef = useRef(null);
-  const snapPoints = ['25%', '53%']; // Define the height of the bottom sheet
-  // Add a new state variable to track the selected sort option
-const [selectedSortOption, setSelectedSortOption] = useState(null);
+  const snapPoints = ['25%', '80%'];
+  const [selectedSortOption, setSelectedSortOption] = useState(null);
+  
+  const {
+    showMainCategory, setShowMainCategory,
+    showSubCategory, setShowSubCategory,
+    showCurrentValue, setShowCurrentValue,
+    showInsuranceValue, setShowInsuranceValue,
+    showLastInspection, setShowLastInspection,
+    showNextInspection, setShowNextInspection,
+    showImage, setShowImage
+  } = useContext(AssetContext);
 
-  // Fetch user data
+
+
+
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         setLoading(true);
         const session = await fetchAuthSession({ forceRefresh: true });
         if (!session || !session.tokens) throw new Error('Session tokens are undefined');
-
         const accessToken = session.tokens.accessToken.toString();
         const myHeaders = new Headers();
         myHeaders.append('Authorization', `Bearer ${accessToken}`);
@@ -453,15 +458,14 @@ const [selectedSortOption, setSelectedSortOption] = useState(null);
 
     fetchUserData();
   }, []);
-  // Function to toggle sort options visibility
-const toggleSortOptions = () => {
-  setShowSortOptions(true);
-};
 
-// Function to toggle back to view options
-const toggleViewOptions = () => {
-  setShowSortOptions(false);
-};
+  const toggleSortOptions = () => {
+    setShowSortOptions(true);
+  };
+
+  const toggleViewOptions = () => {
+    setShowSortOptions(false);
+  };
 
   const toggleDropdown = () => {
     bottomSheetRef.current?.expand();
@@ -469,7 +473,6 @@ const toggleViewOptions = () => {
 
   const handleViewChange = (view) => {
     setViewType(view);
-    // bottomSheetRef.current?.close();
   };
 
   const closeBottomSheet = () => {
@@ -477,197 +480,80 @@ const toggleViewOptions = () => {
   };
 
   const handleSortChange = (sortOption) => {
-    // Pass the sorting option to fetchAssets function based on the viewType
-    setSelectedSortOption(sortOption); // This will make the "Clear Sort" button visible
-  
+    setSelectedSortOption(sortOption);
     if (tenantId) {
       fetchAssets(tenantId, sortOption);
     }
-    // bottomSheetRef.current?.close(); // Close the bottom sheet after sorting
   };
-  // Function to clear the selected sort
-const clearSort = () => {
-  setSelectedSortOption(null); // Reset the selected sort option
-  // Fetch unsorted assets or apply the default sorting logic
-  if (tenantId) {
-    fetchAssets(tenantId); // Call the fetchAssets function without sorting
-  }
-};
-
-
-  // Backdrop with blur effect and close on tap
   const renderBackdrop = (props) => (
     <BottomSheetBackdrop
       {...props}
-      opacity={0.7}
-      // Allow backdrop to be touchable to close the bottom sheet
       disappearsOnIndex={-1}
       appearsOnIndex={0}
-      onPress={() => bottomSheetRef.current?.close()} // Close on tap
+      opacity={0.7}
+      pressBehavior="close"
     />
   );
+
+  const clearSort = () => {
+    setSelectedSortOption(null);
+    if (tenantId) {
+      fetchAssets(tenantId);
+    }
+  };
+
+  const getSortByLabel = () => {
+    if (!selectedSortOption) {
+      return 'Date Updated'; 
+    }
+    switch (selectedSortOption) {
+      case 'name':
+        return 'Name';
+      case 'type':
+        return 'Type (A-Z)';
+      case 'status':
+        return 'Status';
+      case 'condition':
+        return 'Condition';
+      case 'asset_type__asset_category__parent__name':
+        return 'Main Category';
+      case 'asset_type__asset_category__name':
+        return 'Sub Category';
+      default:
+        return 'Date Updated'; 
+    }
+  };
+  const getTitle = (routeName) => {
+    switch (routeName) {
+      case 'DashboardScreen':
+        return 'Dashboard';
+      case 'AssetTable':
+        return 'Assets';
+      case 'AssetMap':
+        return 'Map';
+      case 'ProfileScreen':
+        return 'Profile';
+      default:
+        return '';
+    }
+  };
   
-  // Render the detailed view
- // Updated renderDetailedView to handle sort options display
-//  const renderDetailedView = () => (
-//   <View style={styles.bottomSheetContainer}>
-//     {/* View Options */}
-//     <View>
-//       <TouchableOpacity onPress={toggleViewOptions}>
-//         <View style={styles.headerRow}>
-//           <AntDesign name="appstore-o" size={26} color="black" />
-//           <Text style={styles.headerText}>View Options</Text>
-//         </View>
-//       </TouchableOpacity>
-//     </View>
 
-//     {!showSortOptions ? (
-//       <>
-//         {/* View Options Content */}
-//         <View style={styles.optionContainer}>
-//           <TouchableOpacity onPress={() => handleViewChange('list')}>
-//             <View style={styles.optionRow}>
-//               <Entypo name="menu" size={30} color={viewType === 'list' ? 'green' : 'black'} />
-//               <Text style={[styles.optionText, viewType === 'list' && styles.selectedItem]}>
-//                 Small
-//               </Text>
-//             </View>
-//           </TouchableOpacity>
-
-//           <TouchableOpacity onPress={() => handleViewChange('grid')}>
-//             <View style={styles.optionRow}>
-//               <MaterialIcons name="view-module" size={30} color={viewType === 'grid' ? 'green' : 'black'} />
-//               <Text style={[styles.optionText, viewType === 'grid' && styles.selectedItem]}>
-//                 Large
-//               </Text>
-//             </View>
-//           </TouchableOpacity>
-//         </View>
-
-//         {/* Display Options */}
-//         <Text style={styles.optionTitle}>Display Options</Text>
-//         <View style={styles.optionRow2}>
-//           <Text style={styles.optionText2}>Show Images</Text>
-//           <Switch value={showImages} onValueChange={() => setShowImages(!showImages)} />
-//         </View>
-//         <View style={styles.optionRow2}>
-//           <Text style={styles.optionText2}>Show Body Text</Text>
-//           <Switch value={showBodyText} onValueChange={() => setShowBodyText(!showBodyText)} />
-//         </View>
-//         <View style={styles.optionRow2}>
-//           <Text style={styles.optionText2}>Show Tags</Text>
-//           <Switch value={showTags} onValueChange={() => setShowTags(!showTags)} />
-//         </View>
-
-//         {/* Sort By Section */}
-//         <View style={styles.divider} />
-//         <TouchableOpacity onPress={toggleSortOptions}>
-//           <View style={styles.headerRow}>
-//             <MaterialIcons name="swap-vert" size={30} color="black" />
-//             <Text style={styles.headerText}>Sort By</Text>
-//           </View>
-//         </TouchableOpacity>
-//       </>
-//     ) : (
-//       <>
-//         <TouchableOpacity onPress={toggleSortOptions}>
-//           <View style={styles.headerRow}>
-//             <MaterialIcons name="swap-vert" size={30} color="black" />
-//             <Text style={styles.headerText}>Sort By</Text>
-//           </View>
-//         </TouchableOpacity>
-
-//         {/* Sort By Options Content */}
-//         <View style={styles.sortOptionsContainer}>
-//           <TouchableOpacity onPress={() => handleSortChange('name')}>
-//             <View style={styles.optionRow}>
-//               <Text style={[
-//                 styles.sortOption,
-//                 selectedSortOption === 'name' && styles.selectedSortOption
-//               ]}>Name</Text>
-//               {selectedSortOption === 'name' && <FontAwesome name="check" size={18} color="green" style={styles.checkmark} />}
-//             </View>
-//           </TouchableOpacity>
-
-//           <TouchableOpacity onPress={() => handleSortChange('type')}>
-//             <View style={styles.optionRow}>
-//               <Text style={[
-//                 styles.sortOption,
-//                 selectedSortOption === 'type' && styles.selectedSortOption
-//               ]}>Type (A-Z)</Text>
-//               {selectedSortOption === 'type' && <FontAwesome name="check" size={18} color="green" style={styles.checkmark} />}
-//             </View>
-//           </TouchableOpacity>
-
-//           <TouchableOpacity onPress={() => handleSortChange('status')}>
-//             <View style={styles.optionRow}>
-//               <Text style={[
-//                 styles.sortOption,
-//                 selectedSortOption === 'status' && styles.selectedSortOption
-//               ]}>Status</Text>
-//               {selectedSortOption === 'status' && <FontAwesome name="check" size={18} color="green" style={styles.checkmark} />}
-//             </View>
-//           </TouchableOpacity>
-
-//           <TouchableOpacity onPress={() => handleSortChange('condition')}>
-//             <View style={styles.optionRow}>
-//               <Text style={[
-//                 styles.sortOption,
-//                 selectedSortOption === 'condition' && styles.selectedSortOption
-//               ]}>Condition</Text>
-//               {selectedSortOption === 'condition' && <FontAwesome name="check" size={18} color="green" style={styles.checkmark} />}
-//             </View>
-//           </TouchableOpacity>
-
-//           <TouchableOpacity onPress={() => handleSortChange('asset_type__asset_category__parent__name')}>
-//             <View style={styles.optionRow}>
-//               <Text style={[
-//                 styles.sortOption,
-//                 selectedSortOption === 'asset_type__asset_category__parent__name' && styles.selectedSortOption
-//               ]}>Main Category</Text>
-//               {selectedSortOption === 'asset_type__asset_category__parent__name' && <FontAwesome name="check" size={18} color="green" style={styles.checkmark} />}
-//             </View>
-//           </TouchableOpacity>
-
-//           <TouchableOpacity onPress={() => handleSortChange('asset_type__asset_category__name')}>
-//             <View style={styles.optionRow}>
-//               <Text style={[
-//                 styles.sortOption,
-//                 selectedSortOption === 'asset_type__asset_category__name' && styles.selectedSortOption
-//               ]}>Sub Category</Text>
-//               {selectedSortOption === 'asset_type__asset_category__name' && <FontAwesome name="check" size={18} color="green" style={styles.checkmark} />}
-//             </View>
-//           </TouchableOpacity>
-          
-
-//           {/* Conditionally show "Clear Sort" */}
-//           {selectedSortOption && (
-//             <View style={styles.clearSortContainer}>
-//               <TouchableOpacity onPress={clearSort}>
-//                 <Text style={styles.clearSortOption}>✖ Clear Sort</Text>
-//               </TouchableOpacity>
-//             </View>
-//           )}
-//         </View>
-//       </>
-//     )}
-//   </View>
-// );
-
-const renderDetailedView = () => (
-  <View style={styles.bottomSheetContainer}>
-    {/* View Options */}
-    <View>
-      <TouchableOpacity onPress={toggleViewOptions}>
-        <View style={styles.headerRow}>
-          <AntDesign name="appstore-o" size={26} color="black" />
-          <Text style={styles.headerText}>View Options</Text>
-        </View>
-      </TouchableOpacity>
-    </View>
-
-    {!showSortOptions ? (
-      <>
+  const renderDetailedView = () => (
+   
+    <View style={styles.bottomSheetContainer}>
+      {/* View Options */}
+      <View>
+        <TouchableOpacity onPress={toggleViewOptions}>
+          <View style={styles.headerRow}>
+            <AntDesign name="appstore-o" size={26} color="black" />
+            <Text style={styles.headerText}>View Options</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+  
+      {!showSortOptions ? (
+        <>
         {/* Compact View Options Content */}
         <View style={styles.compactOptionContainer}>
           <TouchableOpacity onPress={() => handleViewChange('list')}>
@@ -690,116 +576,152 @@ const renderDetailedView = () => (
         </View>
 
 
-        {/* Display Options */}
+         {/* Display Options - Conditionally show when viewType is 'list' */}
+    {viewType === 'list' && (
+      <>
         <Text style={styles.optionTitle}>Display Options</Text>
         <View style={styles.optionRow2}>
-          <Text style={styles.optionText2}>Show Images</Text>
-          <Switch value={showImages} onValueChange={() => setShowImages(!showImages)} />
+          <Text style={styles.optionText2}>Show Image</Text>
+          <Switch
+            value={showImage}
+            onValueChange={() => setShowImage(!showImage) }
+          />
         </View>
         <View style={styles.optionRow2}>
-          <Text style={styles.optionText2}>Show Body Text</Text>
-          <Switch value={showBodyText} onValueChange={() => setShowBodyText(!showBodyText)} />
+          <Text style={styles.optionText2}>Show Main Category</Text>
+          <Switch
+            value={showMainCategory}
+            onValueChange={() => setShowMainCategory(!showMainCategory) }
+          />
         </View>
         <View style={styles.optionRow2}>
-          <Text style={styles.optionText2}>Show Tags</Text>
-          <Switch value={showTags} onValueChange={() => setShowTags(!showTags)} />
+          <Text style={styles.optionText2}>Show Sub Category </Text>
+          <Switch
+            value={showSubCategory}
+            onValueChange={() => setShowSubCategory(!showSubCategory)}
+          />
         </View>
-
-        {/* Sort By Section */}
-        <View style={styles.divider} />
-        <TouchableOpacity onPress={toggleSortOptions}>
-          <View style={styles.headerRow}>
-            <MaterialIcons name="swap-vert" size={30} color="black" />
-            <Text style={styles.headerText}>Sort By</Text>
-          </View>
-        </TouchableOpacity>
-      </>
-    ) : (
-      <>
-        <TouchableOpacity onPress={toggleSortOptions}>
-          <View style={styles.headerRow}>
-            <MaterialIcons name="swap-vert" size={30} color="black" />
-            <Text style={styles.headerText}>Sort By</Text>
-          </View>
-        </TouchableOpacity>
-
-        {/* Sort By Options Content */}
-        <View style={styles.sortOptionsContainer}>
-          <TouchableOpacity onPress={() => handleSortChange('name')}>
-            <View style={styles.optionRow}>
-              <Text style={[
-                styles.sortOption,
-                selectedSortOption === 'name' && styles.selectedSortOption
-              ]}>Name</Text>
-              {selectedSortOption === 'name' && <FontAwesome name="check" size={18} color="green" style={styles.checkmark} />}
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => handleSortChange('type')}>
-            <View style={styles.optionRow}>
-              <Text style={[
-                styles.sortOption,
-                selectedSortOption === 'type' && styles.selectedSortOption
-              ]}>Type (A-Z)</Text>
-              {selectedSortOption === 'type' && <FontAwesome name="check" size={18} color="green" style={styles.checkmark} />}
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => handleSortChange('status')}>
-            <View style={styles.optionRow}>
-              <Text style={[
-                styles.sortOption,
-                selectedSortOption === 'status' && styles.selectedSortOption
-              ]}>Status</Text>
-              {selectedSortOption === 'status' && <FontAwesome name="check" size={18} color="green" style={styles.checkmark} />}
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => handleSortChange('condition')}>
-            <View style={styles.optionRow}>
-              <Text style={[
-                styles.sortOption,
-                selectedSortOption === 'condition' && styles.selectedSortOption
-              ]}>Condition</Text>
-              {selectedSortOption === 'condition' && <FontAwesome name="check" size={18} color="green" style={styles.checkmark} />}
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => handleSortChange('asset_type__asset_category__parent__name')}>
-            <View style={styles.optionRow}>
-              <Text style={[
-                styles.sortOption,
-                selectedSortOption === 'asset_type__asset_category__parent__name' && styles.selectedSortOption
-              ]}>Main Category</Text>
-              {selectedSortOption === 'asset_type__asset_category__parent__name' && <FontAwesome name="check" size={18} color="green" style={styles.checkmark} />}
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => handleSortChange('asset_type__asset_category__name')}>
-            <View style={styles.optionRow}>
-              <Text style={[
-                styles.sortOption,
-                selectedSortOption === 'asset_type__asset_category__name' && styles.selectedSortOption
-              ]}>Sub Category</Text>
-              {selectedSortOption === 'asset_type__asset_category__name' && <FontAwesome name="check" size={18} color="green" style={styles.checkmark} />}
-            </View>
-          </TouchableOpacity>
-          
-
-          {/* Conditionally show "Clear Sort" */}
-          {selectedSortOption && (
-            <View style={styles.clearSortContainer}>
-              <TouchableOpacity onPress={clearSort}>
-                <Text style={styles.clearSortOption}>✖ Clear Sort</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+        <View style={styles.optionRow2}>
+          <Text style={styles.optionText2}>Show Current Value</Text>
+          <Switch
+            value={showCurrentValue}
+            onValueChange={() => setShowCurrentValue(!showCurrentValue)}
+          />
         </View>
+       
+            <View style={styles.optionRow2}>
+              <Text style={styles.optionText2}>Show Insurance Value</Text>
+              <Switch
+                value={showInsuranceValue}
+                onValueChange={() => setShowInsuranceValue(!showInsuranceValue)}
+              />
+            </View>
+            <View style={styles.optionRow2}>
+              <Text style={styles.optionText2}>Show Last Inspection</Text>
+              <Switch
+                value={showLastInspection}
+                onValueChange={() => setShowLastInspection(!showLastInspection)}
+              />
+            </View>
+            <View style={styles.optionRow2}>
+              <Text style={styles.optionText2}>Show Next Inspection</Text>
+              <Switch
+                value={showNextInspection}
+                onValueChange={() => setShowNextInspection(!showNextInspection)}
+              />
+            </View>
       </>
     )}
-  </View>
-);
+  
+          {/* Sort By Section */}
+          <View style={styles.divider} />
+          <TouchableOpacity onPress={toggleSortOptions}>
+            <View style={styles.headerRow}>
+              <MaterialIcons name="swap-vert" size={30} color="black" />
+              <Text style={styles.headerText}>Sort By</Text>
+              <Text style={styles.sortByLabel}>{getSortByLabel()}</Text>
+            </View>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <>
+          <View style={styles.headerRow}>
+            <MaterialIcons name="swap-vert" size={30} color="black" />
+            <Text style={styles.headerText}>Sort By</Text>
+            <Text style={styles.sortByLabel}>{getSortByLabel()}</Text>
+          </View>
+  
+          {/* Sort By Options */}
+          <View style={styles.sortOptionsContainer}>
+            {[
+              { key: 'name', label: 'Name' },
+              { key: 'type', label: 'Type (A-Z)' },
+              { key: 'status', label: 'Status' },
+              { key: 'condition', label: 'Condition' },
+              { key: 'asset_type__asset_category__parent__name', label: 'Main Category' },
+              { key: 'asset_type__asset_category__name', label: 'Sub Category' }
+            ].map(option => (
+              <TouchableOpacity
+                key={option.key}
+                onPress={() => handleSortChange(option.key)}
+              >
+                <View style={styles.optionRow}>
+                  <Text
+                    style={[
+                      styles.sortOption,
+                      selectedSortOption === option.key && styles.selectedSortOption
+                    ]}
+                  >
+                    {option.label}
+                  </Text>
+                  {selectedSortOption === option.key && (
+                    <FontAwesome
+                      name="check"
+                      size={18}
+                      color="green"
+                      style={styles.checkmark}
+                    />
+                  )}
+                </View>
+              </TouchableOpacity>
+            ))}
+  
+            {/* Conditionally show "Clear Sort" */}
+            {selectedSortOption && (
+              <View style={styles.clearSortContainer}>
+                <TouchableOpacity onPress={clearSort}>
+                  <Text style={styles.clearSortOption}>✖ Clear Sort</Text>
+                </TouchableOpacity>
+                <View style={styles.divider} />
+                
+                
+              </View>
+            )}
+          </View>
+        </>
+      )}
+    </View>
+    
+  );
+  
+  // Custom Drawer Content to display user image and username
+const CustomDrawerContent = (props) => {
+  const { firstName, lastName, profileImage, userName } = props;
 
+  return (
+    <DrawerContentScrollView {...props}>
+      <View style={styles.drawerHeader}>
+        <Image source={{ uri: profileImage }} style={styles.profileImage} />
+        <View style={styles.textContainer}>
+          <Text style={styles.nameSurname}>{`${firstName} ${lastName}`}</Text>
+          <Text style={styles.userName}>{userName}</Text>
+        </View>
+      </View>
+      <View style={styles.divider} />
+      <DrawerItemList {...props} />
+    </DrawerContentScrollView>
+  );
+};
 
   return (
     <>
@@ -849,50 +771,16 @@ const renderDetailedView = () => (
         <Drawer.Screen name="ProfileScreen" component={ProfileScreen} options={{ title: 'Profile' }} />
       </Drawer.Navigator>
 
-      {/* Bottom Sheet */}
       <TouchableWithoutFeedback onPress={closeBottomSheet}>
-        <BottomSheet ref={bottomSheetRef} index={-1} snapPoints={snapPoints} enablePanDownToClose={true}   backdropComponent={renderBackdrop}>
+        <BottomSheet ref={bottomSheetRef} index={-1} snapPoints={snapPoints} enablePanDownToClose={true} backdropComponent={renderBackdrop}>
           {renderDetailedView()}
         </BottomSheet>
       </TouchableWithoutFeedback>
     </>
   );
 };
-// Custom Drawer Content to display user image and username
-const CustomDrawerContent = (props) => {
-  const { firstName, lastName, profileImage, userName } = props;
 
-  return (
-    <DrawerContentScrollView {...props}>
-      <View style={styles.drawerHeader}>
-        <Image source={{ uri: profileImage }} style={styles.profileImage} />
-        <View style={styles.textContainer}>
-          <Text style={styles.nameSurname}>{`${firstName} ${lastName}`}</Text>
-          <Text style={styles.userName}>{userName}</Text>
-        </View>
-      </View>
-      <View style={styles.divider} />
-      <DrawerItemList {...props} />
-    </DrawerContentScrollView>
-  );
-};
-
-// Function to get the title based on the route name
-const getTitle = (routeName) => {
-  switch (routeName) {
-    case 'DashboardScreen':
-      return 'Dashboard';
-    case 'AssetTable':
-      return 'Assets';
-    case 'AssetMap':
-      return 'Map';
-    case 'ProfileScreen':
-      return 'Profile';
-    default:
-      return '';
-  }
-};
-
+// Styles
 const styles = StyleSheet.create({
   drawer: {
     backgroundColor: 'white',
@@ -943,6 +831,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#e0e0e0',
     marginVertical: 10,
   },
+
+  drawerHeader: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center', // Centers the content horizontally
+    padding: 20,
+  },
   profileImage: {
     width: wp('20%'),
     height: wp('20%'),
@@ -950,16 +845,18 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   textContainer: {
-    alignItems: 'center',
+    alignItems: 'center', // Centers the text below the image
   },
   nameSurname: {
     fontSize: wp('4.5%'),
     fontWeight: 'bold',
     marginBottom: 5,
+    textAlign: 'center', // Centers the text
   },
   userName: {
     fontSize: wp('3.5%'),
     color: 'gray',
+    textAlign: 'center', // Centers the text
   },
   optionContainer: {
     flexDirection: 'row',
@@ -967,11 +864,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   optionRow: {
-    flexDirection: 'column',
-    justifyContent: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-start', // Align items to the left
     alignItems: 'center',
     paddingVertical: 10,
-    width: wp('25%'),
   },
   optionText: {
     fontSize: 14,
@@ -986,7 +882,8 @@ const styles = StyleSheet.create({
   },
   sortOption: {
     fontSize: 16,
-    paddingVertical: 10,
+    fontFamily: 'PublicSans-Regular',
+    textAlign: 'left', // Ensure text is left aligned
   },
   headerContainer: {
     flexDirection: 'row',
@@ -1000,59 +897,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 10,
     paddingBottom: 8,
-
   },
   headerText: {
     fontSize: 18,
-   
     marginLeft: 10, // Space between icon and text
     fontFamily: 'PublicSans-SemiBold',
   },
-
-
-  optionRow2: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 10,
+  sortByLabel: {
+    fontSize: 16,
+    color: 'gray',
+    marginLeft: 'auto',
+    fontFamily: 'PublicSans-SemiBold',
   },
- 
-
-
- 
-
   clearSortContainer: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderColor: '#e0e0e0',
-    marginBottom: 10,
+    marginTop: 10, // Add some space before the "Clear Sort" button
+
+ 
   },
   clearSortOption: {
     fontSize: 16,
     fontWeight: 'bold',
     color: 'red',
-    paddingVertical: 10,
-    textAlign: 'center',
+  
   },
 
-
-
-
-  optionRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between', // This ensures the checkmark aligns to the right
-    alignItems: 'center',
-    paddingVertical: 10,
-  },
   checkmark: {
-    marginLeft: 'auto', // Align the checkmark to the right end
-  },
-  sortOption: {
-    fontSize: 16,
-    fontFamily: 'PublicSans-Regular',
-  },
-  selectedSortOption: {
-    color: 'green', // This will match the tick color
+    marginLeft: 'auto',
   },
   compactOptionContainer: {
     flexDirection: 'row',
@@ -1064,9 +934,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20, // Space between the options
+    paddingHorizontal: 20,
   },
-
 });
 
 export default MainDrawer;

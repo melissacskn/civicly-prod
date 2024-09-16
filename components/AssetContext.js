@@ -7,6 +7,14 @@ export const AssetContext = createContext();
 export const AssetProvider = ({ children }) => {
   const [assets, setAssets] = useState([]);
   const [loading, setLoading] = useState(true);
+    // Add states for display options
+    const [showMainCategory, setShowMainCategory] = useState(true);
+    const [showSubCategory, setShowSubCategory] = useState(true);
+    const [showCurrentValue, setShowCurrentValue] = useState(true);
+    const [showInsuranceValue, setShowInsuranceValue] = useState(true);
+    const [showLastInspection, setShowLastInspection] = useState(true);
+    const [showNextInspection, setShowNextInspection] = useState(true);
+    const[showImage, setShowImage] = useState(true);
 
   const fetchAssets = async (tenantId, ordering = '') => {
     setLoading(true);
@@ -70,8 +78,27 @@ export const AssetProvider = ({ children }) => {
   };
 
   return (
-    <AssetContext.Provider value={{ assets, loading, fetchAssets }}>
+    <AssetContext.Provider value={{
+      assets,
+      loading,
+      fetchAssets,
+      showMainCategory,
+      setShowMainCategory,
+      showSubCategory,
+      setShowSubCategory,
+      showCurrentValue,
+      setShowCurrentValue,
+      showInsuranceValue,
+      setShowInsuranceValue,
+      showLastInspection,
+      setShowLastInspection,
+      showNextInspection,
+      setShowNextInspection,
+      showImage,
+      setShowImage
+    }}>
       {children}
     </AssetContext.Provider>
   );
+
 };

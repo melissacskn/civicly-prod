@@ -212,7 +212,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { TenantProvider } from '../components/TenantContext';
 import { AssetProvider } from '../components/AssetContext';
-import AssetsTable from '../components/AssetTable';
+import AssetsTable from '../screens/AssetTable';
 
 const Stack = createStackNavigator();
 export const LogInContext = createContext();
