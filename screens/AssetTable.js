@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from 'react';
-import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity,ActivityIndicator } from 'react-native';
+import React, { useContext, useEffect,useState } from 'react';
+import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity,ActivityIndicator,RefreshControl } from 'react-native';
 import { AssetContext } from '../components/AssetContext';
 import { TenantContext } from '../components/TenantContext';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -10,6 +10,7 @@ const AssetTable = () => {
   const { assets, loading, fetchAssets } = useContext(AssetContext);
   const { tenantId } = useContext(TenantContext);  // Get tenantId from context
   const navigation = useNavigation(); // Initialize navigation
+  const [refreshing, setRefreshing] = useState(false);  // State to track refreshing
   const { 
   
     showMainCategory, showSubCategory, 
@@ -22,6 +23,15 @@ const AssetTable = () => {
       fetchAssets(tenantId);
     }
   }, [tenantId]);
+
+  // Function to handle pull-to-refresh
+  const onRefresh = async () => {
+    if (tenantId) {
+      setRefreshing(true);  // Set refreshing to true
+      await fetchAssets(tenantId);  // Re-fetch assets
+      setRefreshing(false);  // Stop refreshing after fetching
+    }
+  };
 
   const renderItem = ({ item }) => {
     return (
@@ -74,7 +84,8 @@ const AssetTable = () => {
   };
   
 
-  if (loading) {
+
+  if (loading && !refreshing) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={Colors.green} />
@@ -89,6 +100,10 @@ const AssetTable = () => {
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.container}
+         // Add pull-to-refresh functionality
+         refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[Colors.green]} />
+        }
       />
       <TouchableOpacity
         style={styles.floatingButton}
