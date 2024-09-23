@@ -5,7 +5,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { TenantContext } from "../components/TenantContext";
-
+import config from "../src/config";
 
 const Colors = {
   primary: "#ffffff",
@@ -36,7 +36,7 @@ const ListingTenants = () => {
         redirect: "follow"
       };
 
-      const response = await fetch("https://api.dev.nonprod.civic.ly/core/user/tenant", requestOptions);
+      const response = await fetch(`${config.CORE_BASE_URL_DEV}/user/tenant`, requestOptions);
       const json = await response.json();
       const newData = json.results.map((item) => ({
         id: item.id,

@@ -36,7 +36,7 @@ const requestOptions = {
   redirect: "follow"
 };
 
-const response= await fetch(`https://api.dev.nonprod.civic.ly/assets/${tenantid}/asset/`, requestOptions) // tenant id
+const response= await fetch(`${config.ASSET_BASE_URL_DEV}/${tenantid}/asset/`, requestOptions) // tenant id
 const json = await response.json();
 
 const assetId = json.id;

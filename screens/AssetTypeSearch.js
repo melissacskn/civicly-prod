@@ -8,6 +8,7 @@ import { fetchAuthSession } from 'aws-amplify/auth';
 import config from "../src/config";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
+
 const AssetTypeSearch = () => {
   const [filterData, setFilteredData] = useState([]);
   const [search, setSearch] = useState(''); // State to hold the user's search input
@@ -33,7 +34,7 @@ const AssetTypeSearch = () => {
         redirect: "follow"
       };
 
-      const response = await fetch(`https://api.dev.nonprod.civic.ly/assets/asset-type/?search=${searchParam}`, requestOptions); // Fetch data from API with dynamic query
+      const response = await fetch(`${config.ASSET_BASE_URL_DEV}/asset-type/?search=${searchParam}`, requestOptions); // Fetch data from API with dynamic query
       const responseJson = await response.json();
       setFilteredData(responseJson.results); // Set the filtered data to be the API response
     } catch (error) {

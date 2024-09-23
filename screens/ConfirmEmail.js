@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Alert, StatusBar, View, Text, TextInput, SafeAreaView, TouchableOpacity, StyleSheet } from "react-native";
 import { Colors } from "../components/stylesSignUp"; // Assuming you're still importing Colors from a shared location
+import config from "../src/config";
 
 const { darkLight, primary, green } = Colors;
 
@@ -25,7 +26,7 @@ const ConfirmEmail = ({ route, navigation }) => {
         redirect: "follow",
       };
 
-      const responsee = await fetch('https://api.dev.nonprod.civic.ly/core/user/confirm/', requestOptions);
+      const responsee = await fetch(`${config.CORE_BASE_URL_DEV}/user/confirm/`, requestOptions);
       const responseData = await responsee.json();
       console.log(responseData);
       navigation.navigate("Login");

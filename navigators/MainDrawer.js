@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, Image, Alert, Switch, TouchableWithoutFeedback,ScrollView } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
@@ -16,7 +15,7 @@ import { TenantContext } from '../components/TenantContext';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
+import config from '../src/config';
 const Drawer = createDrawerNavigator();
 
 const MainDrawer = () => {
@@ -80,7 +79,7 @@ const MainDrawer = () => {
         const myHeaders = new Headers();
         myHeaders.append('Authorization', `Bearer ${accessToken}`);
 
-        const response = await fetch('https://api.dev.nonprod.civic.ly/core/user/', {
+        const response = await fetch(`${config.CORE_BASE_URL_DEV}/user/`, {
           method: 'GET',
           headers: myHeaders,
         });

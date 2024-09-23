@@ -1,6 +1,7 @@
 
 import React, { createContext, useState } from 'react';
 import { fetchAuthSession } from 'aws-amplify/auth';
+import config from '../src/config';
 
 export const AssetContext = createContext();
 
@@ -25,7 +26,7 @@ export const AssetProvider = ({ children }) => {
       myHeaders.append("Authorization", `Bearer ${accessToken}`);
 
       // Construct the API URL dynamically based on the ordering parameter
-      let apiUrl = `https://api.dev.nonprod.civic.ly/assets/${tenantId}/asset/`;
+      let apiUrl = `${config.ASSET_BASE_URL_DEV}/${tenantId}/asset/`;
       if (ordering) {
         apiUrl += `?ordering=${ordering}`;
       }

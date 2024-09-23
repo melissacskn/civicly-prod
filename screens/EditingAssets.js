@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect, useMemo, useCallback,useContext } from 'react';
 import { View, Text, TextInput, Image, StyleSheet, TouchableOpacity, Dimensions, StatusBar, Alert, PermissionsAndroid, Linking } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -15,6 +13,7 @@ Mapbox.setAccessToken('sk.eyJ1IjoiY2l2aWNseSIsImEiOiJjbHk4a3NjcmcwZGxzMmpzYnA5dG
 import { LocationContext } from '../components/LocationContext';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { TenantContext } from '../components/TenantContext';
+import config from '../src/config';
 
 const EditingAssets = ({ route }) => {
   const navigation = useNavigation();
@@ -133,7 +132,7 @@ const EditingAssets = ({ route }) => {
 
 
 
-      const url = `https://api.dev.nonprod.civic.ly/assets/${tenantId}/asset/${assetId2}`;
+      const url = `${config.ASSET_BASE_URL_DEV}/${tenantId}/asset/${assetId2}`;
       console.log('PATCH URL:', url);
 
       const requestOptions = {

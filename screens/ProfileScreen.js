@@ -7,6 +7,7 @@ import { fetchAuthSession, signOut } from 'aws-amplify/auth';
 import { Colors } from '../components/stylesSignUp';  
 import { TenantContext } from '../components/TenantContext';  
 import { LogInContext } from '../navigators/RootStack';  
+import config from '../src/config';
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -28,7 +29,7 @@ const ProfileScreen = () => {
       const myHeaders = new Headers();
       myHeaders.append("Authorization", `Bearer ${accessToken}`);
 
-      const response = await fetch("https://api.dev.nonprod.civic.ly/core/user/", {
+      const response = await fetch(`${config.CORE_BASE_URL_DEV}/user/`, {
         method: "GET",
         headers: myHeaders,
       });

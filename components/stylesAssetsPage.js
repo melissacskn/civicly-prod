@@ -22,10 +22,10 @@ export const styles = StyleSheet.create({
     backgroundColor: primary,
     alignItems: 'center',
     justifyContent: 'center',
-   
+    paddingHorizontal: wp('5%'),
     paddingVertical: hp('2%'),
-    paddingHorizontal: 0, // Add this line to ensure no padding
   },
+
   innerContainer: {
     flex: 1,
     width: '100%',
@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     paddingHorizontal: 0,
-    paddingVertical: hp('2%'),
+    // paddingVertical: hp('2%'), //// white space between the botto, of the device
   },
   pageLogo: {
     width: wp('60%'),
@@ -49,8 +49,8 @@ export const styles = StyleSheet.create({
     borderRadius: wp('2%'),
     backgroundColor: primary,
     paddingHorizontal: 0,
-    paddingVertical: hp('2%'),
-    marginBottom: hp('2%'),
+    // paddingVertical: hp('2%'),
+    // marginBottom: hp('2%'),
   },
   containerForLoading: {
     flex: 1,
@@ -59,14 +59,20 @@ export const styles = StyleSheet.create({
     paddingHorizontal: wp('5%'),
     backgroundColor: primary,
   },
-  container: {
-    flex: 1,
-    backgroundColor: primary,
-    alignItems: 'center',
+  floatingButton: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    width: wp('15%'),
+    height: wp('15%'),
+    borderRadius: wp('7.5%'),
     justifyContent: 'center',
-    paddingHorizontal: wp('5%'),
-    paddingVertical: hp('2%'),
+    alignItems: 'center',
+    elevation: 5,
+    backgroundColor: 'rgb(0, 168, 84)', // Green background color
+   
   },
+
   iconButton: {
     paddingVertical: hp('1%'),
     paddingHorizontal: wp('4%'),

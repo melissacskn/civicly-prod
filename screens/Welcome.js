@@ -1,4 +1,3 @@
-
 import React, { useContext, useState, useEffect, useCallback } from "react";
 import { Alert, StatusBar, Text, View, Image, ActivityIndicator, TouchableOpacity } from "react-native";
 import { useNavigation, useFocusEffect } from '@react-navigation/native'; 
@@ -7,6 +6,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import { LogInContext } from "../navigators/RootStack";
 import styles, { Colors } from '../components/stylesWelcome';  
 import { TenantContext } from "../components/TenantContext";
+import config from "../src/config";
 
 const Welcome = ({ route }) => {
   const setIsUser = useContext(LogInContext);
@@ -46,7 +46,7 @@ const Welcome = ({ route }) => {
         redirect: "follow"
       };
 
-      const response = await fetch("https://api.dev.nonprod.civic.ly/core/user/", requestOptions);
+      const response = await fetch(`${config.CORE_BASE_URL_DEV}/user/`, requestOptions);
       const result = await response.json();
 
       setFirstname(result.firstname || "User");

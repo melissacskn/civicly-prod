@@ -9,6 +9,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import Modal from 'react-native-modal';
 import { useNavigation } from '@react-navigation/native';
 import HandleProfileEdit from '../components/HandleProfileEdit';
+import config from '../src/config';
 
 const { darkLight, primary, green, tertiary } = Colors;
 
@@ -48,7 +49,7 @@ const EditProfile = ({ route }) => {
       const myHeaders = new Headers();
       myHeaders.append("Authorization", `Bearer ${accessToken}`);
 
-      const response = await fetch("https://api.dev.nonprod.civic.ly/core/user/", {
+      const response = await fetch(`${config.CORE_BASE_URL_DEV}/user/`, {
         method: "GET",
         headers: myHeaders,
       });
@@ -92,7 +93,7 @@ const EditProfile = ({ route }) => {
         redirect: "follow"
       };
   
-      const response = await fetch("https://api.dev.nonprod.civic.ly/core/user/", requestOptions);
+      const response = await fetch(`${config.CORE_BASE_URL_DEV}/user/`, requestOptions);
   
       if (response.ok) {
         const result = await response.text();  

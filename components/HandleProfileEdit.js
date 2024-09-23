@@ -1,8 +1,8 @@
-
 import React from 'react';
 import { View, Text } from 'react-native';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { Platform } from 'react-native';
+import config from '../src/config';
 
 const HandleProfileEdit = async ({ imageName, imageType, image }) => {
   try {
@@ -33,7 +33,7 @@ const HandleProfileEdit = async ({ imageName, imageType, image }) => {
 
     let response;
     try {
-      response = await fetch("https://api.dev.nonprod.civic.ly/core/user/profile-image/upload/", requestOptions);
+      response = await fetch(`${config.CORE_BASE_URL_DEV}/user/profile-image/upload/`, requestOptions);
       if (!response.ok) {
         console.error("First API call failed.");
         return;
@@ -95,7 +95,7 @@ const HandleProfileEdit = async ({ imageName, imageType, image }) => {
       redirect: "follow"
     };
 
-    const completeResponse = await fetch("https://api.dev.nonprod.civic.ly/core/user/profile-image/upload/complete/", completeRequestOptions);
+    const completeResponse = await fetch(`${config.CORE_BASE_URL_DEV}/user/profile-image/upload/complete/`, completeRequestOptions);
 
     if (!completeResponse.ok) {
       console.error('Failed to complete the image upload.');
