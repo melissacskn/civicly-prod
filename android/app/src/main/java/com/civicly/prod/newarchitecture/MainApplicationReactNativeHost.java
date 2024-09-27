@@ -1,4 +1,4 @@
-package com.myaws.newarchitecture;
+package com.civicly.prod.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.myaws.BuildConfig;
-import com.myaws.newarchitecture.components.MainComponentsRegistry;
-import com.myaws.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.civicly.prod.BuildConfig;
+import com.civicly.prod.newarchitecture.components.MainComponentsRegistry;
+import com.civicly.prod.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

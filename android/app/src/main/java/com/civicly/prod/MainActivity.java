@@ -1,4 +1,4 @@
-package com.myaws;
+package com.civicly.prod;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
@@ -12,7 +12,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "MyAWS";
+    return "civicly-prod";
   }
 
   /**

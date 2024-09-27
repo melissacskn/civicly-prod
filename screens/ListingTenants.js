@@ -5,8 +5,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { TenantContext } from "../components/TenantContext";
-import config from "../src/config";
 
+import config from "../src/config";
 const Colors = {
   primary: "#ffffff",
   secondary: "#E5E7EB",
@@ -29,6 +29,7 @@ const ListingTenants = () => {
       const accessToken = session.tokens.accessToken.toString();
       const myHeaders = new Headers();
       myHeaders.append("Authorization", `Bearer ${accessToken}`);
+     
 
       const requestOptions = {
         method: "GET",
@@ -38,10 +39,12 @@ const ListingTenants = () => {
 
       const response = await fetch(`${config.CORE_BASE_URL_DEV}/user/tenant`, requestOptions);
       const json = await response.json();
-      const newData = json.results.map((item) => ({
+      console.log(json); // Log the full response to inspect
+      const newData = json.results ? json.results.map((item) => ({
         id: item.id,
         title: item.name,
-      }));
+      })) : [];
+      
 
       setData(newData);
     } catch (error) {

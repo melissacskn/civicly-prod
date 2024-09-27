@@ -1,4 +1,4 @@
-package com.myaws.newarchitecture.modules;
+package com.civicly.prod.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;
